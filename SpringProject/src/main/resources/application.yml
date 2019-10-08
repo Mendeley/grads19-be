@@ -1,21 +1,15 @@
 spring:
   application:
-    name: gradproject2019
+    name: SpringProject
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/conferenceFinder?autoreconnect=true"
-    password: "root"
-    username: "root"
-    testOnBorrow: true
-    testWhileIdle: true
-    timeBetweenEvictionRunsMillis: 60000
-    minEvictableIdleTimeMillis: 30000
-    validationQuery: SELECT 1
-    max-active: 15
-    max-idle: 10
-    max-wait: 8000
+    platform: mysql
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/conferenceFinder?autoreconnect=true
+    password: password
+    username: root
 flyway:
   url: jdbc:mysql://localhost:3306/mysql
   schemas: conferenceFinder
-  user: "root"
-  password: "root"
+  user: root
+  password: password
+  locations: db/migration
