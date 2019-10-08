@@ -1,9 +1,9 @@
 spring:
   application:
-    name: SpringProject
+    name: gradproject2019
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/USERSERVICE?autoreconnect=true"
+    url: "jdbc:mysql://localhost:3306/conferenceFinder?autoreconnect=true"
     password: "root"
     username: "root"
     testOnBorrow: true
