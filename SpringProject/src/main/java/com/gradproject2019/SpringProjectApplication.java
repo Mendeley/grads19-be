@@ -1,4 +1,4 @@
-package com.GradProject2019.SpringProject;
+package com.gradproject2019;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

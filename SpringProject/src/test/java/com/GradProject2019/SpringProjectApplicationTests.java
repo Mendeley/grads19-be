@@ -1,4 +1,4 @@
-package com.GradProject2019.SpringProject;
+package com.GradProject2019;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
