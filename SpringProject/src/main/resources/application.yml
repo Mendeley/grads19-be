@@ -4,12 +4,13 @@ spring:
   datasource:
     platform: mysql
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/conferenceFinder?autoreconnect=true
+    url: jdbc:mysql://localhost:3306/conference_finder?autoreconnect=true
     password: password
     username: root
-flyway:
-  url: jdbc:mysql://localhost:3306/mysql
-  schemas: conferenceFinder
-  user: root
-  password: password
-  locations: db/migration
+
+#flyway:
+      ##  url: jdbc:mysql://localhost:3306/mysql
+      ##  schemas: conference_finder
+      ##  user: root
+    ##  password: password
+    ##  locations: db/migration
