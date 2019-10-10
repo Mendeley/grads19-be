@@ -7,10 +7,3 @@ spring:
     url: jdbc:mysql://localhost:3306/conference_finder?autoreconnect=true
     password: password
     username: root
-
-#flyway:
-      ##  url: jdbc:mysql://localhost:3306/mysql
-      ##  schemas: conference_finder
-      ##  user: root
-    ##  password: password
-    ##  locations: db/migration
