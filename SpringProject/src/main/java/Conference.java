@@ -1,7 +1,6 @@
 import java.time.Instant;
 
 public class Conference {
-
     private long id;
     private String name;
     private Instant dateTime;
