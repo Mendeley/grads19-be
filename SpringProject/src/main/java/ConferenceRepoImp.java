@@ -1,4 +1,8 @@
-package PACKAGE_NAME;
+import java.util.List;
 
-public class ConferenceRepoImp {
+public class ConferenceRepoImp implements ConferenceRepository {
+    @Override
+    public List<Conference> getConferences() {
+        return null;
+    }
 }
