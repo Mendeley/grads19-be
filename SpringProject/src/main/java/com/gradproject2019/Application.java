@@ -1,13 +1,13 @@
-package com.GradProject2019.SpringProject;
+package com.gradproject2019;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringProjectApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringProjectApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }
