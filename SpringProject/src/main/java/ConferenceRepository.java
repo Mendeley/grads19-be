@@ -1,4 +1,9 @@
-package PACKAGE_NAME;
+import java.util.List;
 
-public class ConferenceRepository {
+public interface ConferenceRepository {
+
+    List<Conference> getConferences();
+
 }
+
+
