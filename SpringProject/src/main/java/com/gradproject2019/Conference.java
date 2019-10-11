@@ -1,14 +1,27 @@
+package com.gradproject2019;
+
+import javax.persistence.*;
 import java.time.Instant;
 
+@Entity
 public class Conference {
-    private long id;
+    @Id
+    private Long id;
+    @Column(name = "conference_name")
     private String name;
+    @Column(name = "conference_date_time")
     private Instant dateTime;
     private String city;
+    @Column(name = "conference_description")
     private String description;
+    @Column(name = "conference_topic")
     private String topic;
 
-    public Conference(long id, String name, Instant dateTime, String city, String description, String topic) {
+    public Conference() {
+
+    }
+
+    public Conference(Long id, String name, Instant dateTime, String city, String description, String topic) {
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;
@@ -17,7 +30,7 @@ public class Conference {
         this.topic = topic;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -41,4 +54,3 @@ public class Conference {
         return topic;
     }
 }
-
