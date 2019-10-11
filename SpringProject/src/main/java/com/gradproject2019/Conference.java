@@ -17,9 +17,7 @@ public class Conference {
     @Column(name = "conference_topic")
     private String topic;
 
-    public Conference() {
-
-    }
+    public Conference() {}
 
     public Conference(Long id, String name, Instant dateTime, String city, String description, String topic) {
         this.id = id;

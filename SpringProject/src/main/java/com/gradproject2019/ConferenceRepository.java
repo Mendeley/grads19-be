@@ -1,12 +1,8 @@
 package com.gradproject2019;
 
-import java.util.List;
-
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ConferenceRepository extends CrudRepository <Conference, Long>{
-
-
+@Repository
+public interface ConferenceRepository extends CrudRepository<Conference, Long> {
 }
-
-
