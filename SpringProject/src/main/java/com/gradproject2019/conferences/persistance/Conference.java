@@ -1,4 +1,4 @@
-package com.gradproject2019;
+package com.gradproject2019.conferences.persistance;
 
 import javax.persistence.*;
 import java.time.Instant;

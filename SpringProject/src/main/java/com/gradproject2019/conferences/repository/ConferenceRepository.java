@@ -1,5 +1,6 @@
-package com.gradproject2019;
+package com.gradproject2019.conferences.repository;
 
+import com.gradproject2019.conferences.persistance.Conference;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,5 +1,7 @@
 package com.gradproject2019;
 
+import com.gradproject2019.conferences.persistance.Conference;
+import com.gradproject2019.conferences.repository.ConferenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -32,7 +34,7 @@ public class Application implements CommandLineRunner {
 		}
 		System.out.println("Done!");
 
-		System.exit(0);
+		//System.exit(0);
 	}
 
 }
