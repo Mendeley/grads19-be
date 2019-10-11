@@ -34,7 +34,6 @@ public class Application implements CommandLineRunner {
 		}
 		System.out.println("Done!");
 
-		//System.exit(0);
 	}
 
 }
