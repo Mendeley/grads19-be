@@ -4,17 +4,14 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
+@Table(name = "conferences")
 public class Conference {
     @Id
     private Long id;
-    @Column(name = "conference_name")
     private String name;
-    @Column(name = "conference_date_time")
     private Instant dateTime;
     private String city;
-    @Column(name = "conference_description")
     private String description;
-    @Column(name = "conference_topic")
     private String topic;
 
     public Conference() {}
