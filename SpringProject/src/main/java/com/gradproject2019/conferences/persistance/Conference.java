@@ -1,4 +1,4 @@
-package com.gradproject2019;
+package com.gradproject2019.conferences.persistance;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -14,7 +14,8 @@ public class Conference {
     private String description;
     private String topic;
 
-    public Conference() {}
+    public Conference() {
+    }
 
     public Conference(Long id, String name, Instant dateTime, String city, String description, String topic) {
         this.id = id;
