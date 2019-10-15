@@ -2,9 +2,12 @@ package com.gradproject2019.conferences.service;
 
 import com.gradproject2019.conferences.persistance.Conference;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface ConferenceService {
 
-    Iterable<Conference> listConferences();
+    List<Conference> listConferences();
 
-    Conference findConferenceById(Long conferenceId);
+    Optional<Conference> findConferenceById(Long conferenceId);
 }
