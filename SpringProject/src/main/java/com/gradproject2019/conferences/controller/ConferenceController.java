@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @Controller
 public class ConferenceController {
 
