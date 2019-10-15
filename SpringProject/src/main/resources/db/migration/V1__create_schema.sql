@@ -6,5 +6,3 @@ CREATE TABLE conferences (
     description TEXT,
     topic VARCHAR(255)
 );
-
-

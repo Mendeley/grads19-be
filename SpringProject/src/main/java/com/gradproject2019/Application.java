@@ -1,22 +1,22 @@
 package com.gradproject2019;
 
-import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.sql.DataSource;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
 	@Autowired
-	DataSource dataSource;
+	private DataSource dataSource;
 
 	@Autowired
-	ConferenceRepository conferenceRepository;
+	private ConferenceRepository conferenceRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -29,9 +29,9 @@ public class Application implements CommandLineRunner {
 		System.out.println("DATASOURCE = " + dataSource);
 
 		System.out.println("\n1.findAll()...");
-		for (Conference conference : conferenceRepository.findAll()) {
-			System.out.println(conference);
-		}
+
+		conferenceRepository.findAll().forEach(conference -> System.out.println(conference.getId()));
+
 		System.out.println("Done!");
 
 	}
