@@ -26,4 +26,8 @@ public class ConferenceServiceImpl implements ConferenceService {
     public Optional<Conference> findConferenceById(Long conferenceId) {
         return conferenceRepository.findById(conferenceId);
     }
+    @Override
+    public Conference saveConference(Conference conference) {
+        return conferenceRepository.saveAndFlush(conference);
+    }
 }

@@ -10,4 +10,6 @@ public interface ConferenceService {
     List<Conference> listConferences();
 
     Optional<Conference> findConferenceById(Long conferenceId);
+
+    Conference saveConference(Conference conference);
 }
