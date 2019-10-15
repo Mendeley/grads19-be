@@ -3,7 +3,6 @@ package com.gradproject2019;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.conferences.service.ConferenceServiceImpl;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -73,6 +72,4 @@ public class ConferenceServiceTest {
         //then
         assertThat(conferenceById).isEmpty();
     }
-
-
 }

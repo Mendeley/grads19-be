@@ -1,6 +1,8 @@
 package com.gradproject2019.conferences.persistance;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.Instant;
 
 @Entity
