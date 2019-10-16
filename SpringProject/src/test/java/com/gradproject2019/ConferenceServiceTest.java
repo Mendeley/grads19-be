@@ -72,5 +72,4 @@ public class ConferenceServiceTest {
         //then
         assertThat(conferenceById).isEmpty();
     }
-
 }
