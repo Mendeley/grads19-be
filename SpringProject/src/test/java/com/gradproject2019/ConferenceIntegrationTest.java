@@ -43,7 +43,7 @@ public class ConferenceIntegrationTest {
     @Test
     public void testGetListOfConferencesByIdReturnsAConference() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+randomServerPort+"/conferences/1";
+        final String baseUrl = "http://localhost:"+randomServerPort+"/conferences/100";
         URI uri = new URI(baseUrl);
 
         //when
@@ -65,6 +65,4 @@ public class ConferenceIntegrationTest {
         //Then
         Assert.assertEquals(200,result.getStatusCodeValue());
     }
-
-
 }

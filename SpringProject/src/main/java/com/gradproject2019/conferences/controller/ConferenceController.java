@@ -28,8 +28,7 @@ public class ConferenceController {
         return ResponseEntity.ok(conference);
     }
 
-    @PostMapping(path = "/conferences/add")
-    //@RequestBody
+    @PostMapping(path = "/conferences")
     public ResponseEntity<Conference> addConference(@RequestBody Conference conference) {
         Conference newConference = conferenceService.saveConference(conference);
         return ResponseEntity.ok(newConference);
