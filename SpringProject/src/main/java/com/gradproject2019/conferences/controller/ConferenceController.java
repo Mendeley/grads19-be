@@ -23,13 +23,13 @@ public class ConferenceController {
     }
 
     @GetMapping(path = "/conferences/{id}")
-    public ResponseEntity<Optional<Conference>> getConferenceById(@PathVariable("id") Long conferenceId) {
+    public ResponseEntity<Optional<Conference>> findConferenceById(@PathVariable("id") Long conferenceId) {
         Optional<Conference> conference = conferenceService.findConferenceById(conferenceId);
         return ResponseEntity.ok(conference);
     }
 
     @PostMapping(path = "/conferences")
-    public ResponseEntity<Conference> addConference(@RequestBody Conference conference) {
+    public ResponseEntity<Conference> saveConference(@RequestBody Conference conference) {
         Conference newConference = conferenceService.saveConference(conference);
         return ResponseEntity.ok(newConference);
     }

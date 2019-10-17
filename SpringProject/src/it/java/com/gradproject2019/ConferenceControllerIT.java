@@ -19,18 +19,18 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ConferenceIntegrationTest {
+public class ConferenceControllerIT {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @LocalServerPort
-    int randomServerPort = 8081;
+    int testServerPort = 8081;
 
     @Test
     public void testGetListOfConferencesReturnsAllConferences() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+randomServerPort+"/conferences";
+        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
         URI uri = new URI(baseUrl);
 
         //when
@@ -43,7 +43,7 @@ public class ConferenceIntegrationTest {
     @Test
     public void testGetListOfConferencesByIdReturnsAConference() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+randomServerPort+"/conferences/100";
+        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences/100";
         URI uri = new URI(baseUrl);
 
         //when
@@ -55,7 +55,7 @@ public class ConferenceIntegrationTest {
 
     @Test
     public void testAddConferenceSuccess() throws URISyntaxException {
-        final String baseUrl = "http://localhost:"+randomServerPort+"/conferences/add";
+        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
         URI uri = new URI(baseUrl);
         Conference conference = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
 
