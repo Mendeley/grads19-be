@@ -1,5 +1,8 @@
 package com.gradproject2019.conferences.controller;
 
+import com.gradproject2019.conferences.exception.ConferenceConflictException;
+import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
+import com.gradproject2019.conferences.exception.ConferencesNotFoundException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +21,19 @@ public class ConferenceController {
     private ConferenceService conferenceService;
 
     @GetMapping(path = "/conferences")
-    public ResponseEntity<List<Conference>> getAllConferences() {
-        return ResponseEntity.ok(conferenceService.listConferences());
+    public ResponseEntity<List<Conference>> getAllConferences() /*throws ConferencesNotFoundException*/ {
+        List<Conference> conferences = conferenceService.listConferences();
+        return ResponseEntity.ok(conferences);
     }
 
     @GetMapping(path = "/conferences/{id}")
-    public ResponseEntity<Optional<Conference>> findConferenceById(@PathVariable("id") Long conferenceId) {
-        Optional<Conference> conference = conferenceService.findConferenceById(conferenceId);
+    public ResponseEntity<Conference> findConferenceById(@PathVariable("id") Long conferenceId) throws ConferenceNotFoundException {
+        Conference conference = conferenceService.findConferenceById(conferenceId);
         return ResponseEntity.ok(conference);
     }
 
     @PostMapping(path = "/conferences")
-    public ResponseEntity<Conference> saveConference(@RequestBody Conference conference) {
+    public ResponseEntity<Conference> saveConference(@RequestBody Conference conference) throws ConferenceConflictException {
         Conference newConference = conferenceService.saveConference(conference);
         return ResponseEntity.ok(newConference);
     }

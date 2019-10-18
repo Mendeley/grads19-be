@@ -1,5 +1,6 @@
 package com.gradproject2019;
 
+import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.conferences.service.ConferenceServiceImpl;
@@ -43,33 +44,33 @@ public class ConferenceServiceTest {
     }
 
     @Test
-    public void shouldGetConferencesById() {
+    public void shouldGetConferencesById() throws ConferenceNotFoundException {
         //given
         Long conferenceId = 1L;
         Conference conference = new Conference(conferenceId, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
         given(conferenceRepository.findById(conferenceId)).willReturn(Optional.of(conference));
 
         //when
-        Optional<Conference> conferenceById = conferenceService.findConferenceById(conferenceId);
+        Conference conferenceById = conferenceService.findConferenceById(conferenceId);
 
         //then
-        assertThat(conferenceById.get().getId()).isEqualTo(conferenceId);
-        assertThat(conferenceById.get().getName()).isEqualTo(conference.getName());
-        assertThat(conferenceById.get().getCity()).isEqualTo(conference.getCity());
-        assertThat(conferenceById.get().getTopic()).isEqualTo(conference.getTopic());
+        assertThat(conferenceById.getId()).isEqualTo(conferenceId);
+        assertThat(conferenceById.getName()).isEqualTo(conference.getName());
+        assertThat(conferenceById.getCity()).isEqualTo(conference.getCity());
+        assertThat(conferenceById.getTopic()).isEqualTo(conference.getTopic());
     }
 
     @Test
-    public void shouldReturnAnEmptyOptionalWhenIdNotRecognised() {
+    public void shouldReturnAnEmptyOptionalWhenIdNotRecognised() throws ConferenceNotFoundException {
         //given
         Long conferenceId = 66L;
 
         given(conferenceRepository.findById(conferenceId)).willReturn(Optional.empty());
 
         //when
-        Optional<Conference> conferenceById = conferenceService.findConferenceById(conferenceId);
+        Conference conferenceById = conferenceService.findConferenceById(conferenceId);
 
         //then
-        assertThat(conferenceById).isEmpty();
+        assertThat(conferenceById).isNot(null);
     }
 }
