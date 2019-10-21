@@ -111,7 +111,7 @@ public class ConferenceControllerIT {
         //given
         final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
         URI uri = new URI(baseUrl);
-        Conference conference = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
+        Conference conference = new Conference(1L, "Grace's conference", Instant.parse("3000-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
         HttpEntity<Conference> request = new HttpEntity<>(conference);
 
         //when
@@ -139,5 +139,35 @@ public class ConferenceControllerIT {
 
         //Then
         Assert.assertEquals(409,result.getStatusCodeValue());
+    }
+
+    @Test
+    public void testSaveConferenceFailAsBadRequest() throws URISyntaxException {
+        //given
+        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
+        URI uri = new URI(baseUrl);
+        Conference conference = new Conference(null, null, null, null, null, null);
+        HttpEntity<Conference> request = new HttpEntity<>(conference);
+
+        //when
+        ResponseEntity<String> result = this.restTemplate.postForEntity(uri, request, String.class);
+
+        //Then
+        Assert.assertEquals(400,result.getStatusCodeValue());
+    }
+
+    @Test
+    public void testSaveConferenceFailAsDateTimeInPast() throws URISyntaxException {
+        //given
+        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
+        URI uri = new URI(baseUrl);
+        Conference conference = new Conference(1L, "Grace's conference2", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester2", "All about Grace's fabulous and extra house", "grace");
+        HttpEntity<Conference> request = new HttpEntity<>(conference);
+
+        //when
+        ResponseEntity<String> result = this.restTemplate.postForEntity(uri, request, String.class);
+
+        //Then
+        Assert.assertEquals(400,result.getStatusCodeValue());
     }
 }

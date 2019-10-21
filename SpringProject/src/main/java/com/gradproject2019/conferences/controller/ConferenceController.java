@@ -2,6 +2,7 @@ package com.gradproject2019.conferences.controller;
 
 import com.gradproject2019.conferences.exception.ConferenceConflictException;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
+import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class ConferenceController {
     }
 
     @PostMapping(path = "/conferences")
-    public ResponseEntity<Conference> saveConference(@RequestBody Conference conference) throws ConferenceConflictException {
+    public ResponseEntity<Conference> saveConference(@RequestBody Conference conference) throws ConferenceConflictException, InvalidConferenceFieldException {
         Conference newConference = conferenceService.saveConference(conference);
         return ResponseEntity.ok(newConference);
     }
