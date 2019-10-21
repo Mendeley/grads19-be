@@ -2,7 +2,6 @@ package com.gradproject2019.conferences.controller;
 
 import com.gradproject2019.conferences.exception.ConferenceConflictException;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
-import com.gradproject2019.conferences.exception.ConferencesNotFoundException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller

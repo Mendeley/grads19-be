@@ -6,7 +6,6 @@ import com.gradproject2019.conferences.exception.ConferencesNotFoundException;
 import com.gradproject2019.conferences.persistance.Conference;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ConferenceService {
 

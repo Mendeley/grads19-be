@@ -6,8 +6,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,11 +17,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -123,7 +119,7 @@ public class ConferenceControllerIT {
         Conference retrievedConference = conferenceRepository.findById(1L).get();
 
         //Then
-        Assert.assertEquals(200,result.getStatusCodeValue());
+        Assert.assertEquals(200, result.getStatusCodeValue());
         Assert.assertEquals(conference.getId(), retrievedConference.getId());
         Assert.assertEquals(conference.getName(), retrievedConference.getName());
     }

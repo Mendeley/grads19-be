@@ -37,7 +37,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
     @Override
     public Conference saveConference(Conference conference) throws ConferenceConflictException {
-        if(conferenceAlreadyExists) {
+        if(conferenceRepository.existsById(conference.getId())) {
             throw new ConferenceConflictException();
         }
         return conferenceRepository.saveAndFlush(conference);
