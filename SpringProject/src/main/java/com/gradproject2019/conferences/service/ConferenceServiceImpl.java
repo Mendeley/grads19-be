@@ -2,7 +2,6 @@ package com.gradproject2019.conferences.service;
 
 import com.gradproject2019.conferences.exception.ConferenceConflictException;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
-import com.gradproject2019.conferences.exception.ConferencesNotFoundException;
 import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
@@ -23,11 +22,8 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
-    public List<Conference> listConferences() /*throws ConferencesNotFoundException*/ {
+    public List<Conference> listConferences() {
         List<Conference> conferences = conferenceRepository.findAll();
-        //if(conferences.isEmpty()){
-        //    throw new ConferencesNotFoundException();
-        //}
         return conferences;
     }
 

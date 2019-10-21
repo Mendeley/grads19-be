@@ -20,7 +20,7 @@ public class ConferenceController {
     private ConferenceService conferenceService;
 
     @GetMapping(path = "/conferences")
-    public ResponseEntity<List<Conference>> getAllConferences() /*throws ConferencesNotFoundException*/ {
+    public ResponseEntity<List<Conference>> getAllConferences() {
         List<Conference> conferences = conferenceService.listConferences();
         return ResponseEntity.ok(conferences);
     }

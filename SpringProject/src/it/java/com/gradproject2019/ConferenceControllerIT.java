@@ -52,11 +52,11 @@ public class ConferenceControllerIT {
         URI uri = new URI(baseUrl);
 
         //when
-        ResponseEntity<List> result = this.restTemplate.getForEntity(uri, List.class);
+        ResponseEntity<List<Conference>> response = this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Conference>>() {});
 
         //Then
-        Assert.assertEquals(200,result.getStatusCodeValue());
-        Assert.assertEquals(true,result.getBody().isEmpty());
+        Assert.assertEquals(200,response.getStatusCodeValue());
+        Assert.assertEquals(true,response.getBody().isEmpty());
     }
 
     @Test
@@ -68,12 +68,12 @@ public class ConferenceControllerIT {
         conferenceRepository.saveAndFlush(conference);
 
         //when
-        ResponseEntity<List<Conference>> result = this.restTemplate.exchange(uri, HttpMethod.GET,null, new ParameterizedTypeReference<List<Conference>>(){});
+        ResponseEntity<List<Conference>> response = this.restTemplate.exchange(uri, HttpMethod.GET,null, new ParameterizedTypeReference<List<Conference>>() {});
 
         //Then
-        Assert.assertEquals(200,result.getStatusCodeValue());
-        Assert.assertEquals(conference.getId(),result.getBody().get(0).getId());
-        Assert.assertEquals(conference.getName(),result.getBody().get(0).getName());
+        Assert.assertEquals(200,response.getStatusCodeValue());
+        Assert.assertEquals(conference.getId(),response.getBody().get(0).getId());
+        Assert.assertEquals(conference.getName(),response.getBody().get(0).getName());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ConferenceControllerIT {
         URI uri = new URI(baseUrl);
 
         //when
-        ResponseEntity<Conference> response = this.restTemplate.getForEntity(uri, Conference.class);
+        ResponseEntity<Conference> response = this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Conference>() {});
 
         //Then
         Assert.assertEquals(404, response.getStatusCodeValue());
@@ -98,7 +98,7 @@ public class ConferenceControllerIT {
         conferenceRepository.saveAndFlush(conference);
 
         //when
-        ResponseEntity<Conference> response = this.restTemplate.getForEntity(uri, Conference.class);
+        ResponseEntity<Conference> response = this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Conference>() {});
 
         //Then
         Assert.assertEquals(200, response.getStatusCodeValue());
@@ -115,11 +115,11 @@ public class ConferenceControllerIT {
         HttpEntity<Conference> request = new HttpEntity<>(conference);
 
         //when
-        ResponseEntity<String> result = this.restTemplate.postForEntity(uri, request, String.class);
+        ResponseEntity<String> response = this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
         Conference retrievedConference = conferenceRepository.findById(1L).get();
 
         //Then
-        Assert.assertEquals(200, result.getStatusCodeValue());
+        Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(conference.getId(), retrievedConference.getId());
         Assert.assertEquals(conference.getName(), retrievedConference.getName());
     }
@@ -135,10 +135,10 @@ public class ConferenceControllerIT {
         conferenceRepository.saveAndFlush(conference1);
 
         //when
-        ResponseEntity<String> result = this.restTemplate.postForEntity(uri, request, String.class);
+        ResponseEntity<String> response = this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
 
         //Then
-        Assert.assertEquals(409,result.getStatusCodeValue());
+        Assert.assertEquals(409,response.getStatusCodeValue());
     }
 
     @Test
@@ -150,10 +150,10 @@ public class ConferenceControllerIT {
         HttpEntity<Conference> request = new HttpEntity<>(conference);
 
         //when
-        ResponseEntity<String> result = this.restTemplate.postForEntity(uri, request, String.class);
+        ResponseEntity<String> response = this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
 
         //Then
-        Assert.assertEquals(400,result.getStatusCodeValue());
+        Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
     @Test
@@ -165,9 +165,9 @@ public class ConferenceControllerIT {
         HttpEntity<Conference> request = new HttpEntity<>(conference);
 
         //when
-        ResponseEntity<String> result = this.restTemplate.postForEntity(uri, request, String.class);
+        ResponseEntity<String> response = this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
 
         //Then
-        Assert.assertEquals(400,result.getStatusCodeValue());
+        Assert.assertEquals(400,response.getStatusCodeValue());
     }
 }
