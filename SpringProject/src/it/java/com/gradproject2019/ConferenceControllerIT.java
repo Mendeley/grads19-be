@@ -33,7 +33,7 @@ public class ConferenceControllerIT {
     private TestRestTemplate restTemplate;
 
     @LocalServerPort
-    int testServerPort = 8080;
+    int testServerPort;
 
     @Before
     public void setUp() {
