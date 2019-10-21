@@ -4,6 +4,7 @@ import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.conferences.service.ConferenceServiceImpl;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -61,16 +62,19 @@ public class ConferenceServiceTest {
     }
 
     @Test
-    public void shouldReturnAnEmptyOptionalWhenIdNotRecognised() throws ConferenceNotFoundException {
+    public void shouldThrowErrorWhenIdNotRecognised() throws ConferenceNotFoundException {
         //given
-        Long conferenceId = 66L;
-
-        given(conferenceRepository.findById(conferenceId)).willReturn(Optional.empty());
+        Long conferenceId = 1000000000L;
+        boolean errorThrown = false;
 
         //when
-        Conference conferenceById = conferenceService.findConferenceById(conferenceId);
+        try {
+            conferenceService.findConferenceById(conferenceId);
+        } catch(ConferenceNotFoundException e) {
+            errorThrown = true;
+        }
 
         //then
-        assertThat(conferenceById).isNot(null);
+        Assert.assertTrue(errorThrown);
     }
 }
