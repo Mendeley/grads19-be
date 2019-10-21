@@ -29,7 +29,7 @@ public class ConferenceServiceTest {
     private ConferenceRepository conferenceRepository;
 
     @Test
-    public void shouldGetAllConferences() {
+    public void shouldGetListOfAllConferences() {
         // GIVEN
         Conference conference1 = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
         Conference conference2 = new Conference(2L, "Sophia's conference", Instant.now(), "London", "All about Sophia's fabulous and extra house", "grace");
@@ -45,7 +45,7 @@ public class ConferenceServiceTest {
     }
 
     @Test
-    public void shouldGetConferencesById() throws ConferenceNotFoundException {
+    public void shouldGetConferenceById() throws ConferenceNotFoundException {
         //given
         Long conferenceId = 1L;
         Conference conference = new Conference(conferenceId, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");

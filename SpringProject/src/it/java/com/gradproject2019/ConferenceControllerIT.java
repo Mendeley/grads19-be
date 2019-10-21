@@ -46,7 +46,7 @@ public class ConferenceControllerIT {
     }
 
     @Test
-    public void testGetListOfConferencesReturnsNoConferences() throws URISyntaxException {
+    public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
         URI uri = new URI(baseUrl);
@@ -60,7 +60,7 @@ public class ConferenceControllerIT {
     }
 
     @Test
-    public void testGetListOfConferencesReturnsConferences() throws URISyntaxException {
+    public void shouldReturn200AndListOfConferencesWhenDatabasePopulated() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
         URI uri = new URI(baseUrl);
@@ -77,7 +77,7 @@ public class ConferenceControllerIT {
     }
 
     @Test
-    public void testFindConferenceByIdDoesNotReturnAConference() throws URISyntaxException {
+    public void shouldReturn404WhenIdDoesNotExist() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:"+ testServerPort +"/conferences/1000000000";
         URI uri = new URI(baseUrl);
@@ -90,7 +90,7 @@ public class ConferenceControllerIT {
     }
 
     @Test
-    public void testFindConferenceByIdDoesReturnAConference() throws URISyntaxException {
+    public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:"+ testServerPort +"/conferences/1";
         URI uri = new URI(baseUrl);
@@ -107,7 +107,7 @@ public class ConferenceControllerIT {
     }
 
     @Test
-    public void testSaveConferenceSuccess() throws URISyntaxException {
+    public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
         URI uri = new URI(baseUrl);
@@ -125,7 +125,7 @@ public class ConferenceControllerIT {
     }
 
     @Test
-    public void testSaveConferenceFailAsIdAlreadyExists() throws URISyntaxException {
+    public void shouldReturn409WhenConferenceIdAlreadyExists() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
         URI uri = new URI(baseUrl);
@@ -142,7 +142,7 @@ public class ConferenceControllerIT {
     }
 
     @Test
-    public void testSaveConferenceFailAsBadRequest() throws URISyntaxException {
+    public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
         URI uri = new URI(baseUrl);
@@ -157,7 +157,7 @@ public class ConferenceControllerIT {
     }
 
     @Test
-    public void testSaveConferenceFailAsDateTimeInPast() throws URISyntaxException {
+    public void shouldReturn400WhenConferenceInPast() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
         URI uri = new URI(baseUrl);
