@@ -55,18 +55,6 @@ public class ConferenceControllerIT {
        conferenceRepository.deleteAll();
     }
 
-    public ResponseEntity<List<Conference>> getConferenceList() {
-        return this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Conference>>() {});
-    }
-
-    public ResponseEntity<Conference> getSingleConference() {
-        return this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Conference>() {});
-    }
-
-    public ResponseEntity<String> postConference() {
-        return this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
-    }
-
     @Test
     public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
         //given
@@ -180,5 +168,17 @@ public class ConferenceControllerIT {
 
         //Then
         Assert.assertEquals(400,responseString.getStatusCodeValue());
+    }
+
+    private ResponseEntity<List<Conference>> getConferenceList() {
+        return this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Conference>>() {});
+    }
+
+    private ResponseEntity<Conference> getSingleConference() {
+        return this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Conference>() {});
+    }
+
+    private ResponseEntity<String> postConference() {
+        return this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
     }
 }
