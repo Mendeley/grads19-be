@@ -1,5 +1,7 @@
 package com.gradproject2019.conferences.service;
 
+import com.gradproject2019.conferences.data.ConferenceRequestDto;
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.exception.ConferenceAlreadyExistsException;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
@@ -8,6 +10,7 @@ import com.gradproject2019.conferences.repository.ConferenceRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,32 +24,29 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
-    public List<Conference> listConferences() {
-        return conferenceRepository.findAll();
+    public List<ConferenceResponseDto> listConferences() {
+        List<Conference> conferenceList = conferenceRepository.findAll();
+        List<ConferenceResponseDto> conferenceResponseDtoList = new ArrayList<>();
+        for (Conference conference : conferenceList) {
+            conferenceResponseDtoList.add(new ConferenceResponseDto().from(conference));
+        }
+        return conferenceResponseDtoList;
     }
 
     @Override
-    public Conference findConferenceById(Long conferenceId) {
-            return conferenceRepository.findById(conferenceId).orElseThrow(ConferenceNotFoundException::new);
+    public ConferenceResponseDto findConferenceById(Long conferenceId) {
+        Conference conference = conferenceRepository.findById(conferenceId).orElseThrow(ConferenceNotFoundException::new);
+        ConferenceResponseDto conferenceResponseDto = new ConferenceResponseDto().from(conference);
+        return conferenceResponseDto;
     }
+
     @Override
-    public Conference saveConference(Conference conference) {
-        isNotNull(conference);
-        isNotExisting(conference);
+    public ConferenceResponseDto saveConference(ConferenceRequestDto conferenceRequestDto){
+        Conference conference = conferenceRequestDto.from(conferenceRequestDto);
         isNotInPast(conference);
-        return conferenceRepository.saveAndFlush(conference);
-    }
-
-    public void isNotNull(Conference conference) {
-        if(conference.getName() == null || conference.getDateTime() == null || conference.getCity() == null || conference.getDescription() == null || conference.getTopic() == null){
-            throw new InvalidConferenceFieldException();
-        }
-    }
-
-    public void isNotExisting(Conference conference) {
-        if(conferenceRepository.existsById(conference.getId())) {
-            throw new ConferenceAlreadyExistsException();
-        }
+        Conference conf = conferenceRepository.saveAndFlush(conference);
+        ConferenceResponseDto conferenceResponseDto = new ConferenceResponseDto().from(conf);
+        return conferenceResponseDto;
     }
 
     public void isNotInPast(Conference conference) {

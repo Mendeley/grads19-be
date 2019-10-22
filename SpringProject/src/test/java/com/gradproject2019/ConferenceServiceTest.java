@@ -1,5 +1,6 @@
 package com.gradproject2019;
 
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
@@ -38,11 +39,11 @@ public class ConferenceServiceTest {
         given(conferenceRepository.findAll()).willReturn(List.of(conference1, conference2));
 
         // WHEN
-        Iterable<Conference> conferences = conferenceService.listConferences();
+        Iterable<ConferenceResponseDto> conferences = conferenceService.listConferences();
 
         // THEN
         assertThat(conferences)
-                .extracting(Conference::getId, Conference::getName, Conference::getCity)
+                .extracting(ConferenceResponseDto::getId, ConferenceResponseDto::getName, ConferenceResponseDto::getCity)
                 .containsExactly(tuple(conference1.getId(), conference1.getName(), conference1.getCity()), tuple(conference2.getId(), conference2.getName(), conference2.getCity()));
     }
 
@@ -52,7 +53,7 @@ public class ConferenceServiceTest {
         given(conferenceRepository.findById(1L)).willReturn(Optional.of(conference1));
 
         //when
-        Conference conferenceById = conferenceService.findConferenceById(1L);
+        ConferenceResponseDto conferenceById = conferenceService.findConferenceById(1L);
 
         //then
         assertThat(conferenceById.getId()).isEqualTo(1L);
