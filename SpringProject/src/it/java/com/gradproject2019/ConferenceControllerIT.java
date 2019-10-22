@@ -33,11 +33,21 @@ public class ConferenceControllerIT {
     private TestRestTemplate restTemplate;
 
     @LocalServerPort
-    int testServerPort;
+    int testServerPort = 8080;
+
+    private Conference conference;
+    private String baseUrl;
+    private URI uri;
+    private HttpEntity<Conference> request;
+    private ResponseEntity<List<Conference>> responseList;
+    private ResponseEntity<Conference> responseConference;
+    private ResponseEntity<String> responseString;
 
     @Before
     public void setUp() {
-       conferenceRepository.deleteAll();
+        conferenceRepository.deleteAll();
+        conference = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
+        baseUrl = "http://localhost:" + testServerPort + "/conferences";
     }
 
     @After
@@ -45,129 +55,130 @@ public class ConferenceControllerIT {
        conferenceRepository.deleteAll();
     }
 
+    public ResponseEntity<List<Conference>> getConferenceList() {
+        return this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Conference>>() {});
+    }
+
+    public ResponseEntity<Conference> getSingleConference() {
+        return this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Conference>() {});
+    }
+
+    public ResponseEntity<String> postConference() {
+        return this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
+    }
+
     @Test
     public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
-        URI uri = new URI(baseUrl);
+        uri = new URI(baseUrl);
 
         //when
-        ResponseEntity<List<Conference>> response = this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Conference>>() {});
+        responseList = getConferenceList();
 
         //Then
-        Assert.assertEquals(200,response.getStatusCodeValue());
-        Assert.assertEquals(true,response.getBody().isEmpty());
+        Assert.assertEquals(200,responseList.getStatusCodeValue());
+        Assert.assertEquals(true,responseList.getBody().isEmpty());
     }
 
     @Test
     public void shouldReturn200AndListOfConferencesWhenDatabasePopulated() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
-        URI uri = new URI(baseUrl);
-        Conference conference = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
+        uri = new URI(baseUrl);
         conferenceRepository.saveAndFlush(conference);
 
         //when
-        ResponseEntity<List<Conference>> response = this.restTemplate.exchange(uri, HttpMethod.GET,null, new ParameterizedTypeReference<List<Conference>>() {});
+        responseList = getConferenceList();
 
         //Then
-        Assert.assertEquals(200,response.getStatusCodeValue());
-        Assert.assertEquals(conference.getId(),response.getBody().get(0).getId());
-        Assert.assertEquals(conference.getName(),response.getBody().get(0).getName());
+        Assert.assertEquals(200,responseList.getStatusCodeValue());
+        Assert.assertEquals(conference.getId(),responseList.getBody().get(0).getId());
+        Assert.assertEquals(conference.getName(),responseList.getBody().get(0).getName());
     }
 
     @Test
     public void shouldReturn404WhenIdDoesNotExist() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences/1000000000";
-        URI uri = new URI(baseUrl);
+        uri = new URI(baseUrl + "/1000000000");
 
         //when
-        ResponseEntity<Conference> response = this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Conference>() {});
+        responseConference = getSingleConference();
 
         //Then
-        Assert.assertEquals(404, response.getStatusCodeValue());
+        Assert.assertEquals(404, responseConference.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences/1";
-        URI uri = new URI(baseUrl);
-        Conference conference = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
+        uri = new URI(baseUrl + "/1");
         conferenceRepository.saveAndFlush(conference);
 
         //when
-        ResponseEntity<Conference> response = this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Conference>() {});
+        responseConference = getSingleConference();
 
         //Then
-        Assert.assertEquals(200, response.getStatusCodeValue());
-        Assert.assertEquals(conference.getId(), response.getBody().getId());
-        Assert.assertEquals(conference.getName(), response.getBody().getName());
+        Assert.assertEquals(200, responseConference.getStatusCodeValue());
+        Assert.assertEquals(conference.getId(), responseConference.getBody().getId());
+        Assert.assertEquals(conference.getName(), responseConference.getBody().getName());
     }
 
     @Test
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
-        URI uri = new URI(baseUrl);
-        Conference conference = new Conference(1L, "Grace's conference", Instant.parse("3000-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
-        HttpEntity<Conference> request = new HttpEntity<>(conference);
+        uri = new URI(baseUrl);
+        Conference conference2 = new Conference(1L, "Grace's conference", Instant.parse("3000-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
+        request = new HttpEntity<>(conference2);
 
         //when
-        ResponseEntity<String> response = this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
+        responseString = postConference();
         Conference retrievedConference = conferenceRepository.findById(1L).get();
 
         //Then
-        Assert.assertEquals(200, response.getStatusCodeValue());
-        Assert.assertEquals(conference.getId(), retrievedConference.getId());
-        Assert.assertEquals(conference.getName(), retrievedConference.getName());
+        Assert.assertEquals(200, responseString.getStatusCodeValue());
+        Assert.assertEquals(conference2.getId(), retrievedConference.getId());
+        Assert.assertEquals(conference2.getName(), retrievedConference.getName());
     }
 
     @Test
     public void shouldReturn409WhenConferenceIdAlreadyExists() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
-        URI uri = new URI(baseUrl);
-        Conference conference1 = new Conference(1L, "Grace's conference2", Instant.now(), "Leicester2", "All about Grace's fabulous and extra house", "grace");
+        uri = new URI(baseUrl);
         Conference conference2 = new Conference(1L, "Sophia's conference", Instant.now(), "London", "All about Sophia's fabulous and extra house", "grace");
-        HttpEntity<Conference> request = new HttpEntity<>(conference2);
-        conferenceRepository.saveAndFlush(conference1);
+        request = new HttpEntity<>(conference2);
+        conferenceRepository.saveAndFlush(conference);
 
         //when
-        ResponseEntity<String> response = this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
+        responseString = postConference();
 
         //Then
-        Assert.assertEquals(409,response.getStatusCodeValue());
+        Assert.assertEquals(409,responseString.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
-        URI uri = new URI(baseUrl);
-        Conference conference = new Conference(null, null, null, null, null, null);
-        HttpEntity<Conference> request = new HttpEntity<>(conference);
+        uri = new URI(baseUrl);
+        Conference conferenceNull = new Conference(null, null, null, null, null, null);
+        request = new HttpEntity<>(conferenceNull);
 
         //when
-        ResponseEntity<String> response = this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
+        responseString = postConference();
 
         //Then
-        Assert.assertEquals(400,response.getStatusCodeValue());
+        Assert.assertEquals(400,responseString.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn400WhenConferenceInPast() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:"+ testServerPort +"/conferences";
-        URI uri = new URI(baseUrl);
-        Conference conference = new Conference(1L, "Grace's conference2", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester2", "All about Grace's fabulous and extra house", "grace");
-        HttpEntity<Conference> request = new HttpEntity<>(conference);
+        uri = new URI(baseUrl);
+        Conference conference2 = new Conference(1L, "Grace's conference2", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester2", "All about Grace's fabulous and extra house", "grace");
+        request = new HttpEntity<>(conference2);
 
         //when
-        ResponseEntity<String> response = this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
+        responseString = postConference();
 
         //Then
-        Assert.assertEquals(400,response.getStatusCodeValue());
+        Assert.assertEquals(400,responseString.getStatusCodeValue());
     }
 }

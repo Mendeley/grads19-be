@@ -4,5 +4,5 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT, reason="Conference already exists.")
-public class ConferenceConflictException extends RuntimeException {
+public class ConferenceAlreadyExistsException extends RuntimeException {
 }

@@ -1,6 +1,6 @@
 package com.gradproject2019.conferences.service;
 
-import com.gradproject2019.conferences.exception.ConferenceConflictException;
+import com.gradproject2019.conferences.exception.ConferenceAlreadyExistsException;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import com.gradproject2019.conferences.persistance.Conference;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -23,25 +22,22 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     @Override
     public List<Conference> listConferences() {
-        List<Conference> conferences = conferenceRepository.findAll();
-        return conferences;
+        return conferenceRepository.findAll();
     }
 
     @Override
     public Conference findConferenceById(Long conferenceId) throws ConferenceNotFoundException {
-        Optional<Conference> optionalConference = conferenceRepository.findById(conferenceId);
-            return optionalConference.orElseThrow(() -> new ConferenceNotFoundException());
-
+            return conferenceRepository.findById(conferenceId).orElseThrow(() -> new ConferenceNotFoundException());
     }
     @Override
-    public Conference saveConference(Conference conference) throws ConferenceConflictException, InvalidConferenceFieldException {
+    public Conference saveConference(Conference conference) throws ConferenceAlreadyExistsException, InvalidConferenceFieldException {
         if(conference.getId() == null || conference.getName() == null || conference.getDateTime() == null || conference.getCity() == null || conference.getDescription() == null || conference.getTopic() == null){
             throw new InvalidConferenceFieldException();
         }
         if(conferenceRepository.existsById(conference.getId())) {
-            throw new ConferenceConflictException();
+            throw new ConferenceAlreadyExistsException();
         } else if(!conference.getDateTime().isAfter(Instant.now())){
-            throw new InvalidConferenceFieldException(); //fails other tests!!!
+            throw new InvalidConferenceFieldException();
         }
         return conferenceRepository.saveAndFlush(conference);
     }

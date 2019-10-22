@@ -1,6 +1,6 @@
 package com.gradproject2019.conferences.service;
 
-import com.gradproject2019.conferences.exception.ConferenceConflictException;
+import com.gradproject2019.conferences.exception.ConferenceAlreadyExistsException;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import com.gradproject2019.conferences.persistance.Conference;
@@ -13,5 +13,5 @@ public interface ConferenceService {
 
     Conference findConferenceById(Long conferenceId) throws ConferenceNotFoundException;
 
-    Conference saveConference(Conference conference) throws ConferenceConflictException, InvalidConferenceFieldException;
+    Conference saveConference(Conference conference) throws ConferenceAlreadyExistsException, InvalidConferenceFieldException;
 }

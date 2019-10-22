@@ -1,6 +1,6 @@
 package com.gradproject2019.conferences.controller;
 
-import com.gradproject2019.conferences.exception.ConferenceConflictException;
+import com.gradproject2019.conferences.exception.ConferenceAlreadyExistsException;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import com.gradproject2019.conferences.persistance.Conference;
@@ -32,7 +32,7 @@ public class ConferenceController {
     }
 
     @PostMapping(path = "/conferences")
-    public ResponseEntity<Conference> saveConference(@RequestBody Conference conference) throws ConferenceConflictException, InvalidConferenceFieldException {
+    public ResponseEntity<Conference> saveConference(@RequestBody Conference conference) throws ConferenceAlreadyExistsException, InvalidConferenceFieldException {
         Conference newConference = conferenceService.saveConference(conference);
         return ResponseEntity.ok(newConference);
     }
