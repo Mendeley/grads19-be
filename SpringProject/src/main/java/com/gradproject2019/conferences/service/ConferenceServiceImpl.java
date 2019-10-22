@@ -27,18 +27,31 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     @Override
     public Conference findConferenceById(Long conferenceId) {
-            return conferenceRepository.findById(conferenceId).orElseThrow(() -> new ConferenceNotFoundException());
+            return conferenceRepository.findById(conferenceId).orElseThrow(ConferenceNotFoundException::new);
     }
     @Override
     public Conference saveConference(Conference conference) {
+        isNotNull(conference);
+        isNotExisting(conference);
+        isNotInPast(conference);
+        return conferenceRepository.saveAndFlush(conference);
+    }
+
+    public void isNotNull(Conference conference) {
         if(conference.getId() == null || conference.getName() == null || conference.getDateTime() == null || conference.getCity() == null || conference.getDescription() == null || conference.getTopic() == null){
             throw new InvalidConferenceFieldException();
         }
+    }
+
+    public void isNotExisting(Conference conference) {
         if(conferenceRepository.existsById(conference.getId())) {
             throw new ConferenceAlreadyExistsException();
-        } else if(!conference.getDateTime().isAfter(Instant.now())){
+        }
+    }
+
+    public void isNotInPast(Conference conference) {
+        if(!conference.getDateTime().isAfter(Instant.now())){
             throw new InvalidConferenceFieldException();
         }
-        return conferenceRepository.saveAndFlush(conference);
     }
 }
