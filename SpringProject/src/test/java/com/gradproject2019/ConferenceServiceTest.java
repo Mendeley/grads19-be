@@ -28,11 +28,13 @@ public class ConferenceServiceTest {
     @Mock
     private ConferenceRepository conferenceRepository;
 
+    private final Conference conference1 = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
+    private final Conference conference2 = new Conference(2L, "Sophia's conference", Instant.now(), "London", "All about Sophia's fabulous and extra house", "grace");
+
+
     @Test
     public void shouldGetListOfAllConferences() {
         // GIVEN
-        Conference conference1 = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
-        Conference conference2 = new Conference(2L, "Sophia's conference", Instant.now(), "London", "All about Sophia's fabulous and extra house", "grace");
         given(conferenceRepository.findAll()).willReturn(List.of(conference1, conference2));
 
         // WHEN
@@ -47,18 +49,14 @@ public class ConferenceServiceTest {
     @Test
     public void shouldGetConferenceById() {
         //given
-        Long conferenceId = 1L;
-        Conference conference = new Conference(conferenceId, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
-        given(conferenceRepository.findById(conferenceId)).willReturn(Optional.of(conference));
+        given(conferenceRepository.findById(1L)).willReturn(Optional.of(conference1));
 
         //when
-        Conference conferenceById = conferenceService.findConferenceById(conferenceId);
+        Conference conferenceById = conferenceService.findConferenceById(1L);
 
         //then
-        assertThat(conferenceById.getId()).isEqualTo(conferenceId);
-        assertThat(conferenceById.getName()).isEqualTo(conference.getName());
-        assertThat(conferenceById.getCity()).isEqualTo(conference.getCity());
-        assertThat(conferenceById.getTopic()).isEqualTo(conference.getTopic());
+        assertThat(conferenceById.getId()).isEqualTo(1L);
+        assertThat(conferenceById.getName()).isEqualTo(conference1.getName());
     }
 
     @Test
