@@ -38,7 +38,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     public void isNotNull(Conference conference) {
-        if(conference.getId() == null || conference.getName() == null || conference.getDateTime() == null || conference.getCity() == null || conference.getDescription() == null || conference.getTopic() == null){
+        if(conference.getName() == null || conference.getDateTime() == null || conference.getCity() == null || conference.getDescription() == null || conference.getTopic() == null){
             throw new InvalidConferenceFieldException();
         }
     }
