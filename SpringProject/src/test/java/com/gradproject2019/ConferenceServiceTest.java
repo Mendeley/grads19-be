@@ -45,7 +45,7 @@ public class ConferenceServiceTest {
     }
 
     @Test
-    public void shouldGetConferenceById() throws ConferenceNotFoundException {
+    public void shouldGetConferenceById() {
         //given
         Long conferenceId = 1L;
         Conference conference = new Conference(conferenceId, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
@@ -62,7 +62,7 @@ public class ConferenceServiceTest {
     }
 
     @Test
-    public void shouldThrowErrorWhenIdNotRecognised() throws ConferenceNotFoundException {
+    public void shouldThrowErrorWhenIdNotRecognised() {
         //given
         Long conferenceId = 1000000000L;
         boolean errorThrown = false;

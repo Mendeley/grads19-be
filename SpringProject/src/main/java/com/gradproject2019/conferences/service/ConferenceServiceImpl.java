@@ -26,11 +26,11 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
-    public Conference findConferenceById(Long conferenceId) throws ConferenceNotFoundException {
+    public Conference findConferenceById(Long conferenceId) {
             return conferenceRepository.findById(conferenceId).orElseThrow(() -> new ConferenceNotFoundException());
     }
     @Override
-    public Conference saveConference(Conference conference) throws ConferenceAlreadyExistsException, InvalidConferenceFieldException {
+    public Conference saveConference(Conference conference) {
         if(conference.getId() == null || conference.getName() == null || conference.getDateTime() == null || conference.getCity() == null || conference.getDescription() == null || conference.getTopic() == null){
             throw new InvalidConferenceFieldException();
         }

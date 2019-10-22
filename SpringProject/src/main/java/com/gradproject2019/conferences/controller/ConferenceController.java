@@ -1,8 +1,5 @@
 package com.gradproject2019.conferences.controller;
 
-import com.gradproject2019.conferences.exception.ConferenceAlreadyExistsException;
-import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
-import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +23,13 @@ public class ConferenceController {
     }
 
     @GetMapping(path = "/conferences/{id}")
-    public ResponseEntity<Conference> findConferenceById(@PathVariable("id") Long conferenceId) throws ConferenceNotFoundException {
+    public ResponseEntity<Conference> findConferenceById(@PathVariable("id") Long conferenceId) {
         Conference conference = conferenceService.findConferenceById(conferenceId);
         return ResponseEntity.ok(conference);
     }
 
     @PostMapping(path = "/conferences")
-    public ResponseEntity<Conference> saveConference(@RequestBody Conference conference) throws ConferenceAlreadyExistsException, InvalidConferenceFieldException {
+    public ResponseEntity<Conference> saveConference(@RequestBody Conference conference) {
         Conference newConference = conferenceService.saveConference(conference);
         return ResponseEntity.ok(newConference);
     }
