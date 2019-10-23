@@ -39,11 +39,6 @@ public class ConferenceControllerIT {
 
     private Conference conference;
     private String baseUrl;
-    private URI uri;
-    private HttpEntity<ConferenceRequestDto> request;
-    private ResponseEntity<List<ConferenceResponseDto>> responseList;
-    private ResponseEntity<ConferenceResponseDto> responseConference;
-    private ResponseEntity<String> responseString;
 
     @Before
     public void setUp() {
@@ -60,10 +55,10 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
         //given
-        uri = new URI(baseUrl);
+        URI uri = new URI(baseUrl);
 
         //when
-        responseList = getConferenceList();
+        ResponseEntity<List<ConferenceResponseDto>> responseList = getConferenceList(uri);
 
         //Then
         Assert.assertEquals(200,responseList.getStatusCodeValue());
@@ -73,11 +68,11 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn200AndListOfConferencesWhenDatabasePopulated() throws URISyntaxException {
         //given
-        uri = new URI(baseUrl);
+        URI uri = new URI(baseUrl);
         conferenceRepository.saveAndFlush(conference);
 
         //when
-        responseList = getConferenceList();
+        ResponseEntity<List<ConferenceResponseDto>> responseList = getConferenceList(uri);
 
         //Then
         Assert.assertEquals(200,responseList.getStatusCodeValue());
@@ -88,10 +83,10 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn404WhenIdDoesNotExist() throws URISyntaxException {
         //given
-        uri = new URI(baseUrl + "/1000000000");
+        URI uri = new URI(baseUrl + "/1000000000");
 
         //when
-        responseConference = getSingleConference();
+        ResponseEntity<ConferenceResponseDto> responseConference = getSingleConference(uri);
 
         //Then
         Assert.assertEquals(404, responseConference.getStatusCodeValue());
@@ -100,11 +95,11 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
         //given
-        uri = new URI(baseUrl + "/1");
+        URI uri = new URI(baseUrl + "/1");
         conferenceRepository.saveAndFlush(conference);
 
         //when
-        responseConference = getSingleConference();
+        ResponseEntity<ConferenceResponseDto> responseConference = getSingleConference(uri);
 
         //Then
         Assert.assertEquals(200, responseConference.getStatusCodeValue());
@@ -115,7 +110,7 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
         //given
-        uri = new URI(baseUrl);
+        URI uri = new URI(baseUrl);
         ConferenceRequestDto conferenceRequestDto = ConferenceRequestDto
                 .ConferenceRequestDtoBuilder
                 .aConferenceRequestDto()
@@ -126,10 +121,10 @@ public class ConferenceControllerIT {
                 .withDescription("All about Grace's fabulous and extra house")
                 .withTopic("grace")
                 .build();
-        request = new HttpEntity<>(conferenceRequestDto);
+        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(conferenceRequestDto);
 
         //when
-        responseString = postConference();
+        ResponseEntity<String> responseString = postConference(uri, request);
         Conference retrievedConference = conferenceRepository.findById(1L).get();
 
         //Then
@@ -141,7 +136,7 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
         //given
-        uri = new URI(baseUrl);
+        URI uri = new URI(baseUrl);
         ConferenceRequestDto conferenceRequestDtoNull = ConferenceRequestDto
                 .ConferenceRequestDtoBuilder
                 .aConferenceRequestDto()
@@ -152,10 +147,10 @@ public class ConferenceControllerIT {
                 .withDescription(null)
                 .withTopic(null)
                 .build();
-        request = new HttpEntity<>(conferenceRequestDtoNull);
+        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(conferenceRequestDtoNull);
 
         //when
-        responseString = postConference();
+        ResponseEntity<String> responseString = postConference(uri, request);
 
         //Then
         Assert.assertEquals(400,responseString.getStatusCodeValue());
@@ -164,7 +159,7 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn400WhenConferenceInPast() throws URISyntaxException {
         //given
-        uri = new URI(baseUrl);
+        URI uri = new URI(baseUrl);
         ConferenceRequestDto conferenceRequestDto = ConferenceRequestDto
                 .ConferenceRequestDtoBuilder
                 .aConferenceRequestDto()
@@ -175,24 +170,24 @@ public class ConferenceControllerIT {
                 .withDescription("All about Grace's fabulous and extra house")
                 .withTopic("grace")
                 .build();
-        request = new HttpEntity<>(conferenceRequestDto);
+        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(conferenceRequestDto);
 
         //when
-        responseString = postConference();
+        ResponseEntity<String> responseString = postConference(uri, request);
 
         //Then
         Assert.assertEquals(400,responseString.getStatusCodeValue());
     }
 
-    private ResponseEntity<List<ConferenceResponseDto>> getConferenceList() {
-        return this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<ConferenceResponseDto>>() {});
+    private ResponseEntity<List<ConferenceResponseDto>> getConferenceList(URI uri) {
+        return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<ConferenceResponseDto>>() {});
     }
 
-    private ResponseEntity<ConferenceResponseDto> getSingleConference() {
-        return this.restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ConferenceResponseDto>() {});
+    private ResponseEntity<ConferenceResponseDto> getSingleConference(URI uri) {
+        return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ConferenceResponseDto>() {});
     }
 
-    private ResponseEntity<String> postConference() {
-        return this.restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
+    private ResponseEntity<String> postConference(URI uri, HttpEntity<ConferenceRequestDto> request) {
+        return restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
     }
 }

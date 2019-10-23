@@ -27,15 +27,6 @@ public class ConferenceRequestDto {
 
     public ConferenceRequestDto() { }
 
-    public ConferenceRequestDto(Long id, String name, Instant dateTime, String city, String description, String topic) {
-        this.id = id;
-        this.name = name;
-        this.dateTime = dateTime;
-        this.city = city;
-        this.description = description;
-        this.topic = topic;
-    }
-
     public Long getId() {
         return id;
     }
@@ -61,14 +52,13 @@ public class ConferenceRequestDto {
     }
 
     public Conference from(ConferenceRequestDto conferenceRequestDto) {
-        Conference newConference = new Conference(
+        return new Conference(
                     conferenceRequestDto.getId(),
                     conferenceRequestDto.getName(),
                     conferenceRequestDto.getDateTime(),
                     conferenceRequestDto.getCity(),
                     conferenceRequestDto.getDescription(),
                     conferenceRequestDto.getTopic());
-        return newConference;
     }
 
     public static final class ConferenceRequestDtoBuilder {
@@ -117,7 +107,14 @@ public class ConferenceRequestDto {
         }
 
         public ConferenceRequestDto build() {
-            return new ConferenceRequestDto(id, name, dateTime, city, description, topic);
+            ConferenceRequestDto conferenceRequestDto = new ConferenceRequestDto();
+            conferenceRequestDto.description = this.description;
+            conferenceRequestDto.city = this.city;
+            conferenceRequestDto.topic = this.topic;
+            conferenceRequestDto.name = this.name;
+            conferenceRequestDto.dateTime = this.dateTime;
+            conferenceRequestDto.id = this.id;
+            return conferenceRequestDto;
         }
     }
 }

@@ -29,15 +29,6 @@ public class ConferenceResponseDto {
     public ConferenceResponseDto() {
     }
 
-    public ConferenceResponseDto(Long id, String name, Instant dateTime, String city, String description, String topic) {
-        this.id = id;
-        this.name = name;
-        this.dateTime = dateTime;
-        this.city = city;
-        this.description = description;
-        this.topic = topic;
-    }
-
     public Long getId() {
         return id;
     }
@@ -63,7 +54,7 @@ public class ConferenceResponseDto {
     }
 
     public ConferenceResponseDto from(Conference conference) {
-        ConferenceResponseDto newDto = new ConferenceResponseDtoBuilder()
+        return new ConferenceResponseDtoBuilder()
                 .withId(conference.getId())
                 .withName(conference.getName())
                 .withDateTime(conference.getDateTime())
@@ -71,7 +62,6 @@ public class ConferenceResponseDto {
                 .withDescription(conference.getDescription())
                 .withTopic(conference.getTopic())
                 .build();
-        return newDto;
     }
 
     public static final class ConferenceResponseDtoBuilder {
@@ -120,7 +110,14 @@ public class ConferenceResponseDto {
         }
 
         public ConferenceResponseDto build() {
-            return new ConferenceResponseDto(id, name, dateTime, city, description, topic);
+            ConferenceResponseDto conferenceResponseDto = new ConferenceResponseDto();
+            conferenceResponseDto.city = this.city;
+            conferenceResponseDto.name = this.name;
+            conferenceResponseDto.dateTime = this.dateTime;
+            conferenceResponseDto.id = this.id;
+            conferenceResponseDto.description = this.description;
+            conferenceResponseDto.topic = this.topic;
+            return conferenceResponseDto;
         }
     }
 }

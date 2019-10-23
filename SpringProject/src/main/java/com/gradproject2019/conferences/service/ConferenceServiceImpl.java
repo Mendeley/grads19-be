@@ -9,8 +9,8 @@ import com.gradproject2019.conferences.repository.ConferenceRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -24,32 +24,23 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     @Override
     public List<ConferenceResponseDto> listConferences() {
-        List<Conference> conferenceList = conferenceRepository.findAll();
-        List<ConferenceResponseDto> conferenceResponseDtoList = new ArrayList<>();
-        for (Conference conference : conferenceList) {
-            conferenceResponseDtoList.add(new ConferenceResponseDto().from(conference));
-        }
-        return conferenceResponseDtoList;
+        return conferenceRepository.findAll().stream().map(conference -> new ConferenceResponseDto().from(conference)).collect(Collectors.toList());
     }
 
     @Override
     public ConferenceResponseDto findConferenceById(Long conferenceId) {
-        Conference conference = conferenceRepository.findById(conferenceId).orElseThrow(ConferenceNotFoundException::new);
-        ConferenceResponseDto conferenceResponseDto = new ConferenceResponseDto().from(conference);
-        return conferenceResponseDto;
+        return new ConferenceResponseDto().from(conferenceRepository.findById(conferenceId).orElseThrow(ConferenceNotFoundException::new));
     }
 
     @Override
     public ConferenceResponseDto saveConference(ConferenceRequestDto conferenceRequestDto){
         Conference conference = conferenceRequestDto.from(conferenceRequestDto);
-        isNotInPast(conference);
-        Conference conf = conferenceRepository.saveAndFlush(conference);
-        ConferenceResponseDto conferenceResponseDto = new ConferenceResponseDto().from(conf);
-        return conferenceResponseDto;
+        checkNotInPast(conference);
+        return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
 
-    public void isNotInPast(Conference conference) {
-        if(!conference.getDateTime().isAfter(Instant.now())){
+    public void checkNotInPast(Conference conference) {
+        if (!conference.getDateTime().isAfter(Instant.now())) {
             throw new InvalidConferenceFieldException();
         }
     }

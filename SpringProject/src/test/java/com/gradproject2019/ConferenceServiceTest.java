@@ -60,20 +60,9 @@ public class ConferenceServiceTest {
         assertThat(conferenceById.getName()).isEqualTo(conference1.getName());
     }
 
-    @Test
+    @Test(expected = ConferenceNotFoundException.class) //then
     public void shouldThrowErrorWhenIdNotRecognised() {
-        //given
-        Long conferenceId = 1000000000L;
-        boolean errorThrown = false;
-
-        //when
-        try {
-            conferenceService.findConferenceById(conferenceId);
-        } catch(ConferenceNotFoundException e) {
-            errorThrown = true;
-        }
-
-        //then
-        Assert.assertTrue(errorThrown);
+        //given(when)
+        conferenceService.findConferenceById(1000000000L);
     }
 }
