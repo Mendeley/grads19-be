@@ -2,7 +2,6 @@ package com.gradproject2019.conferences.controller;
 
 import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
-import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

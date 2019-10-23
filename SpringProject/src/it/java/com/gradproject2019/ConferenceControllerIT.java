@@ -116,8 +116,16 @@ public class ConferenceControllerIT {
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
         //given
         uri = new URI(baseUrl);
-        Conference conference2 = new Conference(1L, "Grace's conference", Instant.parse("3000-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
-        ConferenceRequestDto conferenceRequestDto = new ConferenceRequestDto().from(conference2);
+        ConferenceRequestDto conferenceRequestDto = ConferenceRequestDto
+                .ConferenceRequestDtoBuilder
+                .aConferenceRequestDto()
+                .withId(1L)
+                .withName("Grace's conference")
+                .withDateTime(Instant.parse("3000-12-30T19:34:50.63Z"))
+                .withCity("Leicester")
+                .withDescription("All about Grace's fabulous and extra house")
+                .withTopic("grace")
+                .build();
         request = new HttpEntity<>(conferenceRequestDto);
 
         //when
@@ -126,32 +134,24 @@ public class ConferenceControllerIT {
 
         //Then
         Assert.assertEquals(200, responseString.getStatusCodeValue());
-        Assert.assertEquals(conference2.getId(), retrievedConference.getId());
-        Assert.assertEquals(conference2.getName(), retrievedConference.getName());
+        Assert.assertEquals(conferenceRequestDto.getId(), retrievedConference.getId());
+        Assert.assertEquals(conferenceRequestDto.getName(), retrievedConference.getName());
     }
-
-//    @Test
-//    public void shouldReturn409WhenConferenceIdAlreadyExists() throws URISyntaxException {
-//        //given
-//        uri = new URI(baseUrl);
-//        Conference conference2 = new Conference(1L, "Sophia's conference", Instant.now(), "London", "All about Sophia's fabulous and extra house", "grace");
-//        ConferenceRequestDto conferenceRequestDto = new ConferenceRequestDto().from(conference2);
-//        request = new HttpEntity<>(conferenceRequestDto);
-//        conferenceRepository.saveAndFlush(conference);
-//
-//        //when
-//        responseString = postConference();
-//
-//        //Then
-//        Assert.assertEquals(409,responseString.getStatusCodeValue());
-//    }
 
     @Test
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
         //given
         uri = new URI(baseUrl);
-        Conference conferenceNull = new Conference(null, null, null, null, null, null);
-        ConferenceRequestDto conferenceRequestDtoNull = new ConferenceRequestDto().from(conferenceNull);
+        ConferenceRequestDto conferenceRequestDtoNull = ConferenceRequestDto
+                .ConferenceRequestDtoBuilder
+                .aConferenceRequestDto()
+                .withId(null)
+                .withName(null)
+                .withDateTime(null)
+                .withCity(null)
+                .withDescription(null)
+                .withTopic(null)
+                .build();
         request = new HttpEntity<>(conferenceRequestDtoNull);
 
         //when
@@ -165,8 +165,16 @@ public class ConferenceControllerIT {
     public void shouldReturn400WhenConferenceInPast() throws URISyntaxException {
         //given
         uri = new URI(baseUrl);
-        Conference conference2 = new Conference(1L, "Grace's conference2", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester2", "All about Grace's fabulous and extra house", "grace");
-        ConferenceRequestDto conferenceRequestDto = new ConferenceRequestDto().from(conference2);
+        ConferenceRequestDto conferenceRequestDto = ConferenceRequestDto
+                .ConferenceRequestDtoBuilder
+                .aConferenceRequestDto()
+                .withId(1L)
+                .withName("Grace's conference")
+                .withDateTime(Instant.parse("2018-12-30T19:34:50.63Z"))
+                .withCity("Leicester")
+                .withDescription("All about Grace's fabulous and extra house")
+                .withTopic("grace")
+                .build();
         request = new HttpEntity<>(conferenceRequestDto);
 
         //when

@@ -85,7 +85,7 @@ public class ConferenceResponseDto {
         private ConferenceResponseDtoBuilder() {
         }
 
-        public static ConferenceResponseDtoBuilder aConferenceDto() {
+        public static ConferenceResponseDtoBuilder aConferenceResponseDto() {
             return new ConferenceResponseDtoBuilder();
         }
 

@@ -2,7 +2,6 @@ package com.gradproject2019.conferences.service;
 
 import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
-import com.gradproject2019.conferences.persistance.Conference;
 
 import java.util.List;
 

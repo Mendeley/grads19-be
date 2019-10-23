@@ -10,19 +10,19 @@ import java.time.Instant;
 public class ConferenceRequestDto {
     private Long id; // FE should be giving BE id = null
 
-    @NotNull
+    @NotNull(message = "Invalid entry in conference field.")
     private String name;
 
-    @NotNull
+    @NotNull(message = "Invalid entry in conference field.")
     private Instant dateTime;
 
-    @NotNull
+    @NotNull(message = "Invalid entry in conference field.")
     private String city;
 
-    @NotNull
+    @NotNull(message = "Invalid entry in conference field.")
     private String description;
 
-    @NotNull
+    @NotNull(message = "Invalid entry in conference field.")
     private String topic;
 
     public ConferenceRequestDto() { }
@@ -71,18 +71,6 @@ public class ConferenceRequestDto {
         return newConference;
     }
 
-    public ConferenceRequestDto from(Conference conference) {
-        ConferenceRequestDto newDto = new ConferenceRequestDtoBuilder()
-                .withId(conference.getId())
-                .withName(conference.getName())
-                .withDateTime(conference.getDateTime())
-                .withCity(conference.getCity())
-                .withDescription(conference.getDescription())
-                .withTopic(conference.getTopic())
-                .build();
-        return newDto;
-    }
-
     public static final class ConferenceRequestDtoBuilder {
         private Long id;
         private String name;
@@ -94,7 +82,7 @@ public class ConferenceRequestDto {
         private ConferenceRequestDtoBuilder() {
         }
 
-        public static ConferenceRequestDtoBuilder aConferenceDto() {
+        public static ConferenceRequestDtoBuilder aConferenceRequestDto() {
             return new ConferenceRequestDtoBuilder();
         }
 
