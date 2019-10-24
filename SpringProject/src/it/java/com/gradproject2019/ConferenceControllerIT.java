@@ -111,16 +111,7 @@ public class ConferenceControllerIT {
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
         //given
         URI uri = new URI(baseUrl);
-        ConferenceRequestDto conferenceRequestDto = ConferenceRequestDto
-                .ConferenceRequestDtoBuilder
-                .aConferenceRequestDto()
-                .withId(1L)
-                .withName("Grace's conference")
-                .withDateTime(Instant.parse("3000-12-30T19:34:50.63Z"))
-                .withCity("Leicester")
-                .withDescription("All about Grace's fabulous and extra house")
-                .withTopic("grace")
-                .build();
+        ConferenceRequestDto conferenceRequestDto = createRequestDto(1L,"Grace's conference", Instant.parse("3000-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
         HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(conferenceRequestDto);
 
         //when
@@ -137,17 +128,7 @@ public class ConferenceControllerIT {
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
         //given
         URI uri = new URI(baseUrl);
-        ConferenceRequestDto conferenceRequestDtoNull = ConferenceRequestDto
-                .ConferenceRequestDtoBuilder
-                .aConferenceRequestDto()
-                .withId(null)
-                .withName(null)
-                .withDateTime(null)
-                .withCity(null)
-                .withDescription(null)
-                .withTopic(null)
-                .build();
-        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(conferenceRequestDtoNull);
+        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto(null, null, null, null, null, null));
 
         //when
         ResponseEntity<String> responseString = postConference(uri, request);
@@ -160,17 +141,7 @@ public class ConferenceControllerIT {
     public void shouldReturn400WhenConferenceInPast() throws URISyntaxException {
         //given
         URI uri = new URI(baseUrl);
-        ConferenceRequestDto conferenceRequestDto = ConferenceRequestDto
-                .ConferenceRequestDtoBuilder
-                .aConferenceRequestDto()
-                .withId(1L)
-                .withName("Grace's conference")
-                .withDateTime(Instant.parse("2018-12-30T19:34:50.63Z"))
-                .withCity("Leicester")
-                .withDescription("All about Grace's fabulous and extra house")
-                .withTopic("grace")
-                .build();
-        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(conferenceRequestDto);
+        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto(1L,"Grace's conference", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace"));
 
         //when
         ResponseEntity<String> responseString = postConference(uri, request);
@@ -189,5 +160,18 @@ public class ConferenceControllerIT {
 
     private ResponseEntity<String> postConference(URI uri, HttpEntity<ConferenceRequestDto> request) {
         return restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
+    }
+
+    private ConferenceRequestDto createRequestDto(Long id, String name, Instant dateTime, String city, String description, String topic) {
+        return ConferenceRequestDto
+                .ConferenceRequestDtoBuilder
+                .aConferenceRequestDto()
+                .withId(id)
+                .withName(name)
+                .withDateTime(dateTime)
+                .withCity(city)
+                .withDescription(description)
+                .withTopic(topic)
+                .build();
     }
 }

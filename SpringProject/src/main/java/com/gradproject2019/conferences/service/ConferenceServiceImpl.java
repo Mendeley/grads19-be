@@ -24,12 +24,16 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     @Override
     public List<ConferenceResponseDto> listConferences() {
-        return conferenceRepository.findAll().stream().map(conference -> new ConferenceResponseDto().from(conference)).collect(Collectors.toList());
+        return conferenceRepository.findAll().stream()
+                .map(conference -> new ConferenceResponseDto().from(conference))
+                .collect(Collectors.toList());
     }
 
     @Override
     public ConferenceResponseDto findConferenceById(Long conferenceId) {
-        return new ConferenceResponseDto().from(conferenceRepository.findById(conferenceId).orElseThrow(ConferenceNotFoundException::new));
+        return new ConferenceResponseDto().from(conferenceRepository
+                .findById(conferenceId)
+                .orElseThrow(ConferenceNotFoundException::new));
     }
 
     @Override
