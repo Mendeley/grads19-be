@@ -1,8 +1,11 @@
 package com.gradproject2019;
 
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
+import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.conferences.service.ConferenceServiceImpl;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,50 +29,40 @@ public class ConferenceServiceTest {
     @Mock
     private ConferenceRepository conferenceRepository;
 
+    private final Conference conference1 = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
+    private final Conference conference2 = new Conference(2L, "Sophia's conference", Instant.now(), "London", "All about Sophia's fabulous and extra house", "grace");
+
+
     @Test
-    public void shouldGetAllConferences() {
+    public void shouldGetListOfAllConferences() {
         // GIVEN
-        Conference conference1 = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
-        Conference conference2 = new Conference(2L, "Sophia's conference", Instant.now(), "London", "All about Sophia's fabulous and extra house", "grace");
         given(conferenceRepository.findAll()).willReturn(List.of(conference1, conference2));
 
         // WHEN
-        Iterable<Conference> conferences = conferenceService.listConferences();
+        Iterable<ConferenceResponseDto> conferences = conferenceService.listConferences();
 
         // THEN
         assertThat(conferences)
-                .extracting(Conference::getId, Conference::getName, Conference::getCity)
+                .extracting(ConferenceResponseDto::getId, ConferenceResponseDto::getName, ConferenceResponseDto::getCity)
                 .containsExactly(tuple(conference1.getId(), conference1.getName(), conference1.getCity()), tuple(conference2.getId(), conference2.getName(), conference2.getCity()));
     }
 
     @Test
-    public void shouldGetConferencesById() {
+    public void shouldGetConferenceById() {
         //given
-        Long conferenceId = 1L;
-        Conference conference = new Conference(conferenceId, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
-        given(conferenceRepository.findById(conferenceId)).willReturn(Optional.of(conference));
+        given(conferenceRepository.findById(1L)).willReturn(Optional.of(conference1));
 
         //when
-        Optional<Conference> conferenceById = conferenceService.findConferenceById(conferenceId);
+        ConferenceResponseDto conferenceById = conferenceService.findConferenceById(1L);
 
         //then
-        assertThat(conferenceById.get().getId()).isEqualTo(conferenceId);
-        assertThat(conferenceById.get().getName()).isEqualTo(conference.getName());
-        assertThat(conferenceById.get().getCity()).isEqualTo(conference.getCity());
-        assertThat(conferenceById.get().getTopic()).isEqualTo(conference.getTopic());
+        assertThat(conferenceById.getId()).isEqualTo(1L);
+        assertThat(conferenceById.getName()).isEqualTo(conference1.getName());
     }
 
-    @Test
-    public void shouldReturnAnEmptyOptionalWhenIdNotRecognised() {
-        //given
-        Long conferenceId = 66L;
-
-        given(conferenceRepository.findById(conferenceId)).willReturn(Optional.empty());
-
-        //when
-        Optional<Conference> conferenceById = conferenceService.findConferenceById(conferenceId);
-
-        //then
-        assertThat(conferenceById).isEmpty();
+    @Test(expected = ConferenceNotFoundException.class) //then
+    public void shouldThrowErrorWhenIdNotRecognised() {
+        //given(when)
+        conferenceService.findConferenceById(1000000000L);
     }
 }
