@@ -1,13 +1,12 @@
 package com.gradproject2019.conferences.persistance;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
 @Table(name = "conferences")
 public class Conference {
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     private String name;
@@ -50,5 +49,56 @@ public class Conference {
 
     public String getTopic() {
         return topic;
+    }
+
+
+    public static final class ConferenceBuilder {
+        private Long id;
+        private String name;
+        private Instant dateTime;
+        private String city;
+        private String description;
+        private String topic;
+
+        private ConferenceBuilder() {
+        }
+
+        public static ConferenceBuilder aConference() {
+            return new ConferenceBuilder();
+        }
+
+        public ConferenceBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public ConferenceBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public ConferenceBuilder withDateTime(Instant dateTime) {
+            this.dateTime = dateTime;
+            return this;
+        }
+
+        public ConferenceBuilder withCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public ConferenceBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public ConferenceBuilder withTopic(String topic) {
+            this.topic = topic;
+            return this;
+        }
+
+        public Conference build() {
+            return new Conference(id, name, dateTime, city, description, topic);
+        }
     }
 }

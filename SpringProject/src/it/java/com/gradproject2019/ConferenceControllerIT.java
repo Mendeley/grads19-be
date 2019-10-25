@@ -120,7 +120,6 @@ public class ConferenceControllerIT {
 
         //Then
         Assert.assertEquals(200, responseString.getStatusCodeValue());
-        Assert.assertEquals(conferenceRequestDto.getId(), retrievedConference.getId());
         Assert.assertEquals(conferenceRequestDto.getName(), retrievedConference.getName());
     }
 
@@ -166,7 +165,6 @@ public class ConferenceControllerIT {
         return ConferenceRequestDto
                 .ConferenceRequestDtoBuilder
                 .aConferenceRequestDto()
-                .withId(id)
                 .withName(name)
                 .withDateTime(dateTime)
                 .withCity(city)
