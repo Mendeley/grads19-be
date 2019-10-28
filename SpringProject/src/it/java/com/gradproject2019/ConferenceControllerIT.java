@@ -89,21 +89,6 @@ public class ConferenceControllerIT {
         Assert.assertEquals(404, responseConference.getStatusCodeValue());
     }
 
-    @Test  @Ignore //CANNOT FUNCTION WHILE NOT USING DOCKER (CONTAINERISATION)
-    public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
-        //given
-        URI uri = new URI(baseUrl + "/1");
-        conferenceRepository.saveAndFlush(conference);
-
-        //when
-        ResponseEntity<ConferenceResponseDto> responseConference = getSingleConference(uri);
-
-        //Then
-        Assert.assertEquals(200, responseConference.getStatusCodeValue());
-        Assert.assertEquals(conference.getId(), responseConference.getBody().getId());
-        Assert.assertEquals(conference.getName(), responseConference.getBody().getName());
-    }
-
     @Test
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
         //given
