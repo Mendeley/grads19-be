@@ -176,7 +176,6 @@ public class ConferenceControllerIT {
         Assert.assertFalse(conferenceRepository.existsById(addedConference.getId()));
     }
 
-
     private ResponseEntity<List<ConferenceResponseDto>> getConferenceList(URI uri) {
         return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<ConferenceResponseDto>>() {});
     }

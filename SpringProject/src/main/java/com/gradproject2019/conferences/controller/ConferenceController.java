@@ -4,7 +4,6 @@ import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -42,4 +41,5 @@ public class ConferenceController {
         conferenceService.deleteConference(conferenceId);
         return ResponseEntity.noContent().build();
     }
+
 }
