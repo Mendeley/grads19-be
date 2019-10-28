@@ -4,10 +4,7 @@ import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -92,20 +89,20 @@ public class ConferenceControllerIT {
         Assert.assertEquals(404, responseConference.getStatusCodeValue());
     }
 
-//    @Test  CANNOT FUNCTION WHILE NOT USING DOCKER (CONTAINERISATION)
-//    public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
-//        //given
-//        URI uri = new URI(baseUrl + "/1");
-//        conferenceRepository.saveAndFlush(conference);
-//
-//        //when
-//        ResponseEntity<ConferenceResponseDto> responseConference = getSingleConference(uri);
-//
-//        //Then
-//        Assert.assertEquals(200, responseConference.getStatusCodeValue());
-//        Assert.assertEquals(conference.getId(), responseConference.getBody().getId());
-//        Assert.assertEquals(conference.getName(), responseConference.getBody().getName());
-//    }
+    @Test  @Ignore //CANNOT FUNCTION WHILE NOT USING DOCKER (CONTAINERISATION)
+    public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
+        //given
+        URI uri = new URI(baseUrl + "/1");
+        conferenceRepository.saveAndFlush(conference);
+
+        //when
+        ResponseEntity<ConferenceResponseDto> responseConference = getSingleConference(uri);
+
+        //Then
+        Assert.assertEquals(200, responseConference.getStatusCodeValue());
+        Assert.assertEquals(conference.getId(), responseConference.getBody().getId());
+        Assert.assertEquals(conference.getName(), responseConference.getBody().getName());
+    }
 
     @Test
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
