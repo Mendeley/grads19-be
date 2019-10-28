@@ -48,4 +48,16 @@ public class ConferenceServiceImpl implements ConferenceService {
             throw new InvalidConferenceFieldException();
         }
     }
+
+    @Override
+    public void deleteConference(Long conferenceId) {
+        checkConferenceExists(conferenceId);
+        conferenceRepository.deleteById(conferenceId);
+    }
+
+    public void checkConferenceExists(Long conferenceId) {
+        if(!conferenceRepository.existsById(conferenceId)) {
+            throw new ConferenceNotFoundException();
+        }
+    }
 }

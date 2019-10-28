@@ -150,6 +150,33 @@ public class ConferenceControllerIT {
         Assert.assertEquals(400,responseString.getStatusCodeValue());
     }
 
+    @Test
+    public void shouldReturn404WhenConferenceToBeDeletedNotFound() throws URISyntaxException {
+        //given
+        URI uri = new URI(baseUrl + "/1000000000");
+
+        //when
+        ResponseEntity<String> responseString = deleteConference(uri);
+
+        //then
+        Assert.assertEquals(404,responseString.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturn200AndDeleteConference() throws URISyntaxException {
+        //given
+        Conference addedConference = conferenceRepository.saveAndFlush(conference);
+        URI uri = new URI(baseUrl + "/" + addedConference.getId());
+
+        //when
+        ResponseEntity<String> responseString = deleteConference(uri);
+
+        //then
+        Assert.assertEquals(204,responseString.getStatusCodeValue());
+        Assert.assertFalse(conferenceRepository.existsById(addedConference.getId()));
+    }
+
+
     private ResponseEntity<List<ConferenceResponseDto>> getConferenceList(URI uri) {
         return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<ConferenceResponseDto>>() {});
     }
@@ -160,6 +187,10 @@ public class ConferenceControllerIT {
 
     private ResponseEntity<String> postConference(URI uri, HttpEntity<ConferenceRequestDto> request) {
         return restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
+    }
+
+    private ResponseEntity<String> deleteConference(URI uri) {
+        return restTemplate.exchange(uri, HttpMethod.DELETE, null, new ParameterizedTypeReference<String>() {});
     }
 
     private ConferenceRequestDto createRequestDto(Long id, String name, Instant dateTime, String city, String description, String topic) {
