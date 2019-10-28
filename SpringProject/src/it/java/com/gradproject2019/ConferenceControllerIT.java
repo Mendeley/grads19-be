@@ -73,7 +73,6 @@ public class ConferenceControllerIT {
 
         //Then
         Assert.assertEquals(200,responseList.getStatusCodeValue());
-        //Assert.assertEquals(conference.getId(),responseList.getBody().get(0).getId()); COMMENT BACK IN WHEN USING DOCKER (CONTAINERISATION)
         Assert.assertEquals(conference.getName(),responseList.getBody().get(0).getName());
     }
 
@@ -98,7 +97,6 @@ public class ConferenceControllerIT {
 
         //when
         ResponseEntity<String> responseString = postConference(uri, request);
-        //Conference retrievedConference = conferenceRepository.findById(1L).get();  REVERT TO THIS WHEN USING DOCKER (CONTAINERISATION)
         Conference retrievedConference = conferenceRepository.findAll().get(0);
 
         //Then
