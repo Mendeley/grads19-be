@@ -6,7 +6,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "conferences")
 public class Conference {
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     private String name;
