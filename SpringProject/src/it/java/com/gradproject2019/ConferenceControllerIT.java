@@ -4,10 +4,7 @@ import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -69,15 +66,15 @@ public class ConferenceControllerIT {
     public void shouldReturn200AndListOfConferencesWhenDatabasePopulated() throws URISyntaxException {
         //given
         URI uri = new URI(baseUrl);
-        conferenceRepository.saveAndFlush(conference);
+        Conference addedConference = conferenceRepository.saveAndFlush(conference);
 
         //when
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
         //Then
-        Assert.assertEquals(200,response.getStatusCodeValue());
-        Assert.assertEquals(conference.getId(),response.getBody().get(0).getId());
+        Assert.assertEquals(200,responseList.getStatusCodeValue());
         Assert.assertEquals(conference.getName(),response.getBody().get(0).getName());
+        Assert.assertEquals(addedConference.getId(),response.getBody().get(0).getId());
     }
 
     @Test
@@ -95,17 +92,19 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
         //given
-        URI uri = new URI(baseUrl + "/1");
-        conferenceRepository.saveAndFlush(conference);
+        Conference addedConference =  conferenceRepository.saveAndFlush(conference);
+        URI uri = new URI(baseUrl + "/" + addedConference.getId());
 
         //when
         ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
 
         //Then
-        Assert.assertEquals(200, response.getStatusCodeValue());
-        Assert.assertEquals(conference.getId(), response.getBody().getId());
-        Assert.assertEquals(conference.getName(), response.getBody().getName());
+
+        Assert.assertEquals(200, responseConference.getStatusCodeValue());
+        Assert.assertEquals(addedConference.getId(), response.getBody().getId());
+        Assert.assertEquals(addedConference.getName(), response.getBody().getName());
     }
+
 
     @Test
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
@@ -116,11 +115,10 @@ public class ConferenceControllerIT {
 
         //when
         ResponseEntity<String> response = postConference(uri, request);
-        Conference retrievedConference = conferenceRepository.findById(1L).get();
+        Conference retrievedConference = conferenceRepository.findAll().get(0);
 
         //Then
         Assert.assertEquals(200, response.getStatusCodeValue());
-        Assert.assertEquals(conferenceRequestDto.getId(), retrievedConference.getId());
         Assert.assertEquals(conferenceRequestDto.getName(), retrievedConference.getName());
     }
 
@@ -196,7 +194,6 @@ public class ConferenceControllerIT {
         return ConferenceRequestDto
                 .ConferenceRequestDtoBuilder
                 .aConferenceRequestDto()
-                .withId(id)
                 .withName(name)
                 .withDateTime(dateTime)
                 .withCity(city)

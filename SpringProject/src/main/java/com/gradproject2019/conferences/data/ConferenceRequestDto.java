@@ -5,11 +5,12 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+import static com.gradproject2019.conferences.persistance.Conference.ConferenceBuilder.aConference;
 
 @Validated
 public class ConferenceRequestDto {
-    private Long id; // FE should be giving BE id = null
-
     @NotNull(message = "Invalid entry in conference field.")
     private String name;
 
@@ -26,10 +27,6 @@ public class ConferenceRequestDto {
     private String topic;
 
     public ConferenceRequestDto() { }
-
-    public Long getId() {
-        return id;
-    }
 
     public String getName() {
         return name;
@@ -52,17 +49,16 @@ public class ConferenceRequestDto {
     }
 
     public Conference from(ConferenceRequestDto conferenceRequestDto) {
-        return new Conference(
-                    conferenceRequestDto.getId(),
-                    conferenceRequestDto.getName(),
-                    conferenceRequestDto.getDateTime(),
-                    conferenceRequestDto.getCity(),
-                    conferenceRequestDto.getDescription(),
-                    conferenceRequestDto.getTopic());
+        return aConference()
+                    .withName(conferenceRequestDto.getName())
+                    .withDateTime(conferenceRequestDto.getDateTime())
+                    .withCity(conferenceRequestDto.getCity())
+                    .withDescription(conferenceRequestDto.getDescription())
+                    .withTopic(conferenceRequestDto.getTopic())
+                    .build();
     }
 
     public static final class ConferenceRequestDtoBuilder {
-        private Long id;
         private String name;
         private Instant dateTime;
         private String city;
@@ -74,11 +70,6 @@ public class ConferenceRequestDto {
 
         public static ConferenceRequestDtoBuilder aConferenceRequestDto() {
             return new ConferenceRequestDtoBuilder();
-        }
-
-        public ConferenceRequestDtoBuilder withId(Long id) {
-            this.id = id;
-            return this;
         }
 
         public ConferenceRequestDtoBuilder withName(String name) {
@@ -113,7 +104,6 @@ public class ConferenceRequestDto {
             conferenceRequestDto.topic = this.topic;
             conferenceRequestDto.name = this.name;
             conferenceRequestDto.dateTime = this.dateTime;
-            conferenceRequestDto.id = this.id;
             return conferenceRequestDto;
         }
     }
