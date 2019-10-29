@@ -74,7 +74,7 @@ public class ConferenceControllerIT {
         //Then
         Assert.assertEquals(200,responseList.getStatusCodeValue());
         Assert.assertEquals(conference.getName(),responseList.getBody().get(0).getName());
-        Assert.assertEquals(addedConference.getName(),responseList.getBody().get(0).getId());
+        Assert.assertEquals(addedConference.getId(),responseList.getBody().get(0).getId());
     }
 
     @Test
