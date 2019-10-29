@@ -35,4 +35,11 @@ public class ConferenceController {
         ConferenceResponseDto newConference = conferenceService.saveConference(conferenceRequestDto);
         return ResponseEntity.ok(newConference);
     }
+
+    @DeleteMapping(path = "/conferences/{id}")
+    public ResponseEntity<Void> deleteConference(@PathVariable("id") Long conferenceId) {
+        conferenceService.deleteConference(conferenceId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
