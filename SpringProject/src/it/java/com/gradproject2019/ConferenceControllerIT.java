@@ -58,11 +58,11 @@ public class ConferenceControllerIT {
         URI uri = new URI(baseUrl);
 
         //when
-        ResponseEntity<List<ConferenceResponseDto>> responseList = getConferenceList(uri);
+        ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
         //Then
-        Assert.assertEquals(200,responseList.getStatusCodeValue());
-        Assert.assertEquals(true,responseList.getBody().isEmpty());
+        Assert.assertEquals(200,response.getStatusCodeValue());
+        Assert.assertEquals(true,response.getBody().isEmpty());
     }
 
     @Test
@@ -72,12 +72,12 @@ public class ConferenceControllerIT {
         conferenceRepository.saveAndFlush(conference);
 
         //when
-        ResponseEntity<List<ConferenceResponseDto>> responseList = getConferenceList(uri);
+        ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
         //Then
-        Assert.assertEquals(200,responseList.getStatusCodeValue());
-        Assert.assertEquals(conference.getId(),responseList.getBody().get(0).getId());
-        Assert.assertEquals(conference.getName(),responseList.getBody().get(0).getName());
+        Assert.assertEquals(200,response.getStatusCodeValue());
+        Assert.assertEquals(conference.getId(),response.getBody().get(0).getId());
+        Assert.assertEquals(conference.getName(),response.getBody().get(0).getName());
     }
 
     @Test
@@ -86,10 +86,10 @@ public class ConferenceControllerIT {
         URI uri = new URI(baseUrl + "/1000000000");
 
         //when
-        ResponseEntity<ConferenceResponseDto> responseConference = getSingleConference(uri);
+        ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
 
         //Then
-        Assert.assertEquals(404, responseConference.getStatusCodeValue());
+        Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
@@ -99,12 +99,12 @@ public class ConferenceControllerIT {
         conferenceRepository.saveAndFlush(conference);
 
         //when
-        ResponseEntity<ConferenceResponseDto> responseConference = getSingleConference(uri);
+        ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
 
         //Then
-        Assert.assertEquals(200, responseConference.getStatusCodeValue());
-        Assert.assertEquals(conference.getId(), responseConference.getBody().getId());
-        Assert.assertEquals(conference.getName(), responseConference.getBody().getName());
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(conference.getId(), response.getBody().getId());
+        Assert.assertEquals(conference.getName(), response.getBody().getName());
     }
 
     @Test
@@ -115,11 +115,11 @@ public class ConferenceControllerIT {
         HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(conferenceRequestDto);
 
         //when
-        ResponseEntity<String> responseString = postConference(uri, request);
+        ResponseEntity<String> response = postConference(uri, request);
         Conference retrievedConference = conferenceRepository.findById(1L).get();
 
         //Then
-        Assert.assertEquals(200, responseString.getStatusCodeValue());
+        Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(conferenceRequestDto.getId(), retrievedConference.getId());
         Assert.assertEquals(conferenceRequestDto.getName(), retrievedConference.getName());
     }
@@ -131,10 +131,10 @@ public class ConferenceControllerIT {
         HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto(null, null, null, null, null, null));
 
         //when
-        ResponseEntity<String> responseString = postConference(uri, request);
+        ResponseEntity<String> response = postConference(uri, request);
 
         //Then
-        Assert.assertEquals(400,responseString.getStatusCodeValue());
+        Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
     @Test
@@ -144,10 +144,36 @@ public class ConferenceControllerIT {
         HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto(1L,"Grace's conference", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace"));
 
         //when
-        ResponseEntity<String> responseString = postConference(uri, request);
+        ResponseEntity<String> response = postConference(uri, request);
 
         //Then
-        Assert.assertEquals(400,responseString.getStatusCodeValue());
+        Assert.assertEquals(400,response.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturn404WhenConferenceToBeDeletedNotFound() throws URISyntaxException {
+        //given
+        URI uri = new URI(baseUrl + "/1000000000");
+
+        //when
+        ResponseEntity<String> response = deleteConference(uri);
+
+        //then
+        Assert.assertEquals(404,response.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturn200AndDeleteConference() throws URISyntaxException {
+        //given
+        Conference added = conferenceRepository.saveAndFlush(conference);
+        URI uri = new URI(baseUrl + "/" + added.getId());
+
+        //when
+        ResponseEntity<String> response = deleteConference(uri);
+
+        //then
+        Assert.assertEquals(204,response.getStatusCodeValue());
+        Assert.assertFalse(conferenceRepository.existsById(added.getId()));
     }
 
     private ResponseEntity<List<ConferenceResponseDto>> getConferenceList(URI uri) {
@@ -160,6 +186,10 @@ public class ConferenceControllerIT {
 
     private ResponseEntity<String> postConference(URI uri, HttpEntity<ConferenceRequestDto> request) {
         return restTemplate.exchange(uri, HttpMethod.POST, request, new ParameterizedTypeReference<String>() {});
+    }
+
+    private ResponseEntity<String> deleteConference(URI uri) {
+        return restTemplate.exchange(uri, HttpMethod.DELETE, null, new ParameterizedTypeReference<String>() {});
     }
 
     private ConferenceRequestDto createRequestDto(Long id, String name, Instant dateTime, String city, String description, String topic) {

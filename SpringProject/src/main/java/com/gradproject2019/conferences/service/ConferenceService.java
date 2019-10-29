@@ -12,4 +12,6 @@ public interface ConferenceService {
     ConferenceResponseDto findConferenceById(Long conferenceId);
 
     ConferenceResponseDto saveConference(ConferenceRequestDto conferenceRequestDto);
+
+    void deleteConference(Long conferenceId);
 }

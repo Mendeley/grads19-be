@@ -43,9 +43,21 @@ public class ConferenceServiceImpl implements ConferenceService {
         return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
 
-    public void checkNotInPast(Conference conference) {
+    private void checkNotInPast(Conference conference) {
         if (!conference.getDateTime().isAfter(Instant.now())) {
             throw new InvalidConferenceFieldException();
+        }
+    }
+
+    @Override
+    public void deleteConference(Long conferenceId) {
+        checkConferenceExists(conferenceId);
+        conferenceRepository.deleteById(conferenceId);
+    }
+
+    private void checkConferenceExists(Long conferenceId) {
+        if(!conferenceRepository.existsById(conferenceId)) {
+            throw new ConferenceNotFoundException();
         }
     }
 }
