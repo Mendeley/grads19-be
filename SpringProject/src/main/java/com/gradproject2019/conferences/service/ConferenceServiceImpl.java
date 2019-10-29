@@ -43,7 +43,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
 
-    public void checkNotInPast(Conference conference) {
+    private void checkNotInPast(Conference conference) {
         if (!conference.getDateTime().isAfter(Instant.now())) {
             throw new InvalidConferenceFieldException();
         }
@@ -55,7 +55,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         conferenceRepository.deleteById(conferenceId);
     }
 
-    public void checkConferenceExists(Long conferenceId) {
+    private void checkConferenceExists(Long conferenceId) {
         if(!conferenceRepository.existsById(conferenceId)) {
             throw new ConferenceNotFoundException();
         }
