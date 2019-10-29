@@ -1,5 +1,6 @@
 package com.gradproject2019.conferences.controller;
 
+import com.gradproject2019.conferences.data.ConferencePatchRequestDto;
 import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.service.ConferenceService;
@@ -20,13 +21,13 @@ public class ConferenceController {
 
     @GetMapping(path = "/conferences")
     public ResponseEntity<List<ConferenceResponseDto>> getAllConferences() {
-        List<ConferenceResponseDto> conferences = conferenceService.listConferences();
+        List<ConferenceResponseDto> conferences = conferenceService.getAllConferences();
         return ResponseEntity.ok(conferences);
     }
 
     @GetMapping(path = "/conferences/{id}")
-    public ResponseEntity<ConferenceResponseDto> findConferenceById(@PathVariable("id") Long conferenceId) {
-        ConferenceResponseDto conferenceResponseDto = conferenceService.findConferenceById(conferenceId);
+    public ResponseEntity<ConferenceResponseDto> getConferenceById(@PathVariable("id") Long conferenceId) {
+        ConferenceResponseDto conferenceResponseDto = conferenceService.getConferenceById(conferenceId);
         return ResponseEntity.ok(conferenceResponseDto);
     }
 
@@ -42,4 +43,9 @@ public class ConferenceController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping(path = "/conferences/{id}")
+    public ResponseEntity<ConferenceResponseDto> editConference(@RequestBody ConferencePatchRequestDto conferencePatchRequestDto, @PathVariable("id") Long conferenceId) {
+        ConferenceResponseDto conferenceResponseDto = conferenceService.editConference(conferenceId, conferencePatchRequestDto);
+        return ResponseEntity.ok(conferenceResponseDto);
+    }
 }

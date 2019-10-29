@@ -1,5 +1,6 @@
 package com.gradproject2019.conferences.service;
 
+import com.gradproject2019.conferences.data.ConferencePatchRequestDto;
 import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
@@ -9,6 +10,7 @@ import com.gradproject2019.conferences.repository.ConferenceRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,14 +25,14 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
-    public List<ConferenceResponseDto> listConferences() {
+    public List<ConferenceResponseDto> getAllConferences() {
         return conferenceRepository.findAll().stream()
                 .map(conference -> new ConferenceResponseDto().from(conference))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ConferenceResponseDto findConferenceById(Long conferenceId) {
+    public ConferenceResponseDto getConferenceById(Long conferenceId) {
         return new ConferenceResponseDto().from(conferenceRepository
                 .findById(conferenceId)
                 .orElseThrow(ConferenceNotFoundException::new));
@@ -44,9 +46,11 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     private void checkNotInPast(Conference conference) {
-        if (!conference.getDateTime().isAfter(Instant.now())) {
-            throw new InvalidConferenceFieldException();
-        }
+        try {
+            if (!conference.getDateTime().isAfter(Instant.now())) {
+                throw new InvalidConferenceFieldException();
+            }
+        } catch (NullPointerException e) {}
     }
 
     @Override
@@ -59,5 +63,13 @@ public class ConferenceServiceImpl implements ConferenceService {
         if(!conferenceRepository.existsById(conferenceId)) {
             throw new ConferenceNotFoundException();
         }
+    }
+
+    @Override
+    public ConferenceResponseDto editConference(Long conferenceId, ConferencePatchRequestDto conferencePatchRequestDto){
+        checkConferenceExists(conferenceId);
+        Conference conference = conferencePatchRequestDto.from(conferenceId, conferencePatchRequestDto);
+        checkNotInPast(conference);
+        return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
 }
