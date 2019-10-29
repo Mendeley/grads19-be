@@ -78,7 +78,7 @@ public class ConferenceRequestDto {
         }
 
         public ConferenceRequestDtoBuilder withDateTime(Instant dateTime) {
-            this.dateTime = dateTime.truncatedTo(ChronoUnit.SECONDS);
+            this.dateTime = dateTime;
             return this;
         }
 

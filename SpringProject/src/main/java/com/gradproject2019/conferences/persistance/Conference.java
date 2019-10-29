@@ -22,7 +22,7 @@ public class Conference {
     public Conference(Long id, String name, Instant dateTime, String city, String description, String topic) {
         this.id = id;
         this.name = name;
-        this.dateTime = dateTime.truncatedTo(ChronoUnit.SECONDS);
+        this.dateTime = dateTime;
         this.city = city;
         this.description = description;
         this.topic = topic;
@@ -79,7 +79,7 @@ public class Conference {
         }
 
         public ConferenceBuilder withDateTime(Instant dateTime) {
-            this.dateTime = dateTime.truncatedTo(ChronoUnit.SECONDS);
+            this.dateTime = dateTime;
             return this;
         }
 

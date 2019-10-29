@@ -91,7 +91,7 @@ public class ConferenceResponseDto {
         }
 
         public ConferenceResponseDtoBuilder withDateTime(Instant dateTime) {
-            this.dateTime = dateTime.truncatedTo(ChronoUnit.SECONDS);
+            this.dateTime = dateTime;
             return this;
         }
 

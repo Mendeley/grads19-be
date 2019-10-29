@@ -125,7 +125,7 @@ public class ConferenceControllerIT {
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
         //given
         URI uri = new URI(baseUrl);
-        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto(null, null, Instant.parse("3000-12-30T19:34:50.63Z"), null, null, null));
+        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto(null, null, null, null, null, null));
 
         //when
         ResponseEntity<String> responseString = postConference(uri, request);
