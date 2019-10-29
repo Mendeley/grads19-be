@@ -2,6 +2,7 @@ package com.gradproject2019.conferences.persistance;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "conferences")
@@ -21,7 +22,7 @@ public class Conference {
     public Conference(Long id, String name, Instant dateTime, String city, String description, String topic) {
         this.id = id;
         this.name = name;
-        this.dateTime = dateTime;
+        this.dateTime = dateTime.truncatedTo(ChronoUnit.SECONDS);
         this.city = city;
         this.description = description;
         this.topic = topic;
@@ -78,7 +79,7 @@ public class Conference {
         }
 
         public ConferenceBuilder withDateTime(Instant dateTime) {
-            this.dateTime = dateTime;
+            this.dateTime = dateTime.truncatedTo(ChronoUnit.SECONDS);
             return this;
         }
 

@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import static com.gradproject2019.conferences.persistance.Conference.ConferenceBuilder.aConference;
 
@@ -77,7 +78,7 @@ public class ConferenceRequestDto {
         }
 
         public ConferenceRequestDtoBuilder withDateTime(Instant dateTime) {
-            this.dateTime = dateTime;
+            this.dateTime = dateTime.truncatedTo(ChronoUnit.SECONDS);
             return this;
         }
 

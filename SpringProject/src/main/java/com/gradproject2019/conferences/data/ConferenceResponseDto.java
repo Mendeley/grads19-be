@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Validated
 public class ConferenceResponseDto {
@@ -90,7 +91,7 @@ public class ConferenceResponseDto {
         }
 
         public ConferenceResponseDtoBuilder withDateTime(Instant dateTime) {
-            this.dateTime = dateTime;
+            this.dateTime = dateTime.truncatedTo(ChronoUnit.SECONDS);
             return this;
         }
 
