@@ -72,7 +72,7 @@ public class ConferenceControllerIT {
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
         //Then
-        Assert.assertEquals(200,responseList.getStatusCodeValue());
+        Assert.assertEquals(200,response.getStatusCodeValue());
         Assert.assertEquals(conference.getName(),response.getBody().get(0).getName());
         Assert.assertEquals(addedConference.getId(),response.getBody().get(0).getId());
     }
@@ -100,7 +100,7 @@ public class ConferenceControllerIT {
 
         //Then
 
-        Assert.assertEquals(200, responseConference.getStatusCodeValue());
+        Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(addedConference.getId(), response.getBody().getId());
         Assert.assertEquals(addedConference.getName(), response.getBody().getName());
     }
