@@ -47,5 +47,6 @@ public class ConferenceController {
     public ResponseEntity<ConferenceResponseDto> editConference(@RequestBody ConferencePatchRequestDto conferencePatchRequestDto, @PathVariable("id") Long conferenceId) {
         ConferenceResponseDto conferenceResponseDto = conferenceService.editConference(conferenceId, conferencePatchRequestDto);
         return ResponseEntity.ok(conferenceResponseDto);
+
     }
 }
