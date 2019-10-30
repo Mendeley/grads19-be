@@ -70,6 +70,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         checkConferenceExists(conferenceId);
         Conference conference = conferencePatchRequestDto.from(conferenceId, conferencePatchRequestDto);
         checkNotInPast(conference);
-        return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
+        return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference)); //DOES NOT WORK, CALL TO METHOD THAT DOESN'T WORK \/
+        //return new ConferenceResponseDto().from(conferenceRepository.updateConference(conference.getId(), conference.getName(), conference.getDateTime(), conference.getCity(), conference.getDescription(), conference.getTopic()));
     }
 }
