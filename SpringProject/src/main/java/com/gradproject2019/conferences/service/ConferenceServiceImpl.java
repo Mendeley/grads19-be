@@ -10,7 +10,6 @@ import com.gradproject2019.conferences.repository.ConferenceRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +49,7 @@ public class ConferenceServiceImpl implements ConferenceService {
             if (!conference.getDateTime().isAfter(Instant.now())) {
                 throw new InvalidConferenceFieldException();
             }
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException ignored) {}
     }
 
     @Override
@@ -70,7 +69,6 @@ public class ConferenceServiceImpl implements ConferenceService {
         checkConferenceExists(conferenceId);
         Conference conference = conferencePatchRequestDto.from(conferenceId, conferencePatchRequestDto);
         checkNotInPast(conference);
-        return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference)); //DOES NOT WORK, CALL TO METHOD THAT DOESN'T WORK \/
-        //return new ConferenceResponseDto().from(conferenceRepository.updateConference(conference.getId(), conference.getName(), conference.getDateTime(), conference.getCity(), conference.getDescription(), conference.getTopic()));
+        return new ConferenceResponseDto().from(conferenceRepository.updateConference(conference.getId(), conference.getName(), conference.getDateTime(), conference.getCity(), conference.getDescription(), conference.getTopic()));
     }
 }

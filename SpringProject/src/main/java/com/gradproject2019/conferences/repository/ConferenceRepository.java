@@ -12,7 +12,8 @@ import java.time.Instant;
 @Repository
 public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 
-    //@Modifying  //DOES NOT WORK
-    //@Query("UPDATE conferences SET name = COALESCE(:name, name), date_time = COALESCE(:dateTime, date_time), city = COALESCE(:city, city), description = COALESCE(:description, description), topic = COALESCE(:topic, topic) WHERE id = :id;")
-    //Conference updateConference(@Param("id") Long id, @Param("name") String name, @Param("dateTime") Instant dateTime, @Param("city") String city, @Param("description") String description, @Param("topic") String topic);
+    @Modifying  //WILL WORK
+    @Query("UPDATE Conference c SET c.name = :name, c.dateTime = :dateTime, c.city = :city, c.description = :description, c.topic = :topic WHERE c.id = :id")
+    Conference updateConference(@Param("id") Long id, @Param("name") String name, @Param("dateTime") Instant dateTime, @Param("city") String city, @Param("description") String description, @Param("topic") String topic);
+
 }
