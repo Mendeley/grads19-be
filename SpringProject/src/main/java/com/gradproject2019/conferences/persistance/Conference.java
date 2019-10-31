@@ -1,10 +1,7 @@
 package com.gradproject2019.conferences.persistance;
 
-import org.hibernate.annotations.DynamicUpdate;
-
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "conferences")

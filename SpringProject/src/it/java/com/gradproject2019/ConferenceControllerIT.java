@@ -113,7 +113,6 @@ public class ConferenceControllerIT {
         Assert.assertEquals(addedConference.getName(), response.getBody().getName());
     }
 
-
     @Test
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
         //given
@@ -217,8 +216,6 @@ public class ConferenceControllerIT {
         Assert.assertEquals(savedConference.getTopic(), response.getBody().getTopic());
     }
 
-
-
     private ResponseEntity<List<ConferenceResponseDto>> getConferenceList(URI uri) {
         return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<List<ConferenceResponseDto>>() {});
     }
@@ -239,7 +236,6 @@ public class ConferenceControllerIT {
         return restTemplate.exchange(uri, PATCH, request, new ParameterizedTypeReference<ConferenceResponseDto>() {});
     }
 
-
     private ConferenceRequestDto createRequestDto(String name, Instant dateTime, String city, String description, String topic) {
         return ConferenceRequestDto
                 .ConferenceRequestDtoBuilder
@@ -251,6 +247,7 @@ public class ConferenceControllerIT {
                 .withTopic(topic)
                 .build();
     }
+
     private ConferencePatchRequestDto createPatchRequestDto(String name, Instant dateTime, String city, String description, String topic) {
         return ConferencePatchRequestDto
                 .ConferencePatchRequestDtoBuilder

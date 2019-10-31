@@ -1,6 +1,5 @@
 package com.gradproject2019.conferences.data;
 
-
 import com.gradproject2019.conferences.persistance.Conference;
 
 import java.time.Instant;

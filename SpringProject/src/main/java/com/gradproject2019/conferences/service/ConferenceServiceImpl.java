@@ -13,11 +13,17 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Service
 public class ConferenceServiceImpl implements ConferenceService {
 
-    private ConferenceRepository conferenceRepository;
+    @Override
+    public ConferenceResponseDto editConference(Long conferenceId, ConferencePatchRequestDto conferencePatchRequestDto){
+        checkConferenceExists(conferenceId);
+        Conference conference = conferencePatchRequestDto.from(conferenceId, conferencePatchRequestDto);
+        checkNotInPast(conference.getDateTime());
+        conferenceRepository.updateConference(conference.getId(), conference.getName(), conference.getDateTime(), conference.getCity(), conference.getDescription(), conference.getTopic());
+        return getConferenceById(conferenceId);
+    }
 
     public ConferenceServiceImpl(ConferenceRepository conferenceRepository) {
         this.conferenceRepository = conferenceRepository;
@@ -31,6 +37,12 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
+    public void deleteConference(Long conferenceId) {
+        checkConferenceExists(conferenceId);
+        conferenceRepository.deleteById(conferenceId);
+    }
+
+    @Override
     public ConferenceResponseDto getConferenceById(Long conferenceId) {
         return new ConferenceResponseDto().from(conferenceRepository
                 .findById(conferenceId)
@@ -40,36 +52,22 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     public ConferenceResponseDto saveConference(ConferenceRequestDto conferenceRequestDto){
         Conference conference = conferenceRequestDto.from(conferenceRequestDto);
-        checkNotInPast(conference);
+        checkNotInPast(conference.getDateTime());
         return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
 
-    private void checkNotInPast(Conference conference) {
+    private void checkNotInPast(Instant dateTime) {
         try {
-            if (!conference.getDateTime().isAfter(Instant.now())) {
+            if (!dateTime.isAfter(Instant.now())) {
                 throw new InvalidConferenceFieldException();
             }
         } catch (NullPointerException ignored) {}
     }
-
-    @Override
-    public void deleteConference(Long conferenceId) {
-        checkConferenceExists(conferenceId);
-        conferenceRepository.deleteById(conferenceId);
-    }
+    private ConferenceRepository conferenceRepository;
 
     private void checkConferenceExists(Long conferenceId) {
         if(!conferenceRepository.existsById(conferenceId)) {
             throw new ConferenceNotFoundException();
         }
-    }
-
-    @Override
-    public ConferenceResponseDto editConference(Long conferenceId, ConferencePatchRequestDto conferencePatchRequestDto){
-        checkConferenceExists(conferenceId);
-        Conference conference = conferencePatchRequestDto.from(conferenceId, conferencePatchRequestDto);
-        checkNotInPast(conference);
-        conferenceRepository.updateConference(conference.getId(), conference.getName(), conference.getDateTime(), conference.getCity(), conference.getDescription(), conference.getTopic());
-        return getConferenceById(conferenceId);
     }
 }
