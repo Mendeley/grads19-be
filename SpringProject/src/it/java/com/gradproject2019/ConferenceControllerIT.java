@@ -171,15 +171,15 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn204AndDeleteConference() throws URISyntaxException {
         //given
-        Conference added = conferenceRepository.saveAndFlush(conference);
-        URI uri = new URI(baseUrl + "/" + added.getId());
+        Conference savedConference = conferenceRepository.saveAndFlush(conference);
+        URI uri = new URI(baseUrl + "/" + savedConference.getId());
 
         //when
         ResponseEntity<String> response = deleteConference(uri);
 
         //then
         Assert.assertEquals(204,response.getStatusCodeValue());
-        Assert.assertFalse(conferenceRepository.existsById(added.getId()));
+        Assert.assertFalse(conferenceRepository.existsById(savedConference.getId()));
     }
 
     @Test
@@ -198,23 +198,22 @@ public class ConferenceControllerIT {
     @Test   //WHEN CUSTOM HIBERNATE QUERY WRITTEN, THIS TEST WILL PASS
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
         //given
-        Conference added = conferenceRepository.saveAndFlush(conference);
-        URI uri = new URI(baseUrl + "/" + added.getId());
-        added.setName("Michael's Conference");
-
-        HttpEntity<ConferencePatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(added.getName(),null, null, null, null));
+        Conference savedConference = conferenceRepository.saveAndFlush(conference);
+        URI uri = new URI(baseUrl + "/" + savedConference.getId());
+        String newName= "Harry's conference";
+        HttpEntity<ConferencePatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(newName,null,null, null, null));
 
         //when
         ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);
 
         //then
-        Assert.assertEquals(200,response.getStatusCodeValue());
-        Assert.assertEquals(added.getId(), response.getBody().getId());
-        Assert.assertEquals(added.getName(), response.getBody().getName());
-        Assert.assertEquals(added.getDateTime(), response.getBody().getDateTime());
-        Assert.assertEquals(added.getCity(), response.getBody().getCity());
-        Assert.assertEquals(added.getDescription(), response.getBody().getDescription());
-        Assert.assertEquals(added.getTopic(), response.getBody().getTopic());
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedConference.getId(), response.getBody().getId());
+        Assert.assertEquals(newName, response.getBody().getName());
+        Assert.assertEquals(savedConference.getDateTime(), response.getBody().getDateTime());
+        Assert.assertEquals(savedConference.getCity(), response.getBody().getCity());
+        Assert.assertEquals(savedConference.getDescription(), response.getBody().getDescription());
+        Assert.assertEquals(savedConference.getTopic(), response.getBody().getTopic());
     }
 
 
