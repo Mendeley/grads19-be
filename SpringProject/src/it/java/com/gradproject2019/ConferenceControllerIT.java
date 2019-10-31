@@ -201,7 +201,8 @@ public class ConferenceControllerIT {
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUrl + "/" + savedConference.getId());
         String newName= "Harry's conference";
-        HttpEntity<ConferencePatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(newName,null,null, null, null));
+        String newCity= "Manchester/North";
+        HttpEntity<ConferencePatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(newName,null,newCity, null, null));
 
         //when
         ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);
@@ -211,7 +212,7 @@ public class ConferenceControllerIT {
         Assert.assertEquals(savedConference.getId(), response.getBody().getId());
         Assert.assertEquals(newName, response.getBody().getName());
         Assert.assertEquals(savedConference.getDateTime(), response.getBody().getDateTime());
-        Assert.assertEquals(savedConference.getCity(), response.getBody().getCity());
+        Assert.assertEquals(newCity, response.getBody().getCity());
         Assert.assertEquals(savedConference.getDescription(), response.getBody().getDescription());
         Assert.assertEquals(savedConference.getTopic(), response.getBody().getTopic());
     }
