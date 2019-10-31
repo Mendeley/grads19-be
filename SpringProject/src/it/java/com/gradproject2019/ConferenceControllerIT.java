@@ -23,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.*;
@@ -46,7 +47,7 @@ public class ConferenceControllerIT {
     @Before
     public void setUp() {
         conferenceRepository.deleteAll();
-        conference = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
+        conference = new Conference(1L, "Grace's conference", Instant.now().truncatedTo(ChronoUnit.SECONDS), "Leicester", "All about Grace's fabulous and extra house", "grace");
         baseUrl = "http://localhost:" + testServerPort + "/conferences";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
@@ -200,6 +201,7 @@ public class ConferenceControllerIT {
         Conference added = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUrl + "/" + added.getId());
         added.setName("Michael's Conference");
+
         HttpEntity<ConferencePatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(added.getName(),null, null, null, null));
 
         //when

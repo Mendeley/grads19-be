@@ -69,6 +69,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         checkConferenceExists(conferenceId);
         Conference conference = conferencePatchRequestDto.from(conferenceId, conferencePatchRequestDto);
         checkNotInPast(conference);
-        return new ConferenceResponseDto().from(conferenceRepository.updateConference(conference.getId(), conference.getName(), conference.getDateTime(), conference.getCity(), conference.getDescription(), conference.getTopic()));
+        conferenceRepository.updateConference(conference.getId(), conference.getName(), conference.getDateTime(), conference.getCity(), conference.getDescription(), conference.getTopic());
+        return getConferenceById(conferenceId);
     }
 }
