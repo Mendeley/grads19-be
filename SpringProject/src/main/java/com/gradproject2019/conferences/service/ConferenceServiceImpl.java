@@ -16,17 +16,20 @@ import java.util.stream.Collectors;
 @Service
 public class ConferenceServiceImpl implements ConferenceService {
 
-    @Override
-    public ConferenceResponseDto editConference(Long conferenceId, ConferencePatchRequestDto conferencePatchRequestDto){
-        checkConferenceExists(conferenceId);
-        Conference conference = conferencePatchRequestDto.from(conferenceId, conferencePatchRequestDto);
-        checkNotInPast(conference.getDateTime());
-        conferenceRepository.updateConference(conference.getId(), conference.getName(), conference.getDateTime(), conference.getCity(), conference.getDescription(), conference.getTopic());
-        return getConferenceById(conferenceId);
-    }
+    private ConferenceRepository conferenceRepository;
 
     public ConferenceServiceImpl(ConferenceRepository conferenceRepository) {
         this.conferenceRepository = conferenceRepository;
+    }
+
+    @Override
+    public ConferenceResponseDto editConference(Long conferenceId, ConferencePatchRequestDto conferencePatch){
+        checkConferenceExists(conferenceId);
+        checkNotInPast(conferencePatch.getDateTime());
+
+        conferenceRepository.updateConference(conferenceId, conferencePatch.getName(), conferencePatch.getDateTime(), conferencePatch.getCity(), conferencePatch.getDescription(), conferencePatch.getTopic());
+
+        return getConferenceById(conferenceId);
     }
 
     @Override
@@ -52,6 +55,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     public ConferenceResponseDto saveConference(ConferenceRequestDto conferenceRequestDto){
         Conference conference = conferenceRequestDto.from(conferenceRequestDto);
+
         checkNotInPast(conference.getDateTime());
         return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
@@ -63,7 +67,6 @@ public class ConferenceServiceImpl implements ConferenceService {
             }
         } catch (NullPointerException ignored) {}
     }
-    private ConferenceRepository conferenceRepository;
 
     private void checkConferenceExists(Long conferenceId) {
         if(!conferenceRepository.existsById(conferenceId)) {
