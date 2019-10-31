@@ -38,7 +38,7 @@ public class ConferenceServiceTest {
         given(conferenceRepository.findAll()).willReturn(List.of(conference1, conference2));
 
         // WHEN
-        Iterable<ConferenceResponseDto> conferences = conferenceService.listConferences();
+        Iterable<ConferenceResponseDto> conferences = conferenceService.getAllConferences();
 
         // THEN
         assertThat(conferences)
@@ -52,7 +52,7 @@ public class ConferenceServiceTest {
         given(conferenceRepository.findById(1L)).willReturn(Optional.of(conference1));
 
         //when
-        ConferenceResponseDto conferenceById = conferenceService.findConferenceById(1L);
+        ConferenceResponseDto conferenceById = conferenceService.getConferenceById(1L);
 
         //then
         assertThat(conferenceById.getId()).isEqualTo(1L);
@@ -62,6 +62,6 @@ public class ConferenceServiceTest {
     @Test(expected = ConferenceNotFoundException.class) //then
     public void shouldThrowErrorWhenIdNotRecognised() {
         //given(when)
-        conferenceService.findConferenceById(1000000000L);
+        conferenceService.getConferenceById(1000000000L);
     }
 }

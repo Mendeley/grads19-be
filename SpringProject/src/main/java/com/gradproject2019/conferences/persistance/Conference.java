@@ -2,7 +2,6 @@ package com.gradproject2019.conferences.persistance;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "conferences")
@@ -52,6 +51,29 @@ public class Conference {
         return topic;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDateTime(Instant dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
 
     public static final class ConferenceBuilder {
         private Long id;
