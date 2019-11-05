@@ -13,6 +13,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.gradproject2019.conferences.data.ConferenceRequestDto.from;
+
 @Service
 public class ConferenceServiceImpl implements ConferenceService {
 
@@ -54,7 +56,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     @Override
     public ConferenceResponseDto saveConference(ConferenceRequestDto conferenceRequestDto){
-        Conference conference = conferenceRequestDto.from(conferenceRequestDto);
+        Conference conference = from(conferenceRequestDto);
 
         checkNotInPast(conference.getDateTime());
         return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));

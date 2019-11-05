@@ -54,7 +54,7 @@ public class UserRequestDto {
         return occupation;
     }
 
-    public User from(UserRequestDto userRequestDto) {
+    public static User from(UserRequestDto userRequestDto) {
         return anUser()
                 .withUsername(userRequestDto.getUsername())
                 .withFirstName(userRequestDto.getFirstName())

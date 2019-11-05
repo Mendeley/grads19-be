@@ -47,7 +47,7 @@ public class ConferenceRequestDto {
         return topic;
     }
 
-    public Conference from(ConferenceRequestDto conferenceRequestDto) {
+    public static Conference from(ConferenceRequestDto conferenceRequestDto) {
         return aConference()
                     .withName(conferenceRequestDto.getName())
                     .withDateTime(conferenceRequestDto.getDateTime())
