@@ -42,7 +42,7 @@ public class UserControllerIT {
     @Before
     public void setUp() {
         userRepository.deleteAll();
-        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd", "Botanist");
+        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
         baseUrl = "http://localhost:" + testServerPort + "/users";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
@@ -56,7 +56,7 @@ public class UserControllerIT {
     public void shouldReturn200AndSaveUserInDatabase() throws URISyntaxException {
         //given
         URI uri = new URI(baseUrl);
-        UserRequestDto userRequestDto = createRequestDto("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd", "Botanist");
+        UserRequestDto userRequestDto = createRequestDto("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
         HttpEntity<UserRequestDto> request = new HttpEntity<>(userRequestDto);
 
         //when
@@ -73,6 +73,19 @@ public class UserControllerIT {
         //given
         URI uri = new URI(baseUrl);
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto( null, null, null, null, null, null));
+
+        //when
+        ResponseEntity<String> response = postUser(uri, request);
+
+        //Then
+        Assert.assertEquals(400,response.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturn400WhenInvalidPassword() throws URISyntaxException {
+        //given
+        URI uri = new URI(baseUrl);
+        HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist"));
 
         //when
         ResponseEntity<String> response = postUser(uri, request);
