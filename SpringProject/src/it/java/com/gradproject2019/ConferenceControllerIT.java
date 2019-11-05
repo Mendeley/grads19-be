@@ -194,7 +194,7 @@ public class ConferenceControllerIT {
         Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
-    @Test   //WHEN CUSTOM HIBERNATE QUERY WRITTEN, THIS TEST WILL PASS
+    @Test
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
         //given
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
