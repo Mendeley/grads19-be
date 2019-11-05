@@ -8,6 +8,7 @@ import com.gradproject2019.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import static com.gradproject2019.users.data.UserRequestDto.from;
+import static com.gradproject2019.users.service.Validator.validate;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,8 +19,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    private Validator passwordValidator = Validator.buildValidator(true,true,true,8,16);
-
     @Override
     public UserResponseDto saveUser(UserRequestDto userRequestDto) {
         User user = from(userRequestDto);
@@ -28,7 +27,7 @@ public class UserServiceImpl implements UserService {
         return new UserResponseDto().from(userRepository.saveAndFlush(user));
     }
     private void checkPassword(String password) {
-        if (!passwordValidator.validate(password)) {
+        if (!validate(password)) {
             throw new InvalidPasswordException();
         }
     }
