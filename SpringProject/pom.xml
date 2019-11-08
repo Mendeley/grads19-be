@@ -93,9 +93,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.mindrot.bcrypt</groupId>
+			<groupId>at.favre.lib</groupId>
 			<artifactId>bcrypt</artifactId>
-			<version>0.3</version>
+			<version>0.2.0</version>
 		</dependency>
 
 	</dependencies>

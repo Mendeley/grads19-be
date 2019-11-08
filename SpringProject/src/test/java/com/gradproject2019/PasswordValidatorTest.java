@@ -3,9 +3,9 @@ package com.gradproject2019;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.gradproject2019.users.service.Validator.validate;
+import static com.gradproject2019.users.service.PasswordValidator.validate;
 
-public class ValidatorTest {
+public class PasswordValidatorTest {
 
     @Test
     public void shouldCheckLength() {

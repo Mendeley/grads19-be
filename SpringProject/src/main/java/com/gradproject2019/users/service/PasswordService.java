@@ -1,35 +1,40 @@
 package com.gradproject2019.users.service;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.gradproject2019.users.persistance.User;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class Hashing {
-    public static final String ALGORITHM = "SHA-256";
+public class PasswordService {
 
-    public static void main(String[] args) throws Exception {
+    private static final String ALGORITHM = "SHA-256";
+    private static final String PATTERN = "((?=.*[a-z])(?=.*[0-9])(?=.*[!?\\#@^&£$*+;:~])(?=.*[A-Z]).{8,16})";
 
-        //String password = User.getPassword();
-        String password = "Grace123^^^^";
-
-        //this will eventually push the data to the database
-        System.out.println("SHA-256 Hash : " + generateHash(password));
+    public boolean validate(final String password) {
+        Pattern pattern = Pattern.compile(PATTERN);
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 
-    public static String generateHash(String password) throws NoSuchAlgorithmException {
+    public String generateHash(String password)  {
         byte[] salt = createSalt();
-        MessageDigest md = MessageDigest.getInstance(ALGORITHM);
-        md.reset();
-        md.update(salt);
-        byte[] hash = md.digest(password.getBytes());
-        return bytesToHex(hash);
+        try {
+            MessageDigest md = MessageDigest.getInstance(ALGORITHM);
+            md.reset();
+            md.update(salt);
+            byte[] hash = md.digest(password.getBytes());
+            return bytesToHex(hash);
+        } catch(NoSuchAlgorithmException exception) {
+            return exception.getMessage();
+        }
     }
 
-
-//        public String hash(String password){
-//            return BCrypt.hashpw(password, BCrypt.gensalt(logRounds));
-//        }
+        public String hash(String password){
+            return BCrypt.verifyer(password, BCrypt.gensalt(logRounds));
+        }
 
     //this is a custom byte to hex converter to get the hash in hexadecimal
     private static String bytesToHex(byte[] hash) {
