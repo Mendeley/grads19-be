@@ -4,6 +4,6 @@ CREATE TABLE users (
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     email VARCHAR(255),
-    password CHAR(64),
+    password CHAR(60),
     occupation VARCHAR(255)
 );

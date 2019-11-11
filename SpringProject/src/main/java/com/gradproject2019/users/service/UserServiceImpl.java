@@ -5,6 +5,7 @@ import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.InvalidPasswordException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
+import com.gradproject2019.users.service.PasswordService;
 import org.springframework.stereotype.Service;
 
 import static com.gradproject2019.users.data.UserRequestDto.from;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto saveUser(UserRequestDto userRequestDto) {
         User user = from(userRequestDto);
         checkPassword(user.getPassword());
-        passwordService.generateHash(userRequestDto.getPassword());
+       passwordService.hash(userRequestDto.getPassword());
         return new UserResponseDto().from(userRepository.saveAndFlush(user));
     }
     private void checkPassword(String password) {
