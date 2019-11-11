@@ -82,7 +82,7 @@ public class UserControllerIT {
     }
 
     @Test
-    public void shouldReturn400WhenInvalidPassword() throws URISyntaxException {
+    public void shouldReturn400WhenPasswordWrongFormat() throws URISyntaxException {
         //given
         URI uri = new URI(baseUrl);
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist"));

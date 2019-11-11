@@ -2,10 +2,10 @@ package com.gradproject2019.users.service;
 
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
-import com.gradproject2019.users.exception.InvalidPasswordException;
+import com.gradproject2019.users.exception.InvalidPasswordFormatException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.gradproject2019.utils.PasswordUtils;
 import org.springframework.stereotype.Service;
 
 import static com.gradproject2019.users.data.UserRequestDto.from;
@@ -15,24 +15,24 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordService passwordService;
+    private final PasswordUtils passwordUtils;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordService passwordService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordUtils passwordUtils) {
         this.userRepository = userRepository;
-        this.passwordService = passwordService;
+        this.passwordUtils = passwordUtils;
     }
 
     @Override
     public UserResponseDto saveUser(UserRequestDto userRequestDto) {
         User user = from(userRequestDto);
-        checkPassword(user.getPassword());
-        user.setPassword(passwordService.hash(userRequestDto.getPassword()));
+        String password = user.getPassword();
+        checkPassword(password);
+        user.setPassword(passwordUtils.hash(password));
         return new UserResponseDto().from(userRepository.saveAndFlush(user));
     }
     private void checkPassword(String password) {
-        if (!passwordService.validate(password)) {
-            throw new InvalidPasswordException();
+        if (!passwordUtils.validate(password)) {
+            throw new InvalidPasswordFormatException();
         }
     }
 
