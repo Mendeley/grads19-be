@@ -5,7 +5,7 @@ import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.InvalidPasswordException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
-import com.gradproject2019.users.service.PasswordService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.gradproject2019.users.data.UserRequestDto.from;
@@ -15,6 +15,7 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
+    @Autowired
     private PasswordService passwordService;
 
     public UserServiceImpl(UserRepository userRepository, PasswordService passwordService) {

@@ -14,11 +14,6 @@ public class PasswordServiceTest {
     private PasswordService passwordService;
 
     @Test
-    public void shouldHashPassword() {
-        System.out.println(passwordService.hash("password"));
-    }
-
-    @Test
     public void shouldCheckLength() {
         Assert.assertFalse(passwordService.validate("1@Aa"));
         Assert.assertTrue(passwordService.validate("1@Password"));
