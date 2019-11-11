@@ -13,13 +13,10 @@ import static com.gradproject2019.users.data.UserRequestDto.from;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private final PasswordUtils passwordUtils;
-
-    public UserServiceImpl(UserRepository userRepository, PasswordUtils passwordUtils) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordUtils = passwordUtils;
     }
 
     @Override
@@ -27,14 +24,13 @@ public class UserServiceImpl implements UserService {
         User user = from(userRequestDto);
         String password = user.getPassword();
         checkPassword(password);
-        user.setPassword(passwordUtils.hash(password));
+        user.setPassword(PasswordUtils.hash(password));
         return new UserResponseDto().from(userRepository.saveAndFlush(user));
     }
     private void checkPassword(String password) {
-        if (!passwordUtils.validate(password)) {
+        if (!PasswordUtils.validate(password)) {
             throw new InvalidPasswordFormatException();
         }
     }
-
 }
 
