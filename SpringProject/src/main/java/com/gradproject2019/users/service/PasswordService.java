@@ -2,6 +2,8 @@ package com.gradproject2019.users.service;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.gradproject2019.users.persistance.User;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -33,7 +35,7 @@ public class PasswordService {
     }
 
         public String hash(String password){
-            return BCrypt.verifyer(password, BCrypt.gensalt(logRounds));
+            return BCrypt.hashpw(password, BCrypt.gensalt());
         }
 
     //this is a custom byte to hex converter to get the hash in hexadecimal
