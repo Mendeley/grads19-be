@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto saveUser(UserRequestDto userRequestDto) {
         User user = from(userRequestDto);
         checkPassword(user.getPassword());
-       passwordService.hash(userRequestDto.getPassword());
+        user.setPassword(passwordService.hash(userRequestDto.getPassword()));
         return new UserResponseDto().from(userRepository.saveAndFlush(user));
     }
     private void checkPassword(String password) {
