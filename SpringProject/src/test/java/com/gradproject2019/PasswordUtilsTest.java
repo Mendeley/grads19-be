@@ -1,7 +1,6 @@
 package com.gradproject2019;
 
 import com.gradproject2019.utils.PasswordUtils;
-import org.assertj.core.internal.cglib.asm.$AnnotationVisitor;
 import org.junit.Assert;
 import org.junit.Test;
 
