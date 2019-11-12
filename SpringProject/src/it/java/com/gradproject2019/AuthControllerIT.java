@@ -40,7 +40,7 @@ public class AuthControllerIT {
     private TestRestTemplate restTemplate;
 
     @LocalServerPort
-    int testServerPort = 8080;
+    int testServerPort;
 
     private User user;
     private String realPassword;
