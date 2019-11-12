@@ -26,15 +26,24 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Token login(LoginDto loginDto) {
-       User user = userRepository.findByUsername(loginDto.getUsername()).orElseThrow(UserNotFoundException::new);
+       User user = userRepository
+               .findByUsername(loginDto.getUsername())
+               .orElseThrow(UserNotFoundException::new);
        checkPasswordHashMatch(loginDto.getPassword(), user.getPassword());
-       UUID uuid = UUID.randomUUID();
-       Token token = Token.TokenBuilder.aToken().withUserId(user.getId()).withToken(uuid.toString()).build();
-       return authRepository.saveAndFlush(token);
+       return authRepository.saveAndFlush(createToken(user.getId()));
     }
+
     private void checkPasswordHashMatch(String password, String hash) {
         if (!PasswordUtils.verifyHash(password, hash)) {
             throw new IncorrectPasswordException();
         }
+    }
+
+    private Token createToken(Long userId) {
+        return Token.TokenBuilder
+                .aToken()
+                .withUserId(userId)
+                .withToken(UUID.randomUUID().toString())
+                .build();
     }
 }

@@ -11,6 +11,8 @@ public class Token {
     private Long userId;
     private String token;
 
+    public Token() {}
+
     public Token(Long userId, String token) {
         this.userId = userId;
         this.token = token;
