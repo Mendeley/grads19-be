@@ -10,19 +10,19 @@ import static com.gradproject2019.conferences.persistance.Conference.ConferenceB
 
 @Validated
 public class ConferenceRequestDto {
-    @NotNull(message = "Invalid entry in conference field.")
+    @NotNull(message = "Invalid entry in conference name field.")
     private String name;
 
-    @NotNull(message = "Invalid entry in conference field.")
+    @NotNull(message = "Invalid entry in conference date time field.")
     private Instant dateTime;
 
-    @NotNull(message = "Invalid entry in conference field.")
+    @NotNull(message = "Invalid entry in conference city field.")
     private String city;
 
-    @NotNull(message = "Invalid entry in conference field.")
+    @NotNull(message = "Invalid entry in conference description field.")
     private String description;
 
-    @NotNull(message = "Invalid entry in conference field.")
+    @NotNull(message = "Invalid entry in conference topic field.")
     private String topic;
 
     public ConferenceRequestDto() { }

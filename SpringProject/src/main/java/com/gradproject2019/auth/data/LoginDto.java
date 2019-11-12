@@ -6,10 +6,10 @@ import javax.validation.constraints.NotNull;
 
 @Validated
 public class LoginDto {
-    @NotNull(message = "Invalid entry in login field.")
+    @NotNull(message = "Invalid entry in login username field.")
     private String username;
 
-    @NotNull(message = "Invalid entry in login field.")
+    @NotNull(message = "Invalid entry in login password field.")
     private String password;
 
     public LoginDto() { }

@@ -9,22 +9,22 @@ import static com.gradproject2019.users.persistance.User.UserBuilder.anUser;
 
 @Validated
 public class UserRequestDto {
-    @NotNull(message = "Invalid entry in user field.")
+    @NotNull(message = "Invalid entry in username field.")
     private String username;
 
-    @NotNull(message = "Invalid entry in user field.")
+    @NotNull(message = "Invalid entry in first name field.")
     private String firstName;
 
-    @NotNull(message = "Invalid entry in user field.")
+    @NotNull(message = "Invalid entry in last name field.")
     private String lastName;
 
-    @NotNull(message = "Invalid entry in user field.")
+    @NotNull(message = "Invalid entry in email field.")
     private String email;
 
-    @NotNull(message = "Invalid entry in user field.")
+    @NotNull(message = "Invalid entry in password field.")
     private String password;
 
-    @NotNull(message = "Invalid entry in user field.")
+    @NotNull(message = "Invalid entry in occupation field.")
     private String occupation;
 
     public UserRequestDto() {
