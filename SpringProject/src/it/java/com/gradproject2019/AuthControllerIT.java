@@ -28,13 +28,13 @@ import static org.springframework.http.HttpMethod.POST;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthControllerIT {
+public class AuthControllerIT extends TestUtils {
 
-    @Autowired
-    private AuthRepository authRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+//    @Autowired
+//    private AuthRepository authRepository;
+//
+//    @Autowired
+//    private UserRepository userRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -43,23 +43,21 @@ public class AuthControllerIT {
     int testServerPort;
 
     private User user;
-    private String realPassword;
+    private String hashedPassword;
     private String baseUrl;
 
     @Before
     public void setUp() {
-        authRepository.deleteAll();
-        userRepository.deleteAll();
-        realPassword = PasswordUtils.hash("P455w0rd!");
-        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", realPassword, "Botanist");
+        clearRepositories();
+        hashedPassword = PasswordUtils.hash("P455w0rd!");
+        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist");
         baseUrl = "http://localhost:" + testServerPort + "/auth";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
 
     @After
     public void tearDown() {
-        authRepository.deleteAll();
-        userRepository.deleteAll();
+        clearRepositories();
     }
 
     @Test
