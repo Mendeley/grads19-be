@@ -1,19 +1,24 @@
 package com.gradproject2019.auth.persistance;
 
+import org.hibernate.annotations.Type;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tokens")
 public class Token {
     @Id
     private Long userId;
-    private String token;
+    @Type(type="uuid-char")
+    private UUID token;
 
     public Token() {}
 
-    public Token(Long userId, String token) {
+    public Token(Long userId, UUID token) {
         this.userId = userId;
         this.token = token;
     }
@@ -22,13 +27,13 @@ public class Token {
         return userId;
     }
 
-    public String getToken() {
+    public UUID getToken() {
         return token;
     }
 
     public static final class TokenBuilder {
         private Long userId;
-        private String token;
+        private UUID token;
 
         private TokenBuilder() {
         }
@@ -42,7 +47,7 @@ public class Token {
             return this;
         }
 
-        public TokenBuilder withToken(String token) {
+        public TokenBuilder withToken(UUID token) {
             this.token = token;
             return this;
         }

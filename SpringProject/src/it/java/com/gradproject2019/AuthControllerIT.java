@@ -2,9 +2,7 @@ package com.gradproject2019;
 
 import com.gradproject2019.auth.data.LoginDto;
 import com.gradproject2019.auth.persistance.Token;
-import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.users.persistance.User;
-import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.PasswordUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -38,15 +35,19 @@ public class AuthControllerIT extends TestUtils {
 
     private User user;
     private String hashedPassword;
-    private String baseUrl;
+    private URI loginUri;
+    private String baseUri;
 
     @Before
-    public void setUp() {
+    public void setUp() throws URISyntaxException {
         clearRepositories();
         hashedPassword = PasswordUtils.hash("P455w0rd!");
         user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist");
-        baseUrl = "http://localhost:" + testServerPort + "/auth";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+        baseUri = "http://localhost:" + testServerPort + "/auth";
+        String loginString = baseUri + "/login";
+        loginUri = new URI(loginString);
     }
 
     @After
@@ -55,52 +56,56 @@ public class AuthControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn200andCreateTokenWhenUserExistsAndPasswordCorrect() throws URISyntaxException {
+    public void shouldReturn200andCreateTokenWhenUserExistsAndPasswordCorrect() {
         //given
-        URI uri = new URI(baseUrl +"/login");
         LoginDto loginDto = createLoginDto("KaramsCoolUsername", "P455w0rd!");
         HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
 
         //when
         User savedUser = userRepository.saveAndFlush(user);
-        ResponseEntity<Token> response = login(uri, request);
+        ResponseEntity<Token> response = login(loginUri, request);
 
         //then
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(savedUser.getId(), response.getBody().getUserId());
+        Assert.assertNotNull(response.getBody().getToken());
     }
 
     @Test
-    public void shouldReturn404WhenUserDoesNotExists() throws URISyntaxException{
+    public void shouldReturn401WhenUserDoesNotExists() {
         //given
-        URI uri = new URI(baseUrl +"/login");
         LoginDto loginDto = createLoginDto("KaramsCoolUsername", "P455w0rd!");
         HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
 
         //when
-        ResponseEntity<Token> response = login(uri, request);
+        ResponseEntity<ErrorEntity> response = loginExpectingError(loginUri, request);
 
         //then
-        Assert.assertEquals(404, response.getStatusCodeValue());
+        Assert.assertEquals(401, response.getStatusCodeValue());
+        Assert.assertEquals("Invalid user credentials.", response.getBody().getMessage());
     }
 
     @Test
-    public void shouldReturn403nWhenUserExistsAndPasswordIncorrect() throws URISyntaxException {
+    public void shouldReturn401WhenUserExistsAndPasswordIncorrect() {
         //given
-        URI uri = new URI(baseUrl +"/login");
         LoginDto loginDto = createLoginDto("KaramsCoolUsername", "WrongPassword");
         HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
 
         //when
         userRepository.saveAndFlush(user);
-        ResponseEntity<Token> response = login(uri, request);
+        ResponseEntity<ErrorEntity> response = loginExpectingError(loginUri, request);
 
         //then
-        Assert.assertEquals(403, response.getStatusCodeValue());
+        Assert.assertEquals(401, response.getStatusCodeValue());
+        Assert.assertEquals("Invalid user credentials.", response.getBody().getMessage());
     }
 
-    private ResponseEntity<Token> login(URI uri, HttpEntity<LoginDto> request) {
-        return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<Token>() {});
+    private ResponseEntity<Token> login(URI loginUri, HttpEntity<LoginDto> request) {
+        return restTemplate.exchange(loginUri, POST, request, Token.class);
+    }
+
+    private ResponseEntity<ErrorEntity> loginExpectingError(URI loginUri, HttpEntity<LoginDto> request) {
+        return restTemplate.exchange(loginUri, POST, request, ErrorEntity.class);
     }
 
     private LoginDto createLoginDto(String username, String password) {
