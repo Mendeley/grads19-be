@@ -1,4 +1,4 @@
-package com.gradproject2019;
+package com.gradproject2019.auth;
 
 public class ErrorEntity {
     private String message;

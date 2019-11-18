@@ -1,4 +1,4 @@
-package com.gradproject2019;
+package com.gradproject2019.utils;
 
 import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.users.repository.UserRepository;

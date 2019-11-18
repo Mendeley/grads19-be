@@ -1,4 +1,4 @@
-package com.gradproject2019;
+package com.gradproject2019.user;
 
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.persistance.User;

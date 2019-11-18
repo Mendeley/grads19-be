@@ -1,5 +1,6 @@
-package com.gradproject2019;
+package com.gradproject2019.auth;
 
+import com.gradproject2019.utils.TestUtils;
 import com.gradproject2019.auth.data.LoginDto;
 import com.gradproject2019.auth.persistance.Token;
 import com.gradproject2019.users.persistance.User;
