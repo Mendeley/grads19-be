@@ -30,12 +30,6 @@ import static org.springframework.http.HttpMethod.POST;
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerIT extends TestUtils {
 
-//    @Autowired
-//    private AuthRepository authRepository;
-//
-//    @Autowired
-//    private UserRepository userRepository;
-
     @Autowired
     private TestRestTemplate restTemplate;
 
