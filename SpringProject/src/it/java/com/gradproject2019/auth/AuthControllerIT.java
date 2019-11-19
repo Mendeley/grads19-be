@@ -35,9 +35,10 @@ public class AuthControllerIT extends TestUtils {
     int testServerPort;
 
     private User user;
-    private String hashedPassword;
     private URI loginUri;
     private String baseUri;
+    private String hashedPassword;
+    private LoginDto loginDto;
 
     @Before
     public void setUp() throws URISyntaxException {
@@ -45,6 +46,7 @@ public class AuthControllerIT extends TestUtils {
         hashedPassword = PasswordUtils.hash("P455w0rd!");
         user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist");
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        loginDto = createLoginDto("KaramsCoolUsername", "P455w0rd!");
 
         baseUri = "http://localhost:" + testServerPort + "/auth";
         String loginString = baseUri + "/login";
@@ -59,7 +61,6 @@ public class AuthControllerIT extends TestUtils {
     @Test
     public void shouldReturn200andCreateTokenWhenUserExistsAndPasswordCorrect() {
         //given
-        LoginDto loginDto = createLoginDto("KaramsCoolUsername", "P455w0rd!");
         HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
 
         //when
@@ -73,9 +74,8 @@ public class AuthControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn401WhenUserDoesNotExists() {
+    public void shouldReturn401WhenUserDoesNotExist() {
         //given
-        LoginDto loginDto = createLoginDto("KaramsCoolUsername", "P455w0rd!");
         HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
 
         //when
@@ -89,8 +89,8 @@ public class AuthControllerIT extends TestUtils {
     @Test
     public void shouldReturn401WhenUserExistsAndPasswordIncorrect() {
         //given
-        LoginDto loginDto = createLoginDto("KaramsCoolUsername", "WrongPassword");
-        HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
+        LoginDto loginWrongPasswordDto = createLoginDto("KaramsCoolUsername", "WrongPassword");
+        HttpEntity<LoginDto> request = new HttpEntity<>(loginWrongPasswordDto);
 
         //when
         userRepository.saveAndFlush(user);
