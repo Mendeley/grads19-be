@@ -1,4 +1,4 @@
-package com.gradproject2019;
+package com.gradproject2019.conferences;
 
 import com.gradproject2019.conferences.data.ConferencePatchRequestDto;
 import com.gradproject2019.conferences.data.ConferenceRequestDto;
@@ -39,7 +39,7 @@ public class ConferenceControllerIT {
     private TestRestTemplate restTemplate;
 
     @LocalServerPort
-    int testServerPort = 8080;
+    int testServerPort;
 
     private Conference conference;
     private String baseUrl;

@@ -1,4 +1,4 @@
-package com.gradproject2019;
+package com.gradproject2019.user;
 
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.persistance.User;
@@ -34,7 +34,7 @@ public class UserControllerIT {
     private TestRestTemplate restTemplate;
 
     @LocalServerPort
-    int testServerPort = 8080;
+    int testServerPort;
 
     private User user;
     private String baseUrl;
