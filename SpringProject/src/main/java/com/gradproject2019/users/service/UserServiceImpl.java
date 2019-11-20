@@ -8,9 +8,7 @@ import com.gradproject2019.users.exception.InvalidPasswordFormatException;
 import com.gradproject2019.users.exception.InvalidUsernameFormatException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
-import com.gradproject2019.utils.EmailUtils;
-import com.gradproject2019.utils.PasswordUtils;
-import com.gradproject2019.utils.UsernameUtils;
+import com.gradproject2019.utils.AuthUtils;
 import org.springframework.stereotype.Service;
 
 import static com.gradproject2019.users.data.UserRequestDto.from;
@@ -19,6 +17,10 @@ import static com.gradproject2019.users.data.UserRequestDto.from;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    public static final String PASSWORD_PATTERN = "((?=.*[a-z])(?=.*[0-9])(?=.*[!?\\#@^&£$*+;:~])(?=.*[A-Z]).{8,16})";
+    public static final String EMAIL_PATTERN = "^[a-zA-Z0-9\\.\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\_\\`]+@[a-zA-Z0-9]+\\.[\\.A-Za-z]{1,10}";
+    public static final String USERNAME_PATTERN = "^[a-zA-Z0-9]*$";
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -38,25 +40,26 @@ public class UserServiceImpl implements UserService {
         checkEmail(email);
 
         User user = from(userRequestDto);
-        user.setPassword(PasswordUtils.hash(password));
+        user.setPassword(AuthUtils.hash(password));
 
         return new UserResponseDto().from(userRepository.saveAndFlush(user));
     }
 
     private void checkPassword(String password) {
-        if (!PasswordUtils.validate(password)) {
+        if (!AuthUtils.validate(password, PASSWORD_PATTERN)) {
+
             throw new InvalidPasswordFormatException();
         }
     }
 
     private void checkUsername(String username) {
-        if (!UsernameUtils.validate(username)) {
+        if (!AuthUtils.validate(username, USERNAME_PATTERN)) {
             throw new InvalidUsernameFormatException();
         }
     }
 
     private void checkEmail(String email) {
-        if (!EmailUtils.validate(email)) {
+        if (!AuthUtils.validate(email, EMAIL_PATTERN)) {
             throw new InvalidEmailFormatException();
         }
     }
