@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void deleteToken(UUID token) {
+    public void logout(UUID token) {
         checkTokenExists(token);
         authRepository.deleteByToken(token);
     }

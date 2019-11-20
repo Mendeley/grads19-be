@@ -24,9 +24,9 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
-    @DeleteMapping(path = "/auth/login")
-    public ResponseEntity<Void> deleteToken(@PathVariable("/auth/login") UUID token) {
-        authService.deleteToken(token);
+    @DeleteMapping(path = "/auth/logout")
+    public ResponseEntity<Void> logout(@RequestBody UUID token) {
+        authService.logout(token);
         return ResponseEntity.noContent().build();
     }
 }

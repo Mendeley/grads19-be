@@ -9,5 +9,5 @@ public interface AuthService {
 
     Token login(LoginDto loginDto);
 
-    void deleteToken(UUID token);
+    void logout(UUID token);
 }
