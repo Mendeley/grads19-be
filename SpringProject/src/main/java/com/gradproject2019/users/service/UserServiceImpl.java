@@ -2,10 +2,8 @@ package com.gradproject2019.users.service;
 
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
-import com.gradproject2019.users.exception.CredentialsExistException;
-import com.gradproject2019.users.exception.InvalidEmailFormatException;
-import com.gradproject2019.users.exception.InvalidPasswordFormatException;
-import com.gradproject2019.users.exception.InvalidUsernameFormatException;
+import com.gradproject2019.users.exception.UserInfoExistsException;
+import com.gradproject2019.users.exception.InvalidRegexFormatException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
@@ -48,31 +46,31 @@ public class UserServiceImpl implements UserService {
     private void checkPassword(String password) {
         if (!AuthUtils.validate(password, PASSWORD_PATTERN)) {
 
-            throw new InvalidPasswordFormatException();
+            throw new InvalidRegexFormatException();
         }
     }
 
     private void checkUsername(String username) {
         if (!AuthUtils.validate(username, USERNAME_PATTERN)) {
-            throw new InvalidUsernameFormatException();
+            throw new InvalidRegexFormatException();
         }
     }
 
     private void checkEmail(String email) {
         if (!AuthUtils.validate(email, EMAIL_PATTERN)) {
-            throw new InvalidEmailFormatException();
+            throw new InvalidRegexFormatException();
         }
     }
 
     private void usernameExists(String username) {
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new CredentialsExistException();
+            throw new UserInfoExistsException();
         }
     }
 
     private void emailExists(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new CredentialsExistException();
+            throw new UserInfoExistsException();
         }
     }
 }
