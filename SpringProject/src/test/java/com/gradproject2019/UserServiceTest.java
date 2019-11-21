@@ -30,7 +30,7 @@ public class UserServiceTest {
     public void shouldThrowErrorWhenUsernameExists() {
         //given user adds username
         given(userRepository.findByUsername("qwerty")).willReturn(Optional.of(qwerty));
-        UserRequestDto copycat = createUserRequestDto("notqwerty","notqwerty", "notqwerty@qwerty.com", "notqwerty", "NotQwerty!1",  "qwerty");
+        UserRequestDto copycat = createUserRequestDto ("notqwerty@qwerty.com", "qwerty");
 
         //when username already exists
         userService.saveUser(copycat);
@@ -40,21 +40,21 @@ public class UserServiceTest {
     public void shouldThrowErrorWhenEmailExists() {
         //given user adds email
         given(userRepository.findByEmail("qwerty@qwerty.com")).willReturn(Optional.of(qwerty));
-        UserRequestDto copycat = createUserRequestDto("notqwerty","notqwerty", "qwerty@qwerty.com", "notqwerty", "NotQwerty!1",  "notqwerty");
+        UserRequestDto copycat = createUserRequestDto("qwerty@qwerty.com","notqwerty");
 
         //when email already exists
         userService.saveUser(copycat);
     }
 
-    private UserRequestDto createUserRequestDto(String firstName, String lastName, String email, String occupation, String password, String username) {
+    private UserRequestDto createUserRequestDto( String email, String username) {
         return UserRequestDto
                 .UserRequestDtoBuilder
                 .anUserRequestDto()
-                .withFirstName(firstName)
-                .withLastName(lastName)
+                .withFirstName("notqwerty")
+                .withLastName("notqwerty")
                 .withEmail(email)
-                .withOccupation(occupation)
-                .withPassword(password)
+                .withOccupation("notqwerty")
+                .withPassword("NotQwerty!1")
                 .withUsername(username)
                 .build();
     }

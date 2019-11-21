@@ -18,9 +18,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public static final String PASSWORD_PATTERN = "((?=.*[a-z])(?=.*[0-9])(?=.*[!?\\#@^&£$*+;:~])(?=.*[A-Z]).{8,16})";
-    public static final String EMAIL_PATTERN = "^[a-zA-Z0-9\\.\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\_\\`]+@[a-zA-Z0-9]+\\.[\\.A-Za-z]{1,10}";
-    public static final String USERNAME_PATTERN = "^[a-zA-Z0-9]*$";
+    public static final String PASSWORD_VALIDATION_PATTERN = "((?=.*[a-z])(?=.*[0-9])(?=.*[!?\\#@^&£$*+;:~])(?=.*[A-Z]).{8,16})";
+    public static final String EMAIL_VALIDATION_PATTERN = "^[a-zA-Z0-9\\.\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\_\\`]+@[a-zA-Z0-9]+\\.[\\.A-Za-z]{1,10}";
+    public static final String USERNAME_VALIDATION_PATTERN = "^[a-zA-Z0-9]*$";
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -46,20 +46,20 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkPassword(String password) {
-        if (!AuthUtils.validate(password, PASSWORD_PATTERN)) {
+        if (!AuthUtils.validate(password, PASSWORD_VALIDATION_PATTERN)) {
 
             throw new InvalidPasswordFormatException();
         }
     }
 
     private void checkUsername(String username) {
-        if (!AuthUtils.validate(username, USERNAME_PATTERN)) {
+        if (!AuthUtils.validate(username, USERNAME_VALIDATION_PATTERN)) {
             throw new InvalidUsernameFormatException();
         }
     }
 
     private void checkEmail(String email) {
-        if (!AuthUtils.validate(email, EMAIL_PATTERN)) {
+        if (!AuthUtils.validate(email, EMAIL_VALIDATION_PATTERN)) {
             throw new InvalidEmailFormatException();
         }
     }
