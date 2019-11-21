@@ -33,9 +33,9 @@ public class UserServiceImpl implements UserService {
         usernameExists(username);
         emailExists(email);
 
-        checkPassword(password);
-        checkUsername(username);
-        checkEmail(email);
+        checkRegex(password, PASSWORD_VALIDATION_PATTERN);
+        checkRegex(username, USERNAME_VALIDATION_PATTERN);
+        checkRegex(email, EMAIL_VALIDATION_PATTERN);
 
         User user = from(userRequestDto);
         user.setPassword(AuthUtils.hash(password));
@@ -43,21 +43,8 @@ public class UserServiceImpl implements UserService {
         return new UserResponseDto().from(userRepository.saveAndFlush(user));
     }
 
-    private void checkPassword(String password) {
-        if (!AuthUtils.validate(password, PASSWORD_VALIDATION_PATTERN)) {
-
-            throw new InvalidRegexFormatException();
-        }
-    }
-
-    private void checkUsername(String username) {
-        if (!AuthUtils.validate(username, USERNAME_VALIDATION_PATTERN)) {
-            throw new InvalidRegexFormatException();
-        }
-    }
-
-    private void checkEmail(String email) {
-        if (!AuthUtils.validate(email, EMAIL_VALIDATION_PATTERN)) {
+    private void checkRegex(String input, String pattern) {
+        if (!AuthUtils.validate(input, pattern)) {
             throw new InvalidRegexFormatException();
         }
     }
