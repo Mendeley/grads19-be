@@ -31,7 +31,6 @@ public class ConferenceServiceTest {
     private final Conference conference1 = new Conference(1L, "Grace's conference", Instant.now(), "Leicester", "All about Grace's fabulous and extra house", "grace");
     private final Conference conference2 = new Conference(2L, "Sophia's conference", Instant.now(), "London", "All about Sophia's fabulous and extra house", "grace");
 
-
     @Test
     public void shouldGetListOfAllConferences() {
         // GIVEN

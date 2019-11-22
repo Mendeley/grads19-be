@@ -1,10 +1,11 @@
 package com.gradproject2019.auth;
 
+import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
 import com.gradproject2019.auth.data.LoginDto;
 import com.gradproject2019.auth.persistance.Token;
 import com.gradproject2019.users.persistance.User;
-import com.gradproject2019.utils.PasswordUtils;
+import com.gradproject2019.utils.AuthUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,7 +44,7 @@ public class AuthControllerIT extends TestUtils {
     @Before
     public void setUp() throws URISyntaxException {
         clearRepositories();
-        hashedPassword = PasswordUtils.hash("P455w0rd!");
+        hashedPassword = AuthUtils.hash("P455w0rd!");
         user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist");
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         loginDto = createLoginDto("KaramsCoolUsername", "P455w0rd!");
