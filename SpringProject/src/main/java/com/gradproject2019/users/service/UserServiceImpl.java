@@ -3,7 +3,7 @@ package com.gradproject2019.users.service;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.UserInfoExistsException;
-import com.gradproject2019.users.exception.InvalidRegexFormatException;
+import com.gradproject2019.users.exception.InvalidCredentialsException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkRegex(String input, String pattern) {
         if (!AuthUtils.validate(input, pattern)) {
-            throw new InvalidRegexFormatException();
+            throw new InvalidCredentialsException();
         }
     }
 
