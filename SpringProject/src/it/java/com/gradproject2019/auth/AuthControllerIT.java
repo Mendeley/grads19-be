@@ -1,5 +1,6 @@
 package com.gradproject2019.auth;
 
+import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.gradproject2019.utils.TestUtils;
 import com.gradproject2019.auth.data.LoginDto;
 import com.gradproject2019.auth.persistance.Token;
@@ -15,13 +16,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
+import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;
 
 @RunWith(SpringRunner.class)
@@ -39,6 +44,8 @@ public class AuthControllerIT extends TestUtils {
     private String baseUri;
     private String hashedPassword;
     private LoginDto loginDto;
+    private URI logoutUri;
+    private Token testToken;
 
     @Before
     public void setUp() throws URISyntaxException {
@@ -49,8 +56,10 @@ public class AuthControllerIT extends TestUtils {
         loginDto = createLoginDto("KaramsCoolUsername", "P455w0rd!");
 
         baseUri = "http://localhost:" + testServerPort + "/auth";
-        String loginString = baseUri + "/login";
-        loginUri = new URI(loginString);
+        loginUri = new URI(baseUri + "/login");
+        logoutUri = new URI(baseUri + "/logout");
+
+        testToken = new Token(1L, randomUUID());
     }
 
     @After
@@ -58,14 +67,14 @@ public class AuthControllerIT extends TestUtils {
         clearRepositories();
     }
 
+    //tests to check login in endpoint works
     @Test
     public void shouldReturn200andCreateTokenWhenUserExistsAndPasswordCorrect() {
         //given
-        HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
+        User savedUser = userRepository.saveAndFlush(user);
 
         //when
-        User savedUser = userRepository.saveAndFlush(user);
-        ResponseEntity<Token> response = login(loginUri, request);
+        ResponseEntity<Token> response = login();
 
         //then
         Assert.assertEquals(200, response.getStatusCodeValue());
@@ -79,7 +88,7 @@ public class AuthControllerIT extends TestUtils {
         HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
 
         //when
-        ResponseEntity<ErrorEntity> response = loginExpectingError(loginUri, request);
+        ResponseEntity<ErrorEntity> response = loginExpectingError(request);
 
         //then
         Assert.assertEquals(401, response.getStatusCodeValue());
@@ -94,19 +103,37 @@ public class AuthControllerIT extends TestUtils {
 
         //when
         userRepository.saveAndFlush(user);
-        ResponseEntity<ErrorEntity> response = loginExpectingError(loginUri, request);
+        ResponseEntity<ErrorEntity> response = loginExpectingError(request);
 
         //then
         Assert.assertEquals(401, response.getStatusCodeValue());
         Assert.assertEquals("Invalid user credentials.", response.getBody().getMessage());
     }
 
-    private ResponseEntity<Token> login(URI loginUri, HttpEntity<LoginDto> request) {
-        return restTemplate.exchange(loginUri, POST, request, Token.class);
+    //test to check the delete token endpoint
+    @Test
+    public void shouldReturn204andDeleteTokenWhenTokenExists() {
+        //given token exists
+        Token savedToken = authRepository.saveAndFlush(testToken);
+
+        //when the user logs out
+        ResponseEntity response = logout();
+
+        //then
+        Assert.assertEquals(204, response.getStatusCodeValue());
+
     }
 
-    private ResponseEntity<ErrorEntity> loginExpectingError(URI loginUri, HttpEntity<LoginDto> request) {
+    private ResponseEntity<Token> login() {
+        return restTemplate.exchange(loginUri, POST,  new HttpEntity<>(loginDto), Token.class);
+    }
+
+    private ResponseEntity<ErrorEntity> loginExpectingError(HttpEntity<LoginDto> request) {
         return restTemplate.exchange(loginUri, POST, request, ErrorEntity.class);
+    }
+
+    private ResponseEntity logout() {
+        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(testToken.getToken()), Void.class);
     }
 
     private LoginDto createLoginDto(String username, String password) {
