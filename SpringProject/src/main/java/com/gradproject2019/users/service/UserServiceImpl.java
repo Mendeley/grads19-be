@@ -17,8 +17,15 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     public static final String PASSWORD_VALIDATION_PATTERN = "((?=.*[a-z])(?=.*[0-9])(?=.*[!?\\#@^&£$*+;:~])(?=.*[A-Z]).{8,16})";
+    //Password must contain one capital letter, one lowercase letter, one special character and one number
+    //Password must also be between 8 and 16 characters in length
     public static final String EMAIL_VALIDATION_PATTERN = "^[a-zA-Z0-9\\.\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\_\\`]+@[a-zA-Z0-9]+\\.[\\.A-Za-z]{1,10}";
+    //Email must contain an '@' and a '.'
+    //Email must not contain spaces
+    //Email can only contain lowercase, uppercase, numbers and the following special characters ".!#$%&'*+-/=?^_`"
     public static final String USERNAME_VALIDATION_PATTERN = "^[a-zA-Z0-9]*$";
+    //Username must not contain spaces
+    //Username can only contain lowercase, uppercase and numbers
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -26,21 +33,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto saveUser(UserRequestDto userRequestDto) {
-        String password = userRequestDto.getPassword();
-        String username = userRequestDto.getUsername();
-        String email = userRequestDto.getEmail();
-
-        usernameExists(username);
-        emailExists(email);
-
-        checkRegex(password, PASSWORD_VALIDATION_PATTERN);
-        checkRegex(username, USERNAME_VALIDATION_PATTERN);
-        checkRegex(email, EMAIL_VALIDATION_PATTERN);
+        checkRegexValidity(userRequestDto);
+        userExists(userRequestDto);
 
         User user = from(userRequestDto);
-        user.setPassword(AuthUtils.hash(password));
+        user.setPassword(AuthUtils.hash(userRequestDto.getPassword()));
 
         return new UserResponseDto().from(userRepository.saveAndFlush(user));
+    }
+
+    private void checkRegexValidity(UserRequestDto userRequestDto) {
+        checkRegex(userRequestDto.getPassword(), PASSWORD_VALIDATION_PATTERN);
+        checkRegex(userRequestDto.getUsername(), USERNAME_VALIDATION_PATTERN);
+        checkRegex(userRequestDto.getEmail(), EMAIL_VALIDATION_PATTERN);
     }
 
     private void checkRegex(String input, String pattern) {
@@ -49,16 +54,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void usernameExists(String username) {
-        if (userRepository.findByUsername(username).isPresent()) {
+    private void userExists(UserRequestDto userRequestDto) {
+        if (userRepository.findByUsername(userRequestDto.getUsername()).isPresent()) {
             throw new UserInfoExistsException();
         }
-    }
-
-    private void emailExists(String email) {
-        if (userRepository.findByEmail(email).isPresent()) {
+        if (userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) {
             throw new UserInfoExistsException();
         }
     }
 }
-

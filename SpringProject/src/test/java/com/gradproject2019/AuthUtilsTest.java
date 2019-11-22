@@ -11,29 +11,62 @@ public class AuthUtilsTest {
     private final String hashedPassword = AuthUtils.hash(password);
 
     @Test
-    public void shouldCheckPasswordIsValidAgainstRegex() {
-        Assert.assertFalse(AuthUtils.validate("1@Aa", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
-        Assert.assertFalse(AuthUtils.validate("@Password", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
-        Assert.assertFalse(AuthUtils.validate("1@password", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
-        Assert.assertFalse(AuthUtils.validate("1Password", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
-
+    public void shouldCheckPasswordContainsACapitalASpecialCharacterANumberAndIsBetween8And16Characters() {
         Assert.assertTrue(AuthUtils.validate("1@Password", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
-
     }
 
     @Test
-    public void shouldCheckEmailIsValidAgainstRegex () {
-        Assert.assertTrue(AuthUtils.validate("Gracesophia!1@gmail.com", UserServiceImpl.EMAIL_VALIDATION_PATTERN));
+    public void shouldCheckPasswordLengthGreaterThan8Characters() {
+        Assert.assertFalse(AuthUtils.validate("1@Aa", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
+    }
 
+    @Test
+    public void shouldCheckPasswordIsLessThan16Characters() {
+        Assert.assertFalse(AuthUtils.validate("1@Aaaaaaaaaaaaaaa", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
+    }
+
+    @Test
+    public void shouldCheckPasswordContainsNumber() {
+        Assert.assertFalse(AuthUtils.validate("@Password", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
+    }
+
+    @Test
+    public void shouldCheckPasswordContainsCapital() {
+        Assert.assertFalse(AuthUtils.validate("1@password", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
+    }
+
+    @Test
+    public void shouldCheckPasswordContainsSpecialCharacter() {
+        Assert.assertFalse(AuthUtils.validate("1Password", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
+    }
+
+    @Test
+    public void shouldCheckEmailIsValidAgainstRegex() {
+        Assert.assertTrue(AuthUtils.validate("Gracesophia!1@gmail.com", UserServiceImpl.EMAIL_VALIDATION_PATTERN));
+    }
+
+    @Test
+    public void shouldCheckEmailContainsDomain() {
         Assert.assertFalse(AuthUtils.validate("gracesophiagmail.com", UserServiceImpl.EMAIL_VALIDATION_PATTERN));
+    }
+
+    @Test
+    public void shouldCheckEmailContainsDot() {
         Assert.assertFalse(AuthUtils.validate("gracesophia@gmailcom", UserServiceImpl.EMAIL_VALIDATION_PATTERN));
+    }
+
+    @Test
+       public void shouldCheckEmailContainsNoSpaces() {
         Assert.assertFalse(AuthUtils.validate("gracesophia @gmailcom", UserServiceImpl.EMAIL_VALIDATION_PATTERN));
     }
 
     @Test
-    public void shouldCheckUsernameNoSpaces() {
-        Assert.assertFalse(AuthUtils.validate("Sophia Grace", UserServiceImpl.USERNAME_VALIDATION_PATTERN));
+    public void shouldCheckUsernameIsValidAgainstRegex () {
         Assert.assertTrue(AuthUtils.validate("SophiaGrace", UserServiceImpl.USERNAME_VALIDATION_PATTERN));
+    }
+    @Test
+    public void shouldCheckUsernameContainsNoSpaces() {
+        Assert.assertFalse(AuthUtils.validate("Sophia Grace", UserServiceImpl.USERNAME_VALIDATION_PATTERN));
     }
 
     @Test
