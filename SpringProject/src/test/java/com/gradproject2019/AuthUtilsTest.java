@@ -11,13 +11,13 @@ public class AuthUtilsTest {
     private final String hashedPassword = AuthUtils.hash(password);
 
     @Test
-    public void shouldCheckPasswordContainsACapitalASpecialCharacterANumberAndIsBetween8And16Characters() {
+    public void shouldCheckPasswordIsValidAgainstRegex() {
         Assert.assertTrue(AuthUtils.validate("1@Password", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
     }
 
     @Test
     public void shouldCheckPasswordLengthGreaterThan8Characters() {
-        Assert.assertFalse(AuthUtils.validate("1@Aa", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
+        Assert.assertFalse(AuthUtils.validate("1@Aaaaa", UserServiceImpl.PASSWORD_VALIDATION_PATTERN));
     }
 
     @Test

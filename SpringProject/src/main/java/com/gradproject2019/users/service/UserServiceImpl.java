@@ -17,15 +17,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     public static final String PASSWORD_VALIDATION_PATTERN = "((?=.*[a-z])(?=.*[0-9])(?=.*[!?\\#@^&£$*+;:~])(?=.*[A-Z]).{8,16})";
-    //Password must contain one capital letter, one lowercase letter, one special character and one number
-    //Password must also be between 8 and 16 characters in length
     public static final String EMAIL_VALIDATION_PATTERN = "^[a-zA-Z0-9\\.\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\_\\`]+@[a-zA-Z0-9]+\\.[\\.A-Za-z]{1,10}";
-    //Email must contain an '@' and a '.'
-    //Email must not contain spaces
-    //Email can only contain lowercase, uppercase, numbers and the following special characters ".!#$%&'*+-/=?^_`"
     public static final String USERNAME_VALIDATION_PATTERN = "^[a-zA-Z0-9]*$";
-    //Username must not contain spaces
-    //Username can only contain lowercase, uppercase and numbers
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
