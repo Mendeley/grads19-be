@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto saveUser(UserRequestDto userRequestDto) {
-        checkRegexValidity(userRequestDto);
+        checkCredentialsValidity(userRequestDto);
         userExists(userRequestDto);
 
         User user = from(userRequestDto);
@@ -35,13 +35,13 @@ public class UserServiceImpl implements UserService {
         return new UserResponseDto().from(userRepository.saveAndFlush(user));
     }
 
-    private void checkRegexValidity(UserRequestDto userRequestDto) {
-        checkRegex(userRequestDto.getPassword(), PASSWORD_VALIDATION_PATTERN);
-        checkRegex(userRequestDto.getUsername(), USERNAME_VALIDATION_PATTERN);
-        checkRegex(userRequestDto.getEmail(), EMAIL_VALIDATION_PATTERN);
+    private void checkCredentialsValidity(UserRequestDto userRequestDto) {
+        checkCredentials(userRequestDto.getPassword(), PASSWORD_VALIDATION_PATTERN);
+        checkCredentials(userRequestDto.getUsername(), USERNAME_VALIDATION_PATTERN);
+        checkCredentials(userRequestDto.getEmail(), EMAIL_VALIDATION_PATTERN);
     }
 
-    private void checkRegex(String input, String pattern) {
+    private void checkCredentials(String input, String pattern) {
         if (!AuthUtils.validate(input, pattern)) {
             throw new InvalidCredentialsException();
         }
