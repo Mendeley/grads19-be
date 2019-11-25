@@ -2,20 +2,19 @@ package com.gradproject2019.auth.persistance;
 
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name = "tokens")
 public class Token {
-    @Id
     private Long userId;
-    @Type(type="uuid-char")
+    @Id
+    @Type(type = "uuid-char")
     private UUID token;
 
-    public Token() {}
+    public Token() {
+    }
 
     public Token(Long userId, UUID token) {
         this.userId = userId;

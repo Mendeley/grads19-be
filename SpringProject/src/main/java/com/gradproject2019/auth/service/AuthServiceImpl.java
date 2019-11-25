@@ -50,11 +50,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout(UUID token) {
         checkTokenExists(token);
-        authRepository.deleteByToken(token);
+        authRepository.deleteById(token);
     }
 
     private void checkTokenExists(UUID token) {
-        if(!authRepository.existsByToken(token)) {
+        if(!authRepository.findById(token).isPresent()) {
             throw new TokenNotFoundException();
         }
     }
