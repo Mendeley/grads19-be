@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @DeleteMapping(path = "/auth/logout")
-    public ResponseEntity<Void> logout(@RequestBody UUID token) {
+    public ResponseEntity<Void> logout(@RequestHeader UUID token) {
         authService.logout(token);
         return ResponseEntity.noContent().build();
     }
