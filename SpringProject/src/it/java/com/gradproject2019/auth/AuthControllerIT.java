@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -124,6 +125,8 @@ public class AuthControllerIT extends TestUtils {
 
     }
 
+
+
     private ResponseEntity<Token> login() {
         return restTemplate.exchange(loginUri, POST,  new HttpEntity<>(loginDto), Token.class);
     }
@@ -133,7 +136,9 @@ public class AuthControllerIT extends TestUtils {
     }
 
     private ResponseEntity logout() {
-        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(testToken.getToken()), Void.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
+        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(headers), Void.class);
     }
 
     private LoginDto createLoginDto(String username, String password) {
