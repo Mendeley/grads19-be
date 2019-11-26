@@ -209,7 +209,7 @@ public class ConferenceControllerIT extends TestUtils {
         URI uri = new URI(baseUri + "/" + savedConference.getId());
         String newName= "Harry's conference";
         String newCity= "Manchester/North";
-        ConferencePatchRequestDto request = createPatchRequestDto(newName,null,newCity, null, null);
+        ConferencePatchRequestDto request = createPatchRequestDto(newName, null, newCity, null, null);
 
         //when
         ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);

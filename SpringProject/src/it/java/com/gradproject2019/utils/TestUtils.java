@@ -24,9 +24,9 @@ public class TestUtils {
     @Autowired
     public TestRestTemplate restTemplate;
 
-    public User user;
+    private User user;
     public User savedUser;
-    public String hashedPassword;
+    private String hashedPassword;
     public Token testToken;
 
     public void clearRepositories() {
