@@ -1,8 +1,10 @@
 package com.gradproject2019.user;
 
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.auth.persistance.Token;
 import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.users.data.UserRequestDto;
+import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import org.junit.After;
@@ -26,8 +28,7 @@ import java.net.URISyntaxException;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -45,15 +46,14 @@ public class UserControllerIT {
     @LocalServerPort
     int testServerPort;
 
-
+    private User user;
     private String baseUrl;
-
 
     @Before
     public void setUp() {
         authRepository.deleteAll();
         userRepository.deleteAll();
-
+        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
         baseUrl = "http://localhost:" + testServerPort + "/users";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
@@ -119,6 +119,41 @@ public class UserControllerIT {
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
+    @Test
+    public void shouldReturn404WhenUserToBeEditedNotFound() throws URISyntaxException{
+        //given
+        URI uri = new URI(baseUrl + "/1000000000");
+        HttpEntity<UserPatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(null, null, null, null, null, null));
+
+        //when
+        ResponseEntity<UserResponseDto> response = editUser(uri, request);
+
+        //then
+        Assert.assertEquals(404, response.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
+        //given
+        User savedUser = userRepository.saveAndFlush(user);
+        URI uri = new URI(baseUrl + "/" + savedUser.getId());
+        String newUsername= "sophiaUsername";
+        String newFirstName= "Sophia";
+        HttpEntity<UserPatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(newUsername,newFirstName,null, null, null, null));
+
+        //when
+        ResponseEntity<UserResponseDto> response = editUser(uri, request);
+
+        //then
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedUser.getId(), response.getBody().getId());
+        Assert.assertEquals(newUsername, response.getBody().getUsername());
+        Assert.assertEquals(newFirstName, response.getBody().getFirstName());
+        Assert.assertEquals(savedUser.getLastName(), response.getBody().getLastName());
+        Assert.assertEquals(savedUser.getEmail(), response.getBody().getEmail());
+        Assert.assertEquals(savedUser.getOccupation(), response.getBody().getOccupation());
+    }
+
     //should pass if user in user database and token in token database
     @Test
     public void shouldReturn200WhenUserRegisteredandLoggedIn() throws URISyntaxException {
@@ -142,6 +177,10 @@ public class UserControllerIT {
         return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
     }
 
+    private ResponseEntity<UserResponseDto> editUser(URI uri, HttpEntity<UserPatchRequestDto> request) {
+        return restTemplate.exchange(uri, PATCH, request, new ParameterizedTypeReference<UserResponseDto>() {});
+    }
+
     private ResponseEntity<User> getUserById(Long userId, UUID token) throws URISyntaxException {
         URI uri = new URI(baseUrl + "/" + userId);
         HttpHeaders headers = new HttpHeaders();
@@ -158,6 +197,18 @@ public class UserControllerIT {
                 .withLastName(lastName)
                 .withEmail(email)
                 .withPassword(password)
+                .withOccupation(occupation)
+                .build();
+    }
+
+    private UserPatchRequestDto createPatchRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {
+        return UserPatchRequestDto
+                .UserPatchRequestDtoBuilder
+                .anUserPatchRequestDto()
+                .withUsername(username)
+                .withFirstName(firstName)
+                .withLastName(lastName)
+                .withEmail(email)
                 .withOccupation(occupation)
                 .build();
     }

@@ -1,5 +1,6 @@
 package com.gradproject2019.users.controller;
 
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.service.UserService;
@@ -24,9 +25,15 @@ public class UserController {
         return ResponseEntity.ok(newUser);
     }
 
+    @PatchMapping(path = "/users/{id}")
+    public ResponseEntity<UserResponseDto> editUser(@RequestBody UserPatchRequestDto userPatchRequestDto, UserRequestDto userRequestDto, @PathVariable("id") Long userId) {
+        UserResponseDto userResponseDto = userService.editUser(userId, userPatchRequestDto, userRequestDto);
+        return ResponseEntity.ok(userResponseDto);
+    }
+
     @GetMapping(path = "/users/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@RequestHeader("Authorization") UUID token, @PathVariable("id") Long userId) {
-        UserResponseDto userResponseDto = userService.getUserById(userId, token);
+        UserResponseDto userResponseDto = userService.findUserById(userId, token);
         return ResponseEntity.ok(userResponseDto);
     }
 }

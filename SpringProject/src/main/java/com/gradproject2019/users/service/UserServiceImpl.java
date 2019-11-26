@@ -1,5 +1,6 @@
 package com.gradproject2019.users.service;
 
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.auth.exception.TokenNotFoundException;
 import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.users.data.UserRequestDto;
@@ -13,8 +14,8 @@ import com.gradproject2019.utils.AuthUtils;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 
-import static com.gradproject2019.users.data.UserRequestDto.from;
 
+import static com.gradproject2019.users.data.UserRequestDto.from;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -43,14 +44,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getUserById(Long userId, UUID token) {
+    public UserResponseDto findUserById(Long userId, UUID token) {
         //need to check user exists
         userExistsById(userId);
         //need to check user logged in
         userLoggedIn(token);
-        return new UserResponseDto().from(
-                userRepository.findById(userId).
-                orElseThrow(UserNotFoundException::new));
+        return getUserById(userId);
 
     }
 
@@ -73,6 +72,20 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) {
             throw new UserInfoExistsException();
         }
+    }
+
+    public UserResponseDto editUser(Long userId, UserPatchRequestDto userPatch, UserRequestDto userRequestDto){
+        userExists(userRequestDto);
+
+        userRepository.updateUser(userId, userPatch.getFirstName(), userPatch.getLastName(), userPatch.getUsername(), userPatch.getEmail(), userPatch.getOccupation());
+
+        return getUserById(userId);
+    }
+
+    public UserResponseDto getUserById(Long userId) {
+        return new UserResponseDto().from(userRepository
+                .findById(userId)
+                .orElseThrow(UserNotFoundException::new));
     }
     private void userExistsById(Long userId){
         //checks user in Users table using user ID
