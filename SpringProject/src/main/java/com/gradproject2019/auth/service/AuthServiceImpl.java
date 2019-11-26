@@ -7,7 +7,7 @@ import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.auth.exception.InvalidCredentialsException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
-import com.gradproject2019.utils.PasswordUtils;
+import com.gradproject2019.utils.AuthUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void checkPasswordHashMatch(String password, String hash) {
-        if (!PasswordUtils.verifyHash(password, hash)) {
+        if (!AuthUtils.verifyHash(password, hash)) {
             throw new InvalidCredentialsException();
         }
     }

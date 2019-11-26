@@ -94,6 +94,19 @@ public class UserControllerIT {
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
+    @Test
+    public void shouldReturn400WhenUsernameWrongFormat() throws URISyntaxException {
+        //given
+        URI uri = new URI(baseUrl);
+        HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto("Karams Cool Username", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist"));
+
+        //when
+        ResponseEntity<String> response = postUser(uri, request);
+
+        //Then
+        Assert.assertEquals(400,response.getStatusCodeValue());
+    }
+
     private ResponseEntity<String> postUser(URI uri, HttpEntity<UserRequestDto> request) {
         return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
     }
