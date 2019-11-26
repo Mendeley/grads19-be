@@ -4,9 +4,11 @@ import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
 
+import java.util.UUID;
+
 public interface UserService {
 
     UserResponseDto saveUser(UserRequestDto userRequestDto);
-
+    UserResponseDto getUserById(Long userId, UUID token);
     UserResponseDto editUser(Long userId, UserPatchRequestDto userPatchRequestDto, UserRequestDto userRequestDto);
 }

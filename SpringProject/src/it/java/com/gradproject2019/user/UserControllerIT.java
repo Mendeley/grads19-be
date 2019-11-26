@@ -1,5 +1,7 @@
 package com.gradproject2019.user;
 
+import com.gradproject2019.auth.persistance.Token;
+import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
@@ -16,13 +18,18 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.*;
 
 @RunWith(SpringRunner.class)
@@ -33,18 +40,29 @@ public class UserControllerIT {
     private UserRepository userRepository;
 
     @Autowired
+    private AuthRepository authRepository;
+
+    @Autowired
     private TestRestTemplate restTemplate;
 
     @LocalServerPort
     int testServerPort;
 
     private User user;
+    private User savedUser;
+    private Token testToken;
+    private Token savedToken;
     private String baseUrl;
 
     @Before
     public void setUp() {
         userRepository.deleteAll();
-        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
+        authRepository.deleteAll();
+
+        user = new User( "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
+        savedUser = userRepository.saveAndFlush(user);
+        testToken = new Token(savedUser.getId(), randomUUID());
+        savedToken = authRepository.saveAndFlush(testToken);
         baseUrl = "http://localhost:" + testServerPort + "/users";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
@@ -144,12 +162,29 @@ public class UserControllerIT {
         Assert.assertEquals(savedUser.getOccupation(), response.getBody().getOccupation());
     }
 
+    //should pass if user in user database and token in token database
+    @Test
+    public void shouldReturn200WhenUserRegisteredandLoggedIn() throws URISyntaxException {
+        //when the user tries to view their profile
+        ResponseEntity<User> response = getUserById(savedUser.getId(), savedToken.getToken());
+
+        //then
+        Assert.assertEquals(200, response.getStatusCodeValue());
+    }
+
+
     private ResponseEntity<String> postUser(URI uri, HttpEntity<UserRequestDto> request) {
         return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
     }
 
     private ResponseEntity<UserResponseDto> editUser(URI uri, HttpEntity<UserPatchRequestDto> request) {
         return restTemplate.exchange(uri, PATCH, request, new ParameterizedTypeReference<UserResponseDto>() {});
+    }
+
+    private ResponseEntity<User> getUserById(Long userId, UUID token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, token.toString());
+        return restTemplate.exchange(baseUrl + "/" + userId, GET, new HttpEntity<>(headers), User.class);
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {
