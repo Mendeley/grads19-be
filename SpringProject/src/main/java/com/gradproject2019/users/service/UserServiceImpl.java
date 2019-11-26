@@ -1,9 +1,11 @@
 package com.gradproject2019.users.service;
 
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.InvalidCredentialsException;
+import com.gradproject2019.users.exception.UserNotFoundException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
@@ -54,5 +56,19 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) {
             throw new UserInfoExistsException();
         }
+    }
+
+    public UserResponseDto editUser(Long userId, UserPatchRequestDto userPatch, UserRequestDto userRequestDto){
+        userExists(userRequestDto);
+
+        userRepository.updateUser(userId, userPatch.getFirstName(), userPatch.getLastName(), userPatch.getUsername(), userPatch.getEmail(), userPatch.getOccupation());
+
+        return getUserById(userId);
+    }
+
+    public UserResponseDto getUserById(Long userId) {
+        return new UserResponseDto().from(userRepository
+                .findById(userId)
+                .orElseThrow(UserNotFoundException::new));
     }
 }
