@@ -175,7 +175,7 @@ public class ConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn401WhenHeaderNotValid() throws URISyntaxException {
+    public void shouldReturn401WhenUnauthorised() throws URISyntaxException {
         //given
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUri + "/" + savedConference.getId());
@@ -185,7 +185,7 @@ public class ConferenceControllerIT extends TestUtils {
 
         //then
         Assert.assertEquals(401, response.getStatusCodeValue());
-        Assert.assertEquals("Invalid user credentials.", response.getBody().getMessage());
+        Assert.assertEquals("User unauthorized to perform action.", response.getBody().getMessage());
         Assert.assertTrue(conferenceRepository.existsById(savedConference.getId()));
     }
 

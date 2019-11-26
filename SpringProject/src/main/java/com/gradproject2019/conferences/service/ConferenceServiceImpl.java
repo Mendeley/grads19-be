@@ -1,7 +1,7 @@
 package com.gradproject2019.conferences.service;
 
-import com.gradproject2019.auth.exception.InvalidCredentialsException;
 import com.gradproject2019.auth.exception.TokenNotFoundException;
+import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.conferences.data.ConferencePatchRequestDto;
 import com.gradproject2019.conferences.data.ConferenceRequestDto;
@@ -90,7 +90,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         try {
             authServiceImpl.checkTokenExists(token);
         } catch (TokenNotFoundException e) {
-            throw new InvalidCredentialsException();
+            throw new UserUnauthorisedException();
         }
     }
 }
