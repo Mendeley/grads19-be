@@ -2,34 +2,23 @@ package com.gradproject2019.auth;
 
 import com.gradproject2019.auth.data.LoginDto;
 import com.gradproject2019.auth.persistance.Token;
-import com.gradproject2019.users.persistance.User;
-import com.gradproject2019.utils.PasswordUtils;
-import com.gradproject2019.utils.TestUtils;
 import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
-import com.gradproject2019.auth.data.LoginDto;
-import com.gradproject2019.auth.persistance.Token;
-import com.gradproject2019.users.persistance.User;
-import com.gradproject2019.utils.AuthUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static java.util.UUID.randomUUID;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;
 
@@ -37,41 +26,23 @@ import static org.springframework.http.HttpMethod.POST;
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerIT extends TestUtils {
 
-    @Autowired
-    private TestRestTemplate restTemplate;
-
     @LocalServerPort
     int testServerPort;
 
-    private User user;
-    private User savedUser;
-    private URI loginUri;
     private String baseUri;
-    private String hashedPassword;
-    private LoginDto loginDto;
+    private URI loginUri;
     private URI logoutUri;
-    private Token testToken;
+    private LoginDto loginDto;
     private LoginDto secondLoginDto;
 
     @Before
     public void setUp() throws URISyntaxException {
-        clearRepositories();
-
-        //hashedPassword = PasswordUtils.hash("P455w0rd!");
-        hashedPassword = AuthUtils.hash("P455w0rd!");
-        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist");
-
-        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        universalSetUp();
         loginDto = createLoginDto("KaramsCoolUsername", "P455w0rd!");
         secondLoginDto = createLoginDto("Test1", "Test123?");
-
         baseUri = "http://localhost:" + testServerPort + "/auth";
         loginUri = new URI(baseUri + "/login");
         logoutUri = new URI(baseUri + "/logout");
-
-        savedUser = userRepository.saveAndFlush(user);
-
-        testToken = new Token(savedUser.getId(), randomUUID());
     }
 
     @After
@@ -79,7 +50,6 @@ public class AuthControllerIT extends TestUtils {
         clearRepositories();
     }
 
-    //tests to check login in endpoint works
     @Test
     public void shouldReturn200andCreateTokenWhenUserExistsAndPasswordCorrect() {
         //given
@@ -131,7 +101,6 @@ public class AuthControllerIT extends TestUtils {
 
         //then
         Assert.assertEquals(204, response.getStatusCodeValue());
-
     }
 
     @Test
@@ -144,7 +113,6 @@ public class AuthControllerIT extends TestUtils {
 
         //then
         Assert.assertEquals(404, response.getStatusCodeValue());
-
     }
 
     private ResponseEntity<Token> login() {

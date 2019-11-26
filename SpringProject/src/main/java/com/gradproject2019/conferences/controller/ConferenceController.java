@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
@@ -32,20 +33,20 @@ public class ConferenceController {
     }
 
     @PostMapping(path = "/conferences")
-    public ResponseEntity<ConferenceResponseDto> saveConference(@Valid @RequestBody ConferenceRequestDto conferenceRequestDto) {
-        ConferenceResponseDto newConference = conferenceService.saveConference(conferenceRequestDto);
+    public ResponseEntity<ConferenceResponseDto> saveConference(@RequestHeader("Authorization") UUID token, @Valid @RequestBody ConferenceRequestDto conferenceRequestDto) {
+        ConferenceResponseDto newConference = conferenceService.saveConference(token, conferenceRequestDto);
         return ResponseEntity.ok(newConference);
     }
 
     @DeleteMapping(path = "/conferences/{id}")
-    public ResponseEntity<Void> deleteConference(@PathVariable("id") Long conferenceId) {
-        conferenceService.deleteConference(conferenceId);
+    public ResponseEntity<Void> deleteConference(@RequestHeader("Authorization") UUID token, @PathVariable("id") Long conferenceId) {
+        conferenceService.deleteConference(token, conferenceId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping(path = "/conferences/{id}")
-    public ResponseEntity<ConferenceResponseDto> editConference(@RequestBody ConferencePatchRequestDto conferencePatchRequestDto, @PathVariable("id") Long conferenceId) {
-        ConferenceResponseDto conferenceResponseDto = conferenceService.editConference(conferenceId, conferencePatchRequestDto);
+    public ResponseEntity<ConferenceResponseDto> editConference(@RequestHeader("Authorization") UUID token, @RequestBody ConferencePatchRequestDto conferencePatchRequestDto, @PathVariable("id") Long conferenceId) {
+        ConferenceResponseDto conferenceResponseDto = conferenceService.editConference(token, conferenceId, conferencePatchRequestDto);
         return ResponseEntity.ok(conferenceResponseDto);
 
     }

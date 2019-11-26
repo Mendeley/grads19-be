@@ -4,20 +4,19 @@ import com.gradproject2019.conferences.data.ConferencePatchRequestDto;
 import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.persistance.Conference;
-import com.gradproject2019.conferences.repository.ConferenceRepository;
+import com.gradproject2019.utils.ErrorEntity;
+import com.gradproject2019.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
@@ -25,42 +24,37 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.http.HttpMethod.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ConferenceControllerIT {
-
-    @Autowired
-    private ConferenceRepository conferenceRepository;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
+public class ConferenceControllerIT extends TestUtils {
 
     @LocalServerPort
     int testServerPort;
 
+    private String baseUri;
     private Conference conference;
-    private String baseUrl;
 
     @Before
     public void setUp() {
-        conferenceRepository.deleteAll();
+        universalSetUp();
         conference = new Conference(1L, "Grace's conference", Instant.now().truncatedTo(ChronoUnit.SECONDS), "Leicester", "All about Grace's fabulous and extra house", "grace");
-        baseUrl = "http://localhost:" + testServerPort + "/conferences";
-        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        baseUri = "http://localhost:" + testServerPort + "/conferences";
+        authRepository.saveAndFlush(testToken);
     }
 
     @After
     public void tearDown() {
-       conferenceRepository.deleteAll();
+       clearRepositories();
     }
 
     @Test
     public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
         //given
-        URI uri = new URI(baseUrl);
+        URI uri = new URI(baseUri);
 
         //when
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
@@ -73,7 +67,7 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn200AndListOfConferencesWhenDatabasePopulated() throws URISyntaxException {
         //given
-        URI uri = new URI(baseUrl);
+        URI uri = new URI(baseUri);
         Conference addedConference = conferenceRepository.saveAndFlush(conference);
 
         //when
@@ -88,7 +82,7 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn404WhenIdDoesNotExist() throws URISyntaxException {
         //given
-        URI uri = new URI(baseUrl + "/1000000000");
+        URI uri = new URI(baseUri + "/1000000000");
 
         //when
         ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
@@ -101,7 +95,7 @@ public class ConferenceControllerIT {
     public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
         //given
         Conference addedConference =  conferenceRepository.saveAndFlush(conference);
-        URI uri = new URI(baseUrl + "/" + addedConference.getId());
+        URI uri = new URI(baseUri + "/" + addedConference.getId());
 
         //when
         ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
@@ -116,12 +110,11 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
         //given
-        URI uri = new URI(baseUrl);
+        URI uri = new URI(baseUri);
         ConferenceRequestDto conferenceRequestDto = createRequestDto("Grace's conference", Instant.parse("3000-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
-        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(conferenceRequestDto);
 
         //when
-        ResponseEntity<String> response = postConference(uri, request);
+        ResponseEntity<String> response = postConference(uri, conferenceRequestDto);
         Conference retrievedConference = conferenceRepository.findAll().get(0);
 
         //Then
@@ -132,8 +125,8 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
         //given
-        URI uri = new URI(baseUrl);
-        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto( null, null, null, null, null));
+        URI uri = new URI(baseUri);
+        ConferenceRequestDto request = createRequestDto( null, null, null, null, null);
 
         //when
         ResponseEntity<String> response = postConference(uri, request);
@@ -145,8 +138,8 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn400WhenConferenceInPast() throws URISyntaxException {
         //given
-        URI uri = new URI(baseUrl);
-        HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto("Grace's conference", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace"));
+        URI uri = new URI(baseUri);
+        ConferenceRequestDto request = createRequestDto("Grace's conference", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
 
         //when
         ResponseEntity<String> response = postConference(uri, request);
@@ -158,7 +151,7 @@ public class ConferenceControllerIT {
     @Test
     public void shouldReturn404WhenConferenceToBeDeletedNotFound() throws URISyntaxException {
         //given
-        URI uri = new URI(baseUrl + "/1000000000");
+        URI uri = new URI(baseUri + "/1000000000");
 
         //when
         ResponseEntity<String> response = deleteConference(uri);
@@ -171,7 +164,7 @@ public class ConferenceControllerIT {
     public void shouldReturn204AndDeleteConference() throws URISyntaxException {
         //given
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
-        URI uri = new URI(baseUrl + "/" + savedConference.getId());
+        URI uri = new URI(baseUri + "/" + savedConference.getId());
 
         //when
         ResponseEntity<String> response = deleteConference(uri);
@@ -182,10 +175,25 @@ public class ConferenceControllerIT {
     }
 
     @Test
+    public void shouldReturn401WhenHeaderNotValid() throws URISyntaxException {
+        //given
+        Conference savedConference = conferenceRepository.saveAndFlush(conference);
+        URI uri = new URI(baseUri + "/" + savedConference.getId());
+
+        //when
+        ResponseEntity<ErrorEntity> response = deleteConferenceExpectingAuthError(uri);
+
+        //then
+        Assert.assertEquals(401, response.getStatusCodeValue());
+        Assert.assertEquals("Invalid user credentials.", response.getBody().getMessage());
+        Assert.assertTrue(conferenceRepository.existsById(savedConference.getId()));
+    }
+
+    @Test
     public void shouldReturn404WhenConferenceToBeEditedNotFound() throws URISyntaxException{
         //given
-        URI uri = new URI(baseUrl + "/1000000000");
-        HttpEntity<ConferencePatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(null, null, null, null, null));
+        URI uri = new URI(baseUri + "/1000000000");
+        ConferencePatchRequestDto request = createPatchRequestDto(null, null, null, null, null);
 
         //when
         ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);
@@ -198,10 +206,10 @@ public class ConferenceControllerIT {
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
         //given
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
-        URI uri = new URI(baseUrl + "/" + savedConference.getId());
+        URI uri = new URI(baseUri + "/" + savedConference.getId());
         String newName= "Harry's conference";
         String newCity= "Manchester/North";
-        HttpEntity<ConferencePatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(newName,null,newCity, null, null));
+        ConferencePatchRequestDto request = createPatchRequestDto(newName,null,newCity, null, null);
 
         //when
         ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);
@@ -224,16 +232,28 @@ public class ConferenceControllerIT {
         return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<ConferenceResponseDto>() {});
     }
 
-    private ResponseEntity<String> postConference(URI uri, HttpEntity<ConferenceRequestDto> request) {
-        return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
+    private ResponseEntity<String> postConference(URI uri, ConferenceRequestDto request) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
+        return restTemplate.exchange(uri, POST, new HttpEntity<>(request, headers), new ParameterizedTypeReference<String>() {});
     }
 
     private ResponseEntity<String> deleteConference(URI uri) {
-        return restTemplate.exchange(uri, DELETE, null, new ParameterizedTypeReference<String>() {});
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
+        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(headers), new ParameterizedTypeReference<String>() {});
     }
 
-    private ResponseEntity<ConferenceResponseDto> editConference(URI uri, HttpEntity<ConferencePatchRequestDto> request) {
-        return restTemplate.exchange(uri, PATCH, request, new ParameterizedTypeReference<ConferenceResponseDto>() {});
+    private ResponseEntity<ConferenceResponseDto> editConference(URI uri, ConferencePatchRequestDto request) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
+        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, headers), new ParameterizedTypeReference<ConferenceResponseDto>() {});
+    }
+
+    private ResponseEntity<ErrorEntity> deleteConferenceExpectingAuthError(URI uri) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, UUID.randomUUID().toString());
+        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(headers), ErrorEntity.class);
     }
 
     private ConferenceRequestDto createRequestDto(String name, Instant dateTime, String city, String description, String topic) {
