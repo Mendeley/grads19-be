@@ -1,6 +1,8 @@
 package com.gradproject2019.user;
 
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
+import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import org.junit.After;
@@ -21,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -107,8 +109,47 @@ public class UserControllerIT {
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
+    @Test
+    public void shouldReturn404WhenUserToBeEditedNotFound() throws URISyntaxException{
+        //given
+        URI uri = new URI(baseUrl + "/1000000000");
+        HttpEntity<UserPatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(null, null, null, null, null, null));
+
+        //when
+        ResponseEntity<UserResponseDto> response = editUser(uri, request);
+
+        //then
+        Assert.assertEquals(404, response.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
+        //given
+        User savedUser = userRepository.saveAndFlush(user);
+        URI uri = new URI(baseUrl + "/" + savedUser.getId());
+        String newUsername= "sophiaUsername";
+        String newFirstName= "Sophia";
+        HttpEntity<UserPatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(newUsername,newFirstName,null, null, null, null));
+
+        //when
+        ResponseEntity<UserResponseDto> response = editUser(uri, request);
+
+        //then
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedUser.getId(), response.getBody().getId());
+        Assert.assertEquals(newUsername, response.getBody().getUsername());
+        Assert.assertEquals(newFirstName, response.getBody().getFirstName());
+        Assert.assertEquals(savedUser.getLastName(), response.getBody().getLastName());
+        Assert.assertEquals(savedUser.getEmail(), response.getBody().getEmail());
+        Assert.assertEquals(savedUser.getOccupation(), response.getBody().getOccupation());
+    }
+
     private ResponseEntity<String> postUser(URI uri, HttpEntity<UserRequestDto> request) {
         return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
+    }
+
+    private ResponseEntity<UserResponseDto> editUser(URI uri, HttpEntity<UserPatchRequestDto> request) {
+        return restTemplate.exchange(uri, PATCH, request, new ParameterizedTypeReference<UserResponseDto>() {});
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {
@@ -120,6 +161,18 @@ public class UserControllerIT {
                 .withLastName(lastName)
                 .withEmail(email)
                 .withPassword(password)
+                .withOccupation(occupation)
+                .build();
+    }
+
+    private UserPatchRequestDto createPatchRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {
+        return UserPatchRequestDto
+                .UserPatchRequestDtoBuilder
+                .anUserPatchRequestDto()
+                .withUsername(username)
+                .withFirstName(firstName)
+                .withLastName(lastName)
+                .withEmail(email)
                 .withOccupation(occupation)
                 .build();
     }
