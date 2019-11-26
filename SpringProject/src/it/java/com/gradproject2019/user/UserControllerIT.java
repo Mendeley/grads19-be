@@ -1,8 +1,8 @@
 package com.gradproject2019.user;
 
-import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.auth.persistance.Token;
 import com.gradproject2019.auth.repository.AuthRepository;
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.persistance.User;
@@ -53,7 +53,7 @@ public class UserControllerIT {
     public void setUp() {
         authRepository.deleteAll();
         userRepository.deleteAll();
-        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
+        user = new User("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
         baseUrl = "http://localhost:" + testServerPort + "/users";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
