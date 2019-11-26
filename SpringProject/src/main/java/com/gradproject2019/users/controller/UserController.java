@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping(path = "/users/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@RequestHeader("Authorization") UUID token, @PathVariable("id") Long userId) {
-        UserResponseDto userResponseDto = userService.getUserById(userId, token);
+        UserResponseDto userResponseDto = userService.findUserById(userId, token);
         return ResponseEntity.ok(userResponseDto);
     }
 }

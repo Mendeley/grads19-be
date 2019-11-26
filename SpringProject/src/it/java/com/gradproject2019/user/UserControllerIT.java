@@ -1,5 +1,6 @@
 package com.gradproject2019.user;
 
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.auth.persistance.Token;
 import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.users.data.UserPatchRequestDto;
@@ -28,6 +29,7 @@ import java.net.URISyntaxException;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.*;
@@ -48,14 +50,14 @@ public class UserControllerIT {
     @LocalServerPort
     int testServerPort;
 
-
+    private User user;
     private String baseUrl;
 
     @Before
     public void setUp() {
         authRepository.deleteAll();
         userRepository.deleteAll();
-
+        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
         baseUrl = "http://localhost:" + testServerPort + "/users";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
@@ -177,6 +179,10 @@ public class UserControllerIT {
 
     private ResponseEntity<String> postUser(URI uri, HttpEntity<UserRequestDto> request) {
         return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
+    }
+
+    private ResponseEntity<UserResponseDto> editUser(URI uri, HttpEntity<UserPatchRequestDto> request) {
+        return restTemplate.exchange(uri, PATCH, request, new ParameterizedTypeReference<UserResponseDto>() {});
     }
 
     private ResponseEntity<User> getUserById(Long userId, UUID token) throws URISyntaxException {

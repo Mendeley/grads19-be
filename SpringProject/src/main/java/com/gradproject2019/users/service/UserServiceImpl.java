@@ -1,5 +1,6 @@
 package com.gradproject2019.users.service;
 
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.auth.exception.TokenNotFoundException;
 import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.users.data.UserPatchRequestDto;
@@ -43,14 +44,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getUserById(Long userId, UUID token) {
+    public UserResponseDto findUserById(Long userId, UUID token) {
         //need to check user exists
         userExistsById(userId);
         //need to check user logged in
         userLoggedIn(token);
-        return new UserResponseDto().from(
-                userRepository.findById(userId).
-                orElseThrow(UserNotFoundException::new));
+        return getUserById(userId);
 
     }
 
