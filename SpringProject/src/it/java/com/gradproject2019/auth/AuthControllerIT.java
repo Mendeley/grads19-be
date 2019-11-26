@@ -38,6 +38,7 @@ public class AuthControllerIT extends TestUtils {
     int testServerPort;
 
     private User user;
+    private User savedUser;
     private URI loginUri;
     private String baseUri;
     private String hashedPassword;
@@ -59,7 +60,7 @@ public class AuthControllerIT extends TestUtils {
         loginUri = new URI(baseUri + "/login");
         logoutUri = new URI(baseUri + "/logout");
 
-        User savedUser = userRepository.saveAndFlush(user);
+        savedUser = userRepository.saveAndFlush(user);
 
         testToken = new Token(savedUser.getId(), randomUUID());
     }
@@ -73,7 +74,6 @@ public class AuthControllerIT extends TestUtils {
     @Test
     public void shouldReturn200andCreateTokenWhenUserExistsAndPasswordCorrect() {
         //given
-        User savedUser = userRepository.saveAndFlush(user);
 
         //when
         ResponseEntity<Token> response = login();
@@ -104,7 +104,6 @@ public class AuthControllerIT extends TestUtils {
         HttpEntity<LoginDto> request = new HttpEntity<>(loginWrongPasswordDto);
 
         //when
-        userRepository.saveAndFlush(user);
         ResponseEntity<ErrorEntity> response = loginExpectingError(request);
 
         //then
@@ -116,7 +115,6 @@ public class AuthControllerIT extends TestUtils {
     @Test
     public void shouldReturn204andDeleteTokenWhenTokenExists() {
         //given token exists
-        userRepository.saveAndFlush(user);
         Token savedToken = authRepository.saveAndFlush(testToken);
 
         //when the user logs out
@@ -130,7 +128,7 @@ public class AuthControllerIT extends TestUtils {
     @Test
     public void shouldReturn404WhenTokenDoesNotExist() {
         //given token exists
-        userRepository.saveAndFlush(user);
+
 
         //when the user logs out
         ResponseEntity response = logout();
