@@ -85,17 +85,14 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserNotFoundException::new));
     }
     private void userExistsById(Long userId){
-        //checks user in Users table using user ID
         if(!userRepository.existsById(userId)){
             throw new UserNotFoundException();
         }
     }
 
     private void userLoggedIn(UUID token){
-        //checks user Id is in Auth table
         if(!authServiceImpl.checkTokenExists(token)){
             throw new TokenNotFoundException();
         }
     }
-
 }
