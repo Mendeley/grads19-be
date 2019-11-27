@@ -46,7 +46,7 @@ public class UserControllerIT {
 
     @LocalServerPort
     int testServerPort;
-
+    User user;
 
     private String baseUrl;
 
@@ -55,7 +55,7 @@ public class UserControllerIT {
         authRepository.deleteAll();
         userRepository.deleteAll();
 
-
+        user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
         baseUrl = "http://localhost:" + testServerPort + "/users";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
@@ -111,7 +111,7 @@ public class UserControllerIT {
 
     @Test
     public void shouldReturn404WhenUserToBeEditedNotFound() throws URISyntaxException{
-        URI uri = new URI(baseUrl + "/1000000000");
+        URI uri = new URI(baseUrl + "/" + Integer.MAX_VALUE);
         HttpEntity<UserPatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(null, null, null, null, null, null));
 
         ResponseEntity<UserResponseDto> response = editUser(uri, request);
@@ -121,7 +121,6 @@ public class UserControllerIT {
 
     @Test
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
-        User user = new User ("Karams Cool Username", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist");
         User savedUser = userRepository.saveAndFlush(user);
         URI uri = new URI(baseUrl + "/" + savedUser.getId());
         String newUsername= "sophiaUsername";
@@ -141,7 +140,6 @@ public class UserControllerIT {
 
     @Test
     public void shouldReturn200WhenGettingUserById() throws URISyntaxException {
-        User user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
         User savedUser = userRepository.saveAndFlush(user);
         URI uri = new URI(baseUrl + "/" + savedUser.getId());
         Token testToken = new Token(savedUser.getId(), randomUUID());
@@ -161,7 +159,7 @@ public class UserControllerIT {
 
     @Test
     public void shouldReturn404WhenGettingUserByIDUnauthorised() throws URISyntaxException{
-        User user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
+
         User savedUser = userRepository.saveAndFlush(user);
 
         URI uri = new URI(baseUrl + "/" + savedUser.getId());
