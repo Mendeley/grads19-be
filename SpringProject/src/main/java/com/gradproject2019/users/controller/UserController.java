@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
@@ -27,6 +28,12 @@ public class UserController {
     @PatchMapping(path = "/users/{id}")
     public ResponseEntity<UserResponseDto> editUser(@RequestBody UserPatchRequestDto userPatchRequestDto, UserRequestDto userRequestDto, @PathVariable("id") Long userId) {
         UserResponseDto userResponseDto = userService.editUser(userId, userPatchRequestDto, userRequestDto);
+        return ResponseEntity.ok(userResponseDto);
+    }
+
+    @GetMapping(path = "/users/{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@RequestHeader("Authorization") UUID token, @PathVariable("id") Long userId) {
+        UserResponseDto userResponseDto = userService.findUserById(userId, token);
         return ResponseEntity.ok(userResponseDto);
     }
 }
