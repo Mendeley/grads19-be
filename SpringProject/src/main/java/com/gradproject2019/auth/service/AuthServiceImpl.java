@@ -53,10 +53,9 @@ public class AuthServiceImpl implements AuthService {
         authRepository.deleteById(token);
     }
 
-    public boolean checkTokenExists(UUID token) {
+    public void checkTokenExists(UUID token) {
         if(!authRepository.findById(token).isPresent()) {
             throw new TokenNotFoundException();
         }
-        return true;
     }
 }
