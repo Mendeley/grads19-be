@@ -7,6 +7,7 @@ import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
 import java.util.UUID;
@@ -28,6 +29,8 @@ public class TestUtils {
     public User savedUser;
     private String hashedPassword;
     public Token testToken;
+    public HttpHeaders passingHeaders;
+    public HttpHeaders failingHeaders;
 
     public void clearRepositories() {
         authRepository.deleteAll();
@@ -43,5 +46,17 @@ public class TestUtils {
         savedUser = userRepository.saveAndFlush(user);
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
         authRepository.saveAndFlush(testToken);
+        constructPassingHeader(testToken.getToken());
+        constructFailingHeader();
+    }
+
+    public void constructPassingHeader(UUID token) {
+        passingHeaders = new HttpHeaders();
+        passingHeaders.add(HttpHeaders.AUTHORIZATION, token.toString());
+    }
+
+    public void constructFailingHeader() {
+        failingHeaders = new HttpHeaders();
+        failingHeaders.add(HttpHeaders.AUTHORIZATION, UUID.randomUUID().toString());
     }
 }

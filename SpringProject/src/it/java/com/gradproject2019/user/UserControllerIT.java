@@ -61,11 +61,11 @@ public class UserControllerIT extends TestUtils {
     @Test
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
         URI uri = new URI(baseUri);
-        HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto( null, null, null, null, null, null));
+        HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto(null, null, null, null, null, null));
 
         ResponseEntity<String> response = postUser(uri, request);
 
-        Assert.assertEquals(400,response.getStatusCodeValue());
+        Assert.assertEquals(400, response.getStatusCodeValue());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class UserControllerIT extends TestUtils {
 
         ResponseEntity<String> response = postUser(uri, request);
 
-        Assert.assertEquals(400,response.getStatusCodeValue());
+        Assert.assertEquals(400, response.getStatusCodeValue());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class UserControllerIT extends TestUtils {
 
         ResponseEntity<String> response = postUser(uri, request);
 
-        Assert.assertEquals(400,response.getStatusCodeValue());
+        Assert.assertEquals(400, response.getStatusCodeValue());
     }
 
     @Test
@@ -103,7 +103,7 @@ public class UserControllerIT extends TestUtils {
         URI uri = new URI(baseUri + "/" + savedUser.getId());
         String newUsername= "sophiaUsername";
         String newFirstName= "Sophia";
-        UserPatchRequestDto request = createPatchRequestDto(newUsername, newFirstName,null, null, null);
+        UserPatchRequestDto request = createPatchRequestDto(newUsername, newFirstName, null, null, null);
 
         ResponseEntity<UserResponseDto> response = editUser(uri, request);
 
@@ -119,7 +119,7 @@ public class UserControllerIT extends TestUtils {
     @Test
     public void shouldReturn401WhenUserUnauthorised() throws URISyntaxException {
         URI uri = new URI(baseUri + "/" + savedUser.getId());
-        UserPatchRequestDto request = createPatchRequestDto(null, null,null, null, null);
+        UserPatchRequestDto request = createPatchRequestDto(null, null, null, null, null);
 
         ResponseEntity<ErrorEntity> response = editUserExpectingAuthError(uri, request);
 
@@ -132,15 +132,11 @@ public class UserControllerIT extends TestUtils {
     }
 
     private ResponseEntity<UserResponseDto> editUser(URI uri, UserPatchRequestDto request) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
-        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, headers), new ParameterizedTypeReference<UserResponseDto>() {});
+        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserResponseDto>() {});
     }
 
     private ResponseEntity<ErrorEntity> editUserExpectingAuthError(URI uri, UserPatchRequestDto request) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, UUID.randomUUID().toString());
-        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, headers), ErrorEntity.class);
+        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, failingHeaders), ErrorEntity.class);
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {

@@ -56,8 +56,8 @@ public class ConferenceControllerIT extends TestUtils {
 
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
-        Assert.assertEquals(200,response.getStatusCodeValue());
-        Assert.assertEquals(true,response.getBody().isEmpty());
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(true, response.getBody().isEmpty());
     }
 
     @Test
@@ -67,8 +67,8 @@ public class ConferenceControllerIT extends TestUtils {
 
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
-        Assert.assertEquals(200,response.getStatusCodeValue());
-        Assert.assertEquals(conference.getName(),response.getBody().get(0).getName());
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(conference.getName(), response.getBody().get(0).getName());
         Assert.assertEquals(addedConference.getId(),response.getBody().get(0).getId());
     }
 
@@ -108,11 +108,11 @@ public class ConferenceControllerIT extends TestUtils {
     @Test
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
         URI uri = new URI(baseUri);
-        ConferenceRequestDto request = createRequestDto( null, null, null, null, null);
+        ConferenceRequestDto request = createRequestDto(null, null, null, null, null);
 
         ResponseEntity<String> response = postConference(uri, request);
 
-        Assert.assertEquals(400,response.getStatusCodeValue());
+        Assert.assertEquals(400, response.getStatusCodeValue());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class ConferenceControllerIT extends TestUtils {
 
         ResponseEntity<String> response = postConference(uri, request);
 
-        Assert.assertEquals(400,response.getStatusCodeValue());
+        Assert.assertEquals(400, response.getStatusCodeValue());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class ConferenceControllerIT extends TestUtils {
 
         ResponseEntity<String> response = deleteConference(uri);
 
-        Assert.assertEquals(404,response.getStatusCodeValue());
+        Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class ConferenceControllerIT extends TestUtils {
 
         ResponseEntity<String> response = deleteConference(uri);
 
-        Assert.assertEquals(204,response.getStatusCodeValue());
+        Assert.assertEquals(204, response.getStatusCodeValue());
         Assert.assertFalse(conferenceRepository.existsById(savedConference.getId()));
     }
 
@@ -195,27 +195,19 @@ public class ConferenceControllerIT extends TestUtils {
     }
 
     private ResponseEntity<String> postConference(URI uri, ConferenceRequestDto request) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
-        return restTemplate.exchange(uri, POST, new HttpEntity<>(request, headers), new ParameterizedTypeReference<String>() {});
+        return restTemplate.exchange(uri, POST, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<String>() {});
     }
 
     private ResponseEntity<String> deleteConference(URI uri) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
-        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(headers), new ParameterizedTypeReference<String>() {});
+        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(passingHeaders), new ParameterizedTypeReference<String>() {});
     }
 
     private ResponseEntity<ConferenceResponseDto> editConference(URI uri, ConferencePatchRequestDto request) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
-        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, headers), new ParameterizedTypeReference<ConferenceResponseDto>() {});
+        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<ConferenceResponseDto>() {});
     }
 
     private ResponseEntity<ErrorEntity> deleteConferenceExpectingAuthError(URI uri) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, UUID.randomUUID().toString());
-        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(headers), ErrorEntity.class);
+        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(failingHeaders), ErrorEntity.class);
     }
 
     private ConferenceRequestDto createRequestDto(String name, Instant dateTime, String city, String description, String topic) {

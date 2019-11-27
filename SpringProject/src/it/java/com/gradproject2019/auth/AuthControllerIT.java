@@ -104,15 +104,11 @@ public class AuthControllerIT extends TestUtils {
     }
 
     private ResponseEntity logout() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
-        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(headers), Void.class);
+        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(passingHeaders), Void.class);
     }
 
     private ResponseEntity logoutExpectingAuthError() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, UUID.randomUUID().toString());
-        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(headers), Void.class);
+        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(failingHeaders), Void.class);
     }
 
     private LoginDto createLoginDto(String username, String password) {
