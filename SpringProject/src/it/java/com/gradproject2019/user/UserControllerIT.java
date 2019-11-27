@@ -183,13 +183,6 @@ public class UserControllerIT {
     }
 
     private ResponseEntity<User> getUserById(URI uri, UUID token) {
-    private ResponseEntity<User> getUserById(Long userId, UUID token) throws URISyntaxException {
-        URI uri = new URI(baseUrl + "/" + userId);
-    private ResponseEntity<UserResponseDto> editUser(URI uri, HttpEntity<UserPatchRequestDto> request) {
-        return restTemplate.exchange(uri, PATCH, request, new ParameterizedTypeReference<UserResponseDto>() {});
-    }
-
-    private ResponseEntity<User> getUserById(Long userId, UUID token) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, token.toString());
         return restTemplate.exchange(uri , GET, new HttpEntity<>(headers), User.class);
