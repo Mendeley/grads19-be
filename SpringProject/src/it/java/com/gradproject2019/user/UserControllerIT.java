@@ -48,27 +48,21 @@ public class UserControllerIT {
     @LocalServerPort
     int testServerPort;
 
-    private User user;
-    private User savedUser;
-    private Token testToken;
-    private Token savedToken;
+
     private String baseUrl;
 
     @Before
     public void setUp() {
-        userRepository.deleteAll();
         authRepository.deleteAll();
+        userRepository.deleteAll();
 
-        user = new User( "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
-        savedUser = userRepository.saveAndFlush(user);
-        testToken = new Token(savedUser.getId(), randomUUID());
-        savedToken = authRepository.saveAndFlush(testToken);
         baseUrl = "http://localhost:" + testServerPort + "/users";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
 
     @After
     public void tearDown() {
+        authRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -76,7 +70,7 @@ public class UserControllerIT {
     public void shouldReturn200AndSaveUserInDatabase() throws URISyntaxException {
         //given
         URI uri = new URI(baseUrl);
-        UserRequestDto userRequestDto = createRequestDto("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
+        UserRequestDto userRequestDto = createRequestDto("GracesCoolUsername", "Grace", "Burley Jones", "Grace@gmail.com", "P455w0rd!", "Botanist");
         HttpEntity<UserRequestDto> request = new HttpEntity<>(userRequestDto);
 
         //when
@@ -165,6 +159,14 @@ public class UserControllerIT {
     //should pass if user in user database and token in token database
     @Test
     public void shouldReturn200WhenUserRegisteredandLoggedIn() throws URISyntaxException {
+
+
+        User user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
+        User savedUser = userRepository.saveAndFlush(user);
+
+        Token testToken = new Token(savedUser.getId(), randomUUID());
+        Token savedToken = authRepository.saveAndFlush(testToken);
+
         //when the user tries to view their profile
         ResponseEntity<User> response = getUserById(savedUser.getId(), savedToken.getToken());
 
@@ -177,6 +179,8 @@ public class UserControllerIT {
         return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
     }
 
+    private ResponseEntity<User> getUserById(Long userId, UUID token) throws URISyntaxException {
+        URI uri = new URI(baseUrl + "/" + userId);
     private ResponseEntity<UserResponseDto> editUser(URI uri, HttpEntity<UserPatchRequestDto> request) {
         return restTemplate.exchange(uri, PATCH, request, new ParameterizedTypeReference<UserResponseDto>() {});
     }
@@ -184,7 +188,7 @@ public class UserControllerIT {
     private ResponseEntity<User> getUserById(Long userId, UUID token) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, token.toString());
-        return restTemplate.exchange(baseUrl + "/" + userId, GET, new HttpEntity<>(headers), User.class);
+        return restTemplate.exchange(uri , GET, new HttpEntity<>(headers), User.class);
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {

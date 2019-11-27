@@ -52,7 +52,6 @@ public class AuthControllerIT extends TestUtils {
     public void setUp() throws URISyntaxException {
         clearRepositories();
 
-        //hashedPassword = PasswordUtils.hash("P455w0rd!");
         hashedPassword = AuthUtils.hash("P455w0rd!");
         user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist");
 
@@ -119,7 +118,7 @@ public class AuthControllerIT extends TestUtils {
     @Test
     public void shouldReturn204andDeleteTokenWhenTokenExists() {
         //given token exists
-        Token savedToken = authRepository.saveAndFlush(testToken);
+        authRepository.saveAndFlush(testToken);
 
         //when the user logs out
         ResponseEntity response = logout();
@@ -131,9 +130,6 @@ public class AuthControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn404WhenTokenDoesNotExist() {
-        //given token exists
-
-
         //when the user logs out
         ResponseEntity response = logout();
 
