@@ -43,7 +43,6 @@ public class ConferenceControllerIT extends TestUtils {
         universalSetUp();
         conference = new Conference(1L, "Grace's conference", Instant.now().truncatedTo(ChronoUnit.SECONDS), "Leicester", "All about Grace's fabulous and extra house", "grace");
         baseUri = "http://localhost:" + testServerPort + "/conferences";
-        authRepository.saveAndFlush(testToken);
     }
 
     @After
@@ -53,27 +52,21 @@ public class ConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUri);
 
-        //when
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
-        //Then
         Assert.assertEquals(200,response.getStatusCodeValue());
         Assert.assertEquals(true,response.getBody().isEmpty());
     }
 
     @Test
     public void shouldReturn200AndListOfConferencesWhenDatabasePopulated() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUri);
         Conference addedConference = conferenceRepository.saveAndFlush(conference);
 
-        //when
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
-        //Then
         Assert.assertEquals(200,response.getStatusCodeValue());
         Assert.assertEquals(conference.getName(),response.getBody().get(0).getName());
         Assert.assertEquals(addedConference.getId(),response.getBody().get(0).getId());
@@ -81,26 +74,19 @@ public class ConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn404WhenIdDoesNotExist() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUri + "/1000000000");
 
-        //when
         ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
 
-        //Then
         Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
-        //given
         Conference addedConference =  conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUri + "/" + addedConference.getId());
 
-        //when
         ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
-
-        //Then
 
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(addedConference.getId(), response.getBody().getId());
@@ -109,81 +95,63 @@ public class ConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUri);
         ConferenceRequestDto conferenceRequestDto = createRequestDto("Grace's conference", Instant.parse("3000-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
 
-        //when
         ResponseEntity<String> response = postConference(uri, conferenceRequestDto);
         Conference retrievedConference = conferenceRepository.findAll().get(0);
 
-        //Then
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(conferenceRequestDto.getName(), retrievedConference.getName());
     }
 
     @Test
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUri);
         ConferenceRequestDto request = createRequestDto( null, null, null, null, null);
 
-        //when
         ResponseEntity<String> response = postConference(uri, request);
 
-        //Then
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn400WhenConferenceInPast() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUri);
         ConferenceRequestDto request = createRequestDto("Grace's conference", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
 
-        //when
         ResponseEntity<String> response = postConference(uri, request);
 
-        //Then
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn404WhenConferenceToBeDeletedNotFound() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUri + "/1000000000");
 
-        //when
         ResponseEntity<String> response = deleteConference(uri);
 
-        //then
         Assert.assertEquals(404,response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn204AndDeleteConference() throws URISyntaxException {
-        //given
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUri + "/" + savedConference.getId());
 
-        //when
         ResponseEntity<String> response = deleteConference(uri);
 
-        //then
         Assert.assertEquals(204,response.getStatusCodeValue());
         Assert.assertFalse(conferenceRepository.existsById(savedConference.getId()));
     }
 
     @Test
     public void shouldReturn401WhenUnauthorised() throws URISyntaxException {
-        //given
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUri + "/" + savedConference.getId());
 
-        //when
         ResponseEntity<ErrorEntity> response = deleteConferenceExpectingAuthError(uri);
 
-        //then
         Assert.assertEquals(401, response.getStatusCodeValue());
         Assert.assertEquals("User unauthorized to perform action.", response.getBody().getMessage());
         Assert.assertTrue(conferenceRepository.existsById(savedConference.getId()));
@@ -191,30 +159,24 @@ public class ConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn404WhenConferenceToBeEditedNotFound() throws URISyntaxException{
-        //given
         URI uri = new URI(baseUri + "/1000000000");
         ConferencePatchRequestDto request = createPatchRequestDto(null, null, null, null, null);
 
-        //when
         ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);
 
-        //then
         Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
-        //given
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUri + "/" + savedConference.getId());
         String newName= "Harry's conference";
         String newCity= "Manchester/North";
         ConferencePatchRequestDto request = createPatchRequestDto(newName, null, newCity, null, null);
 
-        //when
         ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);
 
-        //then
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(savedConference.getId(), response.getBody().getId());
         Assert.assertEquals(newName, response.getBody().getName());

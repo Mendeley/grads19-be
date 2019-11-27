@@ -33,13 +33,10 @@ public class ConferenceServiceTest {
 
     @Test
     public void shouldGetListOfAllConferences() {
-        // GIVEN
         given(conferenceRepository.findAll()).willReturn(List.of(conference1, conference2));
 
-        // WHEN
         Iterable<ConferenceResponseDto> conferences = conferenceService.getAllConferences();
 
-        // THEN
         assertThat(conferences)
                 .extracting(ConferenceResponseDto::getId, ConferenceResponseDto::getName, ConferenceResponseDto::getCity)
                 .containsExactly(tuple(conference1.getId(), conference1.getName(), conference1.getCity()), tuple(conference2.getId(), conference2.getName(), conference2.getCity()));
@@ -47,20 +44,16 @@ public class ConferenceServiceTest {
 
     @Test
     public void shouldGetConferenceById() {
-        //given
         given(conferenceRepository.findById(1L)).willReturn(Optional.of(conference1));
 
-        //when
         ConferenceResponseDto conferenceById = conferenceService.getConferenceById(1L);
 
-        //then
         assertThat(conferenceById.getId()).isEqualTo(1L);
         assertThat(conferenceById.getName()).isEqualTo(conference1.getName());
     }
 
-    @Test(expected = ConferenceNotFoundException.class) //then
+    @Test(expected = ConferenceNotFoundException.class)
     public void shouldThrowErrorWhenIdNotRecognised() {
-        //given(when)
         conferenceService.getConferenceById(1000000000L);
     }
 }

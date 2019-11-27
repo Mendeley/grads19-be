@@ -28,21 +28,17 @@ public class UserServiceTest {
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenUsernameExists() {
-        //given
         given(userRepository.findByUsername("qwerty")).willReturn(Optional.of(qwerty));
         UserRequestDto copycat = createUserRequestDto ("notqwerty@qwerty.com", "qwerty");
 
-        //when
         userService.saveUser(copycat);
     }
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenEmailExists() {
-        //given
         given(userRepository.findByEmail("qwerty@qwerty.com")).willReturn(Optional.of(qwerty));
         UserRequestDto copycat = createUserRequestDto("qwerty@qwerty.com","notqwerty");
 
-        //when
         userService.saveUser(copycat);
     }
 

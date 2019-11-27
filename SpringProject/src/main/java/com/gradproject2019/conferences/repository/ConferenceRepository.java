@@ -14,8 +14,14 @@ import java.time.Instant;
 public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 
     @Transactional
-    @Modifying
-    @Query("UPDATE Conference c SET c.name = IfNull(:name, c.name), c.dateTime = IfNull(:dateTime, c.dateTime), c.city = IfNull(:city, c.city), c.description = IfNull(:description, c.description), c.topic = IfNull(:topic, c.topic) WHERE c.id = :id")
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Conference c SET " +
+            "c.name = IfNull(:name, c.name), " +
+            "c.dateTime = IfNull(:dateTime, c.dateTime), " +
+            "c.city = IfNull(:city, c.city), " +
+            "c.description = IfNull(:description, c.description), " +
+            "c.topic = IfNull(:topic, c.topic) " +
+            "WHERE c.id = :id")
     void updateConference(@Param("id") Long id, @Param("name") String name, @Param("dateTime") Instant dateTime, @Param("city") String city, @Param("description") String description, @Param("topic") String topic);
 
 }

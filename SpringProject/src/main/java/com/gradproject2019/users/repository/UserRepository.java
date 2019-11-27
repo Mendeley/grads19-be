@@ -14,8 +14,14 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
-    @Modifying
-    @Query("UPDATE User u SET u.firstName = IfNull(:firstName, u.firstName), u.lastName = IfNull(:lastName, u.lastName), u.username = IfNull(:username, u.username), u.email = IfNull(:email, u.email), u.occupation = IfNull(:occupation, u.occupation) WHERE u.id = :id")
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE User u SET " +
+            "u.firstName = IfNull(:firstName, u.firstName), " +
+            "u.lastName = IfNull(:lastName, u.lastName), " +
+            "u.username = IfNull(:username, u.username), " +
+            "u.email = IfNull(:email, u.email), " +
+            "u.occupation = IfNull(:occupation, u.occupation) " +
+            "WHERE u.id = :id")
     void updateUser(@Param("id") Long id, @Param("firstName") String firstName, @Param("lastName") String lastName, @Param("username") String username, @Param("email") String email, @Param("occupation") String occupation);
 
     @Query(value = "SELECT * FROM users where username = :username", nativeQuery = true)

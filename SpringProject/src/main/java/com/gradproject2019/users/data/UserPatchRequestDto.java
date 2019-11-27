@@ -1,11 +1,6 @@
 package com.gradproject2019.users.data;
 
-import com.gradproject2019.users.persistance.User;
-
-import static com.gradproject2019.users.persistance.User.UserBuilder.anUser;
-
 public class UserPatchRequestDto {
-    private Long id;
     private String username;
     private String firstName;
     private String lastName;
@@ -14,8 +9,6 @@ public class UserPatchRequestDto {
 
     public UserPatchRequestDto() {
     }
-
-    public Long getId() { return id; }
 
     public String getUsername() { return username; }
 
@@ -29,7 +22,6 @@ public class UserPatchRequestDto {
 
 
     public static final class UserPatchRequestDtoBuilder {
-        private Long id;
         private String username;
         private String firstName;
         private String lastName;
@@ -41,11 +33,6 @@ public class UserPatchRequestDto {
 
         public static UserPatchRequestDtoBuilder anUserPatchRequestDto() {
             return new UserPatchRequestDtoBuilder();
-        }
-
-        public UserPatchRequestDtoBuilder withId(Long id) {
-            this.id = id;
-            return this;
         }
 
         public UserPatchRequestDtoBuilder withUsername(String username) {
@@ -75,7 +62,6 @@ public class UserPatchRequestDto {
 
         public UserPatchRequestDto build() {
             UserPatchRequestDto userPatchRequestDto = new UserPatchRequestDto();
-            userPatchRequestDto.id = this.id;
             userPatchRequestDto.firstName = this.firstName;
             userPatchRequestDto.username = this.username;
             userPatchRequestDto.occupation = this.occupation;
@@ -83,16 +69,5 @@ public class UserPatchRequestDto {
             userPatchRequestDto.lastName = this.lastName;
             return userPatchRequestDto;
         }
-    }
-
-    public User from(Long userId, UserPatchRequestDto userPatchRequestDto) {
-        return anUser()
-                .withId(userId)
-                .withFirstName(userPatchRequestDto.getFirstName())
-                .withLastName(userPatchRequestDto.getLastName())
-                .withUsername(userPatchRequestDto.getUsername())
-                .withOccupation(userPatchRequestDto.getOccupation())
-                .withEmail(userPatchRequestDto.getEmail())
-                .build();
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;
@@ -52,12 +53,8 @@ public class AuthControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200andCreateTokenWhenUserExistsAndPasswordCorrect() {
-        //given
-
-        //when
         ResponseEntity<Token> response = login();
 
-        //then
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(savedUser.getId(), response.getBody().getUserId());
         Assert.assertNotNull(response.getBody().getToken());
@@ -65,53 +62,36 @@ public class AuthControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn401WhenUserDoesNotExist() {
-        //given
         HttpEntity<LoginDto> request = new HttpEntity<>(secondLoginDto);
 
-        //when
         ResponseEntity<ErrorEntity> response = loginExpectingError(request);
 
-        //then
         Assert.assertEquals(401, response.getStatusCodeValue());
         Assert.assertEquals("Invalid user credentials.", response.getBody().getMessage());
     }
 
     @Test
     public void shouldReturn401WhenUserExistsAndPasswordIncorrect() {
-        //given
         LoginDto loginWrongPasswordDto = createLoginDto("KaramsCoolUsername", "WrongPassword");
         HttpEntity<LoginDto> request = new HttpEntity<>(loginWrongPasswordDto);
 
-        //when
         ResponseEntity<ErrorEntity> response = loginExpectingError(request);
 
-        //then
         Assert.assertEquals(401, response.getStatusCodeValue());
         Assert.assertEquals("Invalid user credentials.", response.getBody().getMessage());
     }
 
-    //test to check the delete token endpoint
     @Test
     public void shouldReturn204andDeleteTokenWhenTokenExists() {
-        //given token exists
-        Token savedToken = authRepository.saveAndFlush(testToken);
-
-        //when the user logs out
         ResponseEntity response = logout();
 
-        //then
         Assert.assertEquals(204, response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn404WhenTokenDoesNotExist() {
-        //given token exists
+        ResponseEntity response = logoutExpectingAuthError();
 
-
-        //when the user logs out
-        ResponseEntity response = logout();
-
-        //then
         Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
@@ -126,6 +106,12 @@ public class AuthControllerIT extends TestUtils {
     private ResponseEntity logout() {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, testToken.getToken().toString());
+        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(headers), Void.class);
+    }
+
+    private ResponseEntity logoutExpectingAuthError() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, UUID.randomUUID().toString());
         return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(headers), Void.class);
     }
 

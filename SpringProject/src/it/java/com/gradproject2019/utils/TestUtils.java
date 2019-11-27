@@ -42,5 +42,6 @@ public class TestUtils {
         user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist");
         savedUser = userRepository.saveAndFlush(user);
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
+        authRepository.saveAndFlush(testToken);
     }
 }
