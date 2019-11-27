@@ -22,6 +22,11 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
             "c.description = IfNull(:description, c.description), " +
             "c.topic = IfNull(:topic, c.topic) " +
             "WHERE c.id = :id")
-    void updateConference(@Param("id") Long id, @Param("name") String name, @Param("dateTime") Instant dateTime, @Param("city") String city, @Param("description") String description, @Param("topic") String topic);
+    void updateConference(@Param("id") Long id,
+                          @Param("name") String name,
+                          @Param("dateTime") Instant dateTime,
+                          @Param("city") String city,
+                          @Param("description") String description,
+                          @Param("topic") String topic);
 
 }

@@ -22,7 +22,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "u.email = IfNull(:email, u.email), " +
             "u.occupation = IfNull(:occupation, u.occupation) " +
             "WHERE u.id = :id")
-    void updateUser(@Param("id") Long id, @Param("firstName") String firstName, @Param("lastName") String lastName, @Param("username") String username, @Param("email") String email, @Param("occupation") String occupation);
+    void updateUser(@Param("id") Long id,
+                    @Param("firstName") String firstName,
+                    @Param("lastName") String lastName,
+                    @Param("username") String username,
+                    @Param("email") String email,
+                    @Param("occupation") String occupation);
 
     @Query(value = "SELECT * FROM users where username = :username", nativeQuery = true)
     Optional<User> findByUsername(@Param("username") String username);
