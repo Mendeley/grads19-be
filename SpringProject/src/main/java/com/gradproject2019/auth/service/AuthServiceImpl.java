@@ -56,6 +56,7 @@ public class AuthServiceImpl implements AuthService {
     public boolean checkTokenExists(UUID token) {
         if(!authRepository.findById(token).isPresent()) {
             throw new TokenNotFoundException();
-        } return(true);
+        }
+        return true;
     }
 }

@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto findUserById(Long userId, UUID token) {
-        userExistsById(userId);
+        getUserById(userId);
         userLoggedIn(token);
         return getUserById(userId);
 
@@ -83,11 +83,6 @@ public class UserServiceImpl implements UserService {
         return new UserResponseDto().from(userRepository
                 .findById(userId)
                 .orElseThrow(UserNotFoundException::new));
-    }
-    private void userExistsById(Long userId){
-        if(!userRepository.existsById(userId)){
-            throw new UserNotFoundException();
-        }
     }
 
     private void userLoggedIn(UUID token){
