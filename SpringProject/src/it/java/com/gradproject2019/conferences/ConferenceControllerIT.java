@@ -75,8 +75,8 @@ public class ConferenceControllerIT {
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
         Assert.assertEquals(200,response.getStatusCodeValue());
-        Assert.assertEquals(conference.getName(),response.getBody().get(0).getName());
-        Assert.assertEquals(addedConference.getId(),response.getBody().get(0).getId());
+        Assert.assertEquals(conference.getName(), response.getBody().get(0).getName());
+        Assert.assertEquals(addedConference.getId(), response.getBody().get(0).getId());
     }
 
     @Test
