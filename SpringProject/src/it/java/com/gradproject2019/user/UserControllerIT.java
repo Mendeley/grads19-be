@@ -139,7 +139,7 @@ public class UserControllerIT {
     }
 
     @Test
-    public void shouldReturn200WhenUserRegisteredAndLoggedIn() throws URISyntaxException {
+    public void shouldReturn200WhenGettingUserById() throws URISyntaxException {
         User user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
         User savedUser = userRepository.saveAndFlush(user);
 
@@ -152,7 +152,7 @@ public class UserControllerIT {
     }
 
     @Test
-    public void shouldReturn404WhenUserNotLoggedIn() throws URISyntaxException{
+    public void shouldReturn404WhenGettingUserByIDUnauthorised() throws URISyntaxException{
         User user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
         User savedUser = userRepository.saveAndFlush(user);
 
