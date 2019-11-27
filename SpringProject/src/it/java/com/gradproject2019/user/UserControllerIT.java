@@ -142,13 +142,20 @@ public class UserControllerIT {
     public void shouldReturn200WhenGettingUserById() throws URISyntaxException {
         User user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
         User savedUser = userRepository.saveAndFlush(user);
-
+        URI uri = new URI(baseUrl + "/" + savedUser.getId());
         Token testToken = new Token(savedUser.getId(), randomUUID());
         Token savedToken = authRepository.saveAndFlush(testToken);
 
-        ResponseEntity<User> response = getUserById(savedUser.getId(), savedToken.getToken());
+        ResponseEntity<User> response = getUserById(uri, savedToken.getToken());
 
         Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedUser.getId(), response.getBody().getId());
+        Assert.assertEquals(savedUser.getFirstName(), response.getBody().getFirstName());
+        Assert.assertEquals(savedUser.getUsername(), response.getBody().getUsername());
+        Assert.assertEquals(savedUser.getLastName(), response.getBody().getLastName());
+        Assert.assertEquals(savedUser.getEmail(), response.getBody().getEmail());
+        Assert.assertEquals(savedUser.getOccupation(), response.getBody().getOccupation());
+
     }
 
     @Test
@@ -156,7 +163,9 @@ public class UserControllerIT {
         User user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
         User savedUser = userRepository.saveAndFlush(user);
 
-        ResponseEntity<User> response = getUserById(savedUser.getId(), randomUUID());
+        URI uri = new URI(baseUrl + "/" + savedUser.getId());
+
+        ResponseEntity<User> response = getUserById(uri, randomUUID());
 
         Assert.assertEquals(404, response.getStatusCodeValue());
     }
@@ -170,8 +179,7 @@ public class UserControllerIT {
         return restTemplate.exchange(uri, PATCH, request, new ParameterizedTypeReference<UserResponseDto>() {});
     }
 
-    private ResponseEntity<User> getUserById(Long userId, UUID token) throws URISyntaxException {
-        URI uri = new URI(baseUrl + "/" + userId);
+    private ResponseEntity<User> getUserById(URI uri, UUID token) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, token.toString());
         return restTemplate.exchange(uri , GET, new HttpEntity<>(headers), User.class);
