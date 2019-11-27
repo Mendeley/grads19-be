@@ -67,85 +67,68 @@ public class UserControllerIT {
 
     @Test
     public void shouldReturn200AndSaveUserInDatabase() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl);
         UserRequestDto userRequestDto = createRequestDto("GracesCoolUsername", "Grace", "Burley Jones", "Grace@gmail.com", "P455w0rd!", "Botanist");
         HttpEntity<UserRequestDto> request = new HttpEntity<>(userRequestDto);
 
-        //when
         ResponseEntity<String> response = postUser(uri, request);
         User retrievedUser = userRepository.findAll().get(0);
 
-        //Then
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(userRequestDto.getUsername(), retrievedUser.getUsername());
     }
 
     @Test
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl);
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto( null, null, null, null, null, null));
 
-        //when
         ResponseEntity<String> response = postUser(uri, request);
 
-        //Then
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn400WhenPasswordWrongFormat() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl);
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist"));
 
-        //when
         ResponseEntity<String> response = postUser(uri, request);
 
-        //Then
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn400WhenUsernameWrongFormat() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl);
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto("Karams Cool Username", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist"));
 
-        //when
         ResponseEntity<String> response = postUser(uri, request);
 
-        //Then
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn404WhenUserToBeEditedNotFound() throws URISyntaxException{
-        //given
         URI uri = new URI(baseUrl + "/1000000000");
         HttpEntity<UserPatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(null, null, null, null, null, null));
 
-        //when
         ResponseEntity<UserResponseDto> response = editUser(uri, request);
 
-        //then
         Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
-        //given
+        User user = new User ("Karams Cool Username", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist");
         User savedUser = userRepository.saveAndFlush(user);
         URI uri = new URI(baseUrl + "/" + savedUser.getId());
         String newUsername= "sophiaUsername";
         String newFirstName= "Sophia";
         HttpEntity<UserPatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(newUsername,newFirstName,null, null, null, null));
 
-        //when
         ResponseEntity<UserResponseDto> response = editUser(uri, request);
 
-        //then
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(savedUser.getId(), response.getBody().getId());
         Assert.assertEquals(newUsername, response.getBody().getUsername());
@@ -155,22 +138,27 @@ public class UserControllerIT {
         Assert.assertEquals(savedUser.getOccupation(), response.getBody().getOccupation());
     }
 
-    //should pass if user in user database and token in token database
     @Test
-    public void shouldReturn200WhenUserRegisteredandLoggedIn() throws URISyntaxException {
-
-
+    public void shouldReturn200WhenUserRegisteredAndLoggedIn() throws URISyntaxException {
         User user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
         User savedUser = userRepository.saveAndFlush(user);
 
         Token testToken = new Token(savedUser.getId(), randomUUID());
         Token savedToken = authRepository.saveAndFlush(testToken);
 
-        //when the user tries to view their profile
         ResponseEntity<User> response = getUserById(savedUser.getId(), savedToken.getToken());
 
-        //then
         Assert.assertEquals(200, response.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturn404WhenUserNotLoggedIn() throws URISyntaxException{
+        User user = new User( "Grace", "Grace", "Jones", "gbj@gmail.com", "P455w0rd!", "na");
+        User savedUser = userRepository.saveAndFlush(user);
+
+        ResponseEntity<User> response = getUserById(savedUser.getId(), randomUUID());
+
+        Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
 

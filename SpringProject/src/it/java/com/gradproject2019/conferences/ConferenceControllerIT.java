@@ -59,27 +59,21 @@ public class ConferenceControllerIT {
 
     @Test
     public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl);
 
-        //when
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
-        //Then
         Assert.assertEquals(200,response.getStatusCodeValue());
         Assert.assertEquals(true,response.getBody().isEmpty());
     }
 
     @Test
     public void shouldReturn200AndListOfConferencesWhenDatabasePopulated() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl);
         Conference addedConference = conferenceRepository.saveAndFlush(conference);
 
-        //when
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
 
-        //Then
         Assert.assertEquals(200,response.getStatusCodeValue());
         Assert.assertEquals(conference.getName(),response.getBody().get(0).getName());
         Assert.assertEquals(addedConference.getId(),response.getBody().get(0).getId());
@@ -87,26 +81,19 @@ public class ConferenceControllerIT {
 
     @Test
     public void shouldReturn404WhenIdDoesNotExist() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl + "/1000000000");
 
-        //when
         ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
 
-        //Then
         Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn200AndConferenceWhenIdDoesExist() throws URISyntaxException {
-        //given
         Conference addedConference =  conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUrl + "/" + addedConference.getId());
 
-        //when
         ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
-
-        //Then
 
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(addedConference.getId(), response.getBody().getId());
@@ -115,98 +102,77 @@ public class ConferenceControllerIT {
 
     @Test
     public void shouldReturn200AndSaveConferenceInDatabase() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl);
         ConferenceRequestDto conferenceRequestDto = createRequestDto("Grace's conference", Instant.parse("3000-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
         HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(conferenceRequestDto);
 
-        //when
         ResponseEntity<String> response = postConference(uri, request);
         Conference retrievedConference = conferenceRepository.findAll().get(0);
 
-        //Then
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(conferenceRequestDto.getName(), retrievedConference.getName());
     }
 
     @Test
     public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl);
         HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto( null, null, null, null, null));
 
-        //when
         ResponseEntity<String> response = postConference(uri, request);
 
-        //Then
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn400WhenConferenceInPast() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl);
         HttpEntity<ConferenceRequestDto> request = new HttpEntity<>(createRequestDto("Grace's conference", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace"));
 
-        //when
         ResponseEntity<String> response = postConference(uri, request);
 
-        //Then
         Assert.assertEquals(400,response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn404WhenConferenceToBeDeletedNotFound() throws URISyntaxException {
-        //given
         URI uri = new URI(baseUrl + "/1000000000");
 
-        //when
         ResponseEntity<String> response = deleteConference(uri);
 
-        //then
         Assert.assertEquals(404,response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn204AndDeleteConference() throws URISyntaxException {
-        //given
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUrl + "/" + savedConference.getId());
 
-        //when
         ResponseEntity<String> response = deleteConference(uri);
 
-        //then
         Assert.assertEquals(204,response.getStatusCodeValue());
         Assert.assertFalse(conferenceRepository.existsById(savedConference.getId()));
     }
 
     @Test
     public void shouldReturn404WhenConferenceToBeEditedNotFound() throws URISyntaxException{
-        //given
         URI uri = new URI(baseUrl + "/1000000000");
         HttpEntity<ConferencePatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(null, null, null, null, null));
 
-        //when
         ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);
 
-        //then
         Assert.assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
-        //given
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUrl + "/" + savedConference.getId());
         String newName= "Harry's conference";
         String newCity= "Manchester/North";
         HttpEntity<ConferencePatchRequestDto> request = new HttpEntity<>(createPatchRequestDto(newName,null,newCity, null, null));
 
-        //when
         ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);
 
-        //then
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(savedConference.getId(), response.getBody().getId());
         Assert.assertEquals(newName, response.getBody().getName());
