@@ -46,14 +46,15 @@ public class UserControllerIT {
     @LocalServerPort
     int testServerPort;
 
-    private User user;
+
     private String baseUrl;
 
     @Before
     public void setUp() {
         authRepository.deleteAll();
         userRepository.deleteAll();
-        user = new User("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "P455w0rd!", "Botanist");
+
+
         baseUrl = "http://localhost:" + testServerPort + "/users";
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
