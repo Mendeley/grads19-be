@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         checkTokenMatchesUser(existingToken.getUserId(), userId);
         checkUsernameAndEmailValidity(patchUsername, patchEmail);
         checkIfUpdatedCredentialsExist(patchUsername, patchEmail, user);
-        //fix tests
+
         userRepository.updateUser(userId, userPatch.getFirstName(), userPatch.getLastName(), patchUsername, patchEmail, userPatch.getOccupation());
         return new UserResponseDto().from(getUserById(userId));
     }
