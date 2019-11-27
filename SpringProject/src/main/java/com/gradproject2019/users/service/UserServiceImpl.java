@@ -44,7 +44,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto findUserById(Long userId, UUID token) {
-        getUserById(userId);
         userLoggedIn(token);
         return getUserById(userId);
 
