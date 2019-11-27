@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto findUserById(Long userId, UUID token) {
-        userLoggedIn(token);
+        authServiceImpl.checkTokenExists(token);
         return getUserById(userId);
 
     }
@@ -84,9 +84,4 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserNotFoundException::new));
     }
 
-    private void userLoggedIn(UUID token){
-        if(!authServiceImpl.checkTokenExists(token)){
-            throw new TokenNotFoundException();
-        }
-    }
 }
