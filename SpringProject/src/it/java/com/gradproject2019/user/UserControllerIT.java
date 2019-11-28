@@ -59,7 +59,7 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
+    public void shouldReturn400WhenAnyRegistrationFieldNull() throws URISyntaxException {
         URI uri = new URI(baseUri);
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto(null, null, null, null, null, null));
 
@@ -69,7 +69,7 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn400WhenPasswordWrongFormat() throws URISyntaxException {
+    public void shouldReturn400WhenRegistrationPasswordWrongFormat() throws URISyntaxException {
         URI uri = new URI(baseUri);
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist"));
 
@@ -79,7 +79,7 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn400WhenUsernameWrongFormat() throws URISyntaxException {
+    public void shouldReturn400WhenRegistrationUsernameWrongFormat() throws URISyntaxException {
         URI uri = new URI(baseUri);
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto("Karams Cool Username", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist"));
 
@@ -107,7 +107,7 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn401WhenUserUnauthorised() throws URISyntaxException {
+    public void shouldReturn401WhenUnauthorisedEdit() throws URISyntaxException {
         URI uri = new URI(baseUri + "/" + savedUser.getId());
         UserPatchRequestDto request = createPatchRequestDto(null, null, null, null, null);
 

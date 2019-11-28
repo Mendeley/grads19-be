@@ -106,7 +106,7 @@ public class ConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn400WhenAnyFieldNull() throws URISyntaxException {
+    public void shouldReturn400WhenAnyAddedConferenceFieldNull() throws URISyntaxException {
         URI uri = new URI(baseUri);
         ConferenceRequestDto request = createRequestDto(null, null, null, null, null);
 
@@ -116,7 +116,7 @@ public class ConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn400WhenConferenceInPast() throws URISyntaxException {
+    public void shouldReturn400WhenAddedConferenceConferenceInPast() throws URISyntaxException {
         URI uri = new URI(baseUri);
         ConferenceRequestDto request = createRequestDto("Grace's conference", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
 
@@ -146,7 +146,7 @@ public class ConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn401WhenUnauthorised() throws URISyntaxException {
+    public void shouldReturn401WhenUnauthorisedDelete() throws URISyntaxException {
         Conference savedConference = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUri + "/" + savedConference.getId());
 

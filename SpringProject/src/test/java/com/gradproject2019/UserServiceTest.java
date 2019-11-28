@@ -39,7 +39,7 @@ public class UserServiceTest {
     private final Long userId = 1L;
 
     @Test(expected = UserInfoExistsException.class)
-    public void shouldThrowErrorWhenUsernameExists() {
+    public void shouldThrowErrorWhenRegistrationUsernameExists() {
         given(userRepository.findByUsername("qwerty")).willReturn(Optional.of(qwerty));
         UserRequestDto copycat = createUserRequestDto ("notqwerty@qwerty.com", "qwerty");
 
@@ -47,7 +47,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = UserInfoExistsException.class)
-    public void shouldThrowErrorWhenEmailExists() {
+    public void shouldThrowErrorWhenRegistrationEmailExists() {
         given(userRepository.findByEmail("qwerty@qwerty.com")).willReturn(Optional.of(qwerty));
         UserRequestDto copycat = createUserRequestDto("qwerty@qwerty.com","notqwerty");
 
