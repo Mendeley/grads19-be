@@ -1,5 +1,7 @@
 package com.gradproject2019.user;
 
+import com.gradproject2019.auth.persistance.Token;
+import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
@@ -23,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
 import static org.springframework.http.HttpMethod.*;
 
 @RunWith(SpringRunner.class)
@@ -107,6 +110,38 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
+    public void shouldReturn200WhenGettingUserById() throws URISyntaxException {
+        User savedUser = userRepository.saveAndFlush(user);
+        URI uri = new URI(baseUrl + "/" + savedUser.getId());
+        Token testToken = new Token(savedUser.getId(), randomUUID());
+        Token savedToken = authRepository.saveAndFlush(testToken);
+
+        ResponseEntity<User> response = getUserById(uri, savedToken.getToken());
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedUser.getId(), response.getBody().getId());
+        Assert.assertEquals(savedUser.getFirstName(), response.getBody().getFirstName());
+        Assert.assertEquals(savedUser.getUsername(), response.getBody().getUsername());
+        Assert.assertEquals(savedUser.getLastName(), response.getBody().getLastName());
+        Assert.assertEquals(savedUser.getEmail(), response.getBody().getEmail());
+        Assert.assertEquals(savedUser.getOccupation(), response.getBody().getOccupation());
+
+    }
+
+    @Test
+    public void shouldReturn404WhenGettingUserByIDUnauthorised() throws URISyntaxException{
+
+        User savedUser = userRepository.saveAndFlush(user);
+
+        URI uri = new URI(baseUrl + "/" + savedUser.getId());
+
+        ResponseEntity<User> response = getUserById(uri, randomUUID());
+
+        Assert.assertEquals(404, response.getStatusCodeValue());
+    }
+
+
+    @Test
     public void shouldReturn401WhenUnauthorisedEdit() throws URISyntaxException {
         URI uri = new URI(baseUri + "/" + savedUser.getId());
         UserPatchRequestDto request = createPatchRequestDto(null, null, null, null, null);
@@ -127,6 +162,12 @@ public class UserControllerIT extends TestUtils {
 
     private ResponseEntity<ErrorEntity> editUserExpectingAuthError(URI uri, UserPatchRequestDto request) {
         return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, failingHeaders), ErrorEntity.class);
+    }
+
+    private ResponseEntity<User> getUserById(URI uri, UUID token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, token.toString());
+        return restTemplate.exchange(uri , GET, new HttpEntity<>(headers), User.class);
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {

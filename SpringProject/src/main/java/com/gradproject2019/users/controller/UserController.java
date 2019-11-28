@@ -30,4 +30,10 @@ public class UserController {
         UserResponseDto userResponseDto = userService.editUser(token, userId, userPatchRequestDto);
         return ResponseEntity.ok(userResponseDto);
     }
+
+    @GetMapping(path = "/users/{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@RequestHeader("Authorization") UUID token, @PathVariable("id") Long userId) {
+        UserResponseDto userResponseDto = userService.findUserById(userId, token);
+        return ResponseEntity.ok(userResponseDto);
+    }
 }
