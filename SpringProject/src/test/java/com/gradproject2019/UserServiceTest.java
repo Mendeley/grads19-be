@@ -1,7 +1,13 @@
 package com.gradproject2019;
 
+import com.gradproject2019.users.exception.InvalidCredentialsException;
+import com.gradproject2019.auth.exception.UserUnauthorisedException;
+import com.gradproject2019.auth.persistance.Token;
+import com.gradproject2019.auth.repository.AuthRepository;
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.exception.UserInfoExistsException;
+import com.gradproject2019.users.exception.UserNotFoundException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.users.service.UserServiceImpl;
@@ -12,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.BDDMockito.given;
 
@@ -24,7 +31,12 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    private final User qwerty = new User( 3L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty");
+    @Mock
+    private AuthRepository authRepository;
+
+    private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty");
+    private final Token token = new Token(1L, UUID.randomUUID());
+    private final Long userId = 1L;
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenUsernameExists() {
@@ -42,6 +54,68 @@ public class UserServiceTest {
         userService.saveUser(copycat);
     }
 
+    @Test(expected = UserUnauthorisedException.class)
+    public void shouldThrowErrorWhenTokenDoesNotExist() {
+        given(authRepository.findById(token.getToken())).willReturn(Optional.empty());
+        UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
+
+        userService.editUser(token.getToken(), userId, update);
+    }
+
+    @Test(expected = UserUnauthorisedException.class)
+    public void shouldThrowErrorWhenTokenDoesNotMatchUserId() {
+        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
+
+        userService.editUser(token.getToken(), 2L, update);
+    }
+
+    @Test(expected = InvalidCredentialsException.class)
+    public void shouldThrowErrorWhenInvalidUsernameFormat() {
+        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "wrong format");
+
+        userService.editUser(token.getToken(), userId, update);
+    }
+
+    @Test(expected = InvalidCredentialsException.class)
+    public void shouldThrowErrorWhenInvalidEmailFormat() {
+        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        UserPatchRequestDto update = createUserPatchRequestDto("not an email", "newusername");
+
+        userService.editUser(token.getToken(), userId, update);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void shouldThrowErrorWhenUserToBeEditedDoesNotExist() {
+        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        given(userRepository.findById(userId)).willReturn(Optional.empty());
+        UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
+
+        userService.editUser(token.getToken(), userId, update);
+    }
+
+    @Test(expected = UserInfoExistsException.class)
+    public void shouldThrowErrorWhenNewUsernameExist() {
+        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+        UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
+        given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.of(createUser("notqwerty@qwerty.com", "newqwerty")));
+
+        userService.editUser(token.getToken(), userId, update);
+    }
+
+    @Test(expected = UserInfoExistsException.class)
+    public void shouldThrowErrorWhenNewEmailExists() {
+        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+        UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
+        given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.empty());
+        given(userRepository.findByEmail(update.getEmail())).willReturn(Optional.of(createUser("newqwerty@newqwerty.com", "notqwerty")));
+
+        userService.editUser(token.getToken(), userId, update);
+    }
+
     private UserRequestDto createUserRequestDto( String email, String username) {
         return UserRequestDto
                 .UserRequestDtoBuilder
@@ -51,6 +125,32 @@ public class UserServiceTest {
                 .withEmail(email)
                 .withOccupation("notqwerty")
                 .withPassword("NotQwerty!1")
+                .withUsername(username)
+                .build();
+    }
+
+    private UserPatchRequestDto createUserPatchRequestDto(String email, String username) {
+        return UserPatchRequestDto
+                .UserPatchRequestDtoBuilder
+                .anUserPatchRequestDto()
+                .withFirstName("notqwerty")
+                .withLastName("notqwerty")
+                .withEmail(email)
+                .withOccupation("notqwerty")
+                .withUsername(username)
+                .build();
+    }
+
+    private User createUser(String email, String username) {
+        return User
+                .UserBuilder
+                .anUser()
+                .withId(2L)
+                .withFirstName("notqwerty")
+                .withLastName("notqwerty")
+                .withEmail(email)
+                .withOccupation("notqwerty")
+                .withPassword("password")
                 .withUsername(username)
                 .build();
     }

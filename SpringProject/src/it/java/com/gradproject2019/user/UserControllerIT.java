@@ -89,16 +89,6 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn404WhenUserToBeEditedNotFound() throws URISyntaxException{
-        URI uri = new URI(baseUri + "/1000000000");
-        UserPatchRequestDto request = createPatchRequestDto(null, null, null, null, null);
-
-        ResponseEntity<UserResponseDto> response = editUser(uri, request);
-
-        Assert.assertEquals(404, response.getStatusCodeValue());
-    }
-
-    @Test
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
         URI uri = new URI(baseUri + "/" + savedUser.getId());
         String newUsername= "sophiaUsername";
