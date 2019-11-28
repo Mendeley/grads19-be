@@ -1,11 +1,11 @@
 package com.gradproject2019;
 
-import com.gradproject2019.users.exception.InvalidCredentialsException;
 import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.persistance.Token;
-import com.gradproject2019.auth.repository.AuthRepository;
+import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
+import com.gradproject2019.users.exception.InvalidCredentialsException;
 import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.UserNotFoundException;
 import com.gradproject2019.users.persistance.User;
@@ -32,7 +32,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private AuthRepository authRepository;
+    private AuthServiceImpl authServiceImpl;
 
     private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty");
     private final Token token = new Token(1L, UUID.randomUUID());
@@ -55,16 +55,8 @@ public class UserServiceTest {
     }
 
     @Test(expected = UserUnauthorisedException.class)
-    public void shouldThrowErrorWhenTokenDoesNotExist() {
-        given(authRepository.findById(token.getToken())).willReturn(Optional.empty());
-        UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
-
-        userService.editUser(token.getToken(), userId, update);
-    }
-
-    @Test(expected = UserUnauthorisedException.class)
     public void shouldThrowErrorWhenTokenDoesNotMatchUserId() {
-        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
 
         userService.editUser(token.getToken(), 2L, update);
@@ -72,7 +64,7 @@ public class UserServiceTest {
 
     @Test(expected = InvalidCredentialsException.class)
     public void shouldThrowErrorWhenInvalidUsernameFormat() {
-        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "wrong format");
 
         userService.editUser(token.getToken(), userId, update);
@@ -80,7 +72,7 @@ public class UserServiceTest {
 
     @Test(expected = InvalidCredentialsException.class)
     public void shouldThrowErrorWhenInvalidEmailFormat() {
-        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         UserPatchRequestDto update = createUserPatchRequestDto("not an email", "newusername");
 
         userService.editUser(token.getToken(), userId, update);
@@ -88,7 +80,7 @@ public class UserServiceTest {
 
     @Test(expected = UserNotFoundException.class)
     public void shouldThrowErrorWhenUserToBeEditedDoesNotExist() {
-        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         given(userRepository.findById(userId)).willReturn(Optional.empty());
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
 
@@ -97,7 +89,7 @@ public class UserServiceTest {
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenNewUsernameExist() {
-        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
         given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.of(createUser("notqwerty@qwerty.com", "newqwerty")));
@@ -107,7 +99,7 @@ public class UserServiceTest {
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenNewEmailExists() {
-        given(authRepository.findById(token.getToken())).willReturn(Optional.of(token));
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
         given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.empty());

@@ -2,6 +2,7 @@ package com.gradproject2019.auth.service;
 
 import com.gradproject2019.auth.data.LoginDto;
 import com.gradproject2019.auth.exception.TokenNotFoundException;
+import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.persistance.Token;
 import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.auth.exception.InvalidCredentialsException;
@@ -57,5 +58,11 @@ public class AuthServiceImpl implements AuthService {
         if(!authRepository.findById(token).isPresent()) {
             throw new TokenNotFoundException();
         }
+    }
+
+    public Token getTokenById(UUID token) {
+        return authRepository
+                .findById(token)
+                .orElseThrow(UserUnauthorisedException::new);
     }
 }

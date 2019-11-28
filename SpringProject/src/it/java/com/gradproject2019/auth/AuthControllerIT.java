@@ -2,11 +2,8 @@ package com.gradproject2019.auth;
 
 import com.gradproject2019.auth.data.LoginDto;
 import com.gradproject2019.auth.persistance.Token;
-import com.gradproject2019.users.persistance.User;
-import com.gradproject2019.utils.TestUtils;
 import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
-import com.gradproject2019.utils.AuthUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,13 +12,11 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.UUID;
 
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;

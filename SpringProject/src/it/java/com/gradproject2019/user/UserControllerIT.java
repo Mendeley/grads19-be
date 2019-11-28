@@ -1,7 +1,5 @@
 package com.gradproject2019.user;
 
-import com.gradproject2019.auth.persistance.Token;
-import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
@@ -17,15 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.UUID;
 
-import static java.util.UUID.randomUUID;
 import static org.springframework.http.HttpMethod.*;
 
 @RunWith(SpringRunner.class)
@@ -111,12 +106,9 @@ public class UserControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200WhenGettingUserById() throws URISyntaxException {
-        User savedUser = userRepository.saveAndFlush(user);
-        URI uri = new URI(baseUrl + "/" + savedUser.getId());
-        Token testToken = new Token(savedUser.getId(), randomUUID());
-        Token savedToken = authRepository.saveAndFlush(testToken);
+        URI uri = new URI(baseUri + "/" + savedUser.getId());
 
-        ResponseEntity<User> response = getUserById(uri, savedToken.getToken());
+        ResponseEntity<User> response = getUserById(uri);
 
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(savedUser.getId(), response.getBody().getId());
@@ -129,17 +121,14 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn404WhenGettingUserByIDUnauthorised() throws URISyntaxException{
+    public void shouldReturn401WhenGettingUserByIDUnauthorised() throws URISyntaxException{
+        URI uri = new URI(baseUri + "/" + savedUser.getId());
 
-        User savedUser = userRepository.saveAndFlush(user);
+        ResponseEntity<ErrorEntity> response = getUserByIdExpectingAuthError(uri);
 
-        URI uri = new URI(baseUrl + "/" + savedUser.getId());
-
-        ResponseEntity<User> response = getUserById(uri, randomUUID());
-
-        Assert.assertEquals(404, response.getStatusCodeValue());
+        Assert.assertEquals(401, response.getStatusCodeValue());
+        Assert.assertEquals("User unauthorized to perform action.", response.getBody().getMessage());
     }
-
 
     @Test
     public void shouldReturn401WhenUnauthorisedEdit() throws URISyntaxException {
@@ -164,10 +153,12 @@ public class UserControllerIT extends TestUtils {
         return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, failingHeaders), ErrorEntity.class);
     }
 
-    private ResponseEntity<User> getUserById(URI uri, UUID token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, token.toString());
-        return restTemplate.exchange(uri , GET, new HttpEntity<>(headers), User.class);
+    private ResponseEntity<User> getUserById(URI uri) {
+        return restTemplate.exchange(uri , GET, new HttpEntity<>(passingHeaders), User.class);
+    }
+
+    private ResponseEntity<ErrorEntity> getUserByIdExpectingAuthError(URI uri) {
+        return restTemplate.exchange(uri , GET, new HttpEntity<>(failingHeaders), ErrorEntity.class);
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {
