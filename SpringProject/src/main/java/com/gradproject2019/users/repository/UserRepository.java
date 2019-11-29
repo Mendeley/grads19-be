@@ -15,13 +15,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE User u SET " +
-            "u.firstName = IfNull(:firstName, u.firstName), " +
-            "u.lastName = IfNull(:lastName, u.lastName), " +
-            "u.username = IfNull(:username, u.username), " +
-            "u.email = IfNull(:email, u.email), " +
-            "u.occupation = IfNull(:occupation, u.occupation) " +
-            "WHERE u.id = :id")
+    @Query("UPDATE User SET " +
+            "firstName = IfNull(:firstName, firstName), " +
+            "lastName = IfNull(:lastName, lastName), " +
+            "username = IfNull(:username, username), " +
+            "email = IfNull(:email, email), " +
+            "occupation = IfNull(:occupation, occupation) " +
+            "WHERE id = :id")
     void updateUser(@Param("id") Long id,
                     @Param("firstName") String firstName,
                     @Param("lastName") String lastName,
