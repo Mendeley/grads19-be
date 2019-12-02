@@ -49,7 +49,7 @@ public class ConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
+    public void shouldReturn200AndEmptyListWhenNoConferences() throws URISyntaxException {
         URI uri = new URI(baseUri);
 
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
@@ -59,7 +59,7 @@ public class ConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn200AndListOfConferencesWhenDatabasePopulated() throws URISyntaxException {
+    public void shouldReturn200AndListOfConferencesWhenConferenceExists() throws URISyntaxException {
         URI uri = new URI(baseUri);
         Conference addedConference = conferenceRepository.saveAndFlush(conference);
 
