@@ -48,6 +48,5 @@ public class ConferenceController {
     public ResponseEntity<ConferenceResponseDto> editConference(@RequestHeader("Authorization") UUID token, @RequestBody ConferencePatchRequestDto conferencePatchRequestDto, @PathVariable("id") Long conferenceId) {
         ConferenceResponseDto conferenceResponseDto = conferenceService.editConference(token, conferenceId, conferencePatchRequestDto);
         return ResponseEntity.ok(conferenceResponseDto);
-
     }
 }
