@@ -9,6 +9,8 @@ import java.util.UUID;
 public interface UserService {
 
     UserResponseDto saveUser(UserRequestDto userRequestDto);
+
+    UserResponseDto editUser(UUID token, Long userId, UserPatchRequestDto userPatchRequestDto);
+
     UserResponseDto findUserById(Long userId, UUID token);
-    UserResponseDto editUser(Long userId, UserPatchRequestDto userPatchRequestDto, UserRequestDto userRequestDto);
 }

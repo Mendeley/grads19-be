@@ -9,7 +9,7 @@ import java.time.Instant;
 @Validated
 public class ConferenceResponseDto {
     @NotNull
-    private Long id; // BE should be giving FE id!=null
+    private Long id;
 
     @NotNull
     private String name;

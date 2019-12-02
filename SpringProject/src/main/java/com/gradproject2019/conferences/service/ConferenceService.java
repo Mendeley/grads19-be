@@ -5,6 +5,7 @@ import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ConferenceService {
 
@@ -12,9 +13,9 @@ public interface ConferenceService {
 
     ConferenceResponseDto getConferenceById(Long conferenceId);
 
-    ConferenceResponseDto saveConference(ConferenceRequestDto conferenceRequestDto);
+    ConferenceResponseDto saveConference(UUID token, ConferenceRequestDto conferenceRequestDto);
 
-    void deleteConference(Long conferenceId);
+    void deleteConference(UUID token, Long conferenceId);
 
-    ConferenceResponseDto editConference(Long conferenceId, ConferencePatchRequestDto conferencePatchRequestDto);
+    ConferenceResponseDto editConference(UUID token, Long conferenceId, ConferencePatchRequestDto conferencePatchRequestDto);
 }

@@ -1,17 +1,18 @@
 package com.gradproject2019.users.service;
 
-import com.gradproject2019.users.data.UserPatchRequestDto;
-import com.gradproject2019.auth.exception.TokenNotFoundException;
+import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.service.AuthServiceImpl;
+import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
-import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.InvalidCredentialsException;
+import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.UserNotFoundException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
 import static com.gradproject2019.users.data.UserRequestDto.from;
@@ -20,6 +21,7 @@ import static com.gradproject2019.users.data.UserRequestDto.from;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
     private final AuthServiceImpl authServiceImpl;
 
     public static final String PASSWORD_VALIDATION_PATTERN = "((?=.*[a-z])(?=.*[0-9])(?=.*[!?\\#@^&£$*+;:~])(?=.*[A-Z]).{8,16})";
@@ -33,8 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto saveUser(UserRequestDto userRequestDto) {
-        checkCredentialsValidity(userRequestDto);
-        userExists(userRequestDto);
+        checkValidSave(userRequestDto);
 
         User user = from(userRequestDto);
         user.setPassword(AuthUtils.hash(userRequestDto.getPassword()));
@@ -44,44 +45,72 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto findUserById(Long userId, UUID token) {
-        authServiceImpl.checkTokenExists(token);
-        return getUserById(userId);
-
+        authServiceImpl.getTokenById(token);
+        return new UserResponseDto().from(getUserById(userId));
     }
 
-    private void checkCredentialsValidity(UserRequestDto userRequestDto) {
+    @Override
+    public UserResponseDto editUser(UUID token, Long userId, UserPatchRequestDto userPatchRequestDto) {
+        checkValidUpdate(token, userId, userPatchRequestDto);
+
+        userRepository.updateUser(userId, userPatchRequestDto.getFirstName(), userPatchRequestDto.getLastName(), userPatchRequestDto.getUsername(), userPatchRequestDto.getEmail(), userPatchRequestDto.getOccupation());
+        return new UserResponseDto().from(getUserById(userId));
+    }
+
+    private void checkValidSave(UserRequestDto userRequestDto) {
         checkCredentials(userRequestDto.getPassword(), PASSWORD_VALIDATION_PATTERN);
         checkCredentials(userRequestDto.getUsername(), USERNAME_VALIDATION_PATTERN);
         checkCredentials(userRequestDto.getEmail(), EMAIL_VALIDATION_PATTERN);
+        checkIfUsernameExists(userRequestDto.getUsername());
+        checkIfEmailExists(userRequestDto.getEmail());
+    }
+
+    private void checkValidUpdate(UUID token, Long userId, UserPatchRequestDto userPatchRequestDto) {
+        checkTokenMatchesUser(token, userId);
+        checkCredentials(userPatchRequestDto.getUsername(), USERNAME_VALIDATION_PATTERN);
+        checkCredentials(userPatchRequestDto.getEmail(), EMAIL_VALIDATION_PATTERN);
+        checkIfUpdatedCredentialsExist(userPatchRequestDto.getUsername(), userPatchRequestDto.getEmail(), userId);
     }
 
     private void checkCredentials(String input, String pattern) {
-        if (!AuthUtils.validate(input, pattern)) {
-            throw new InvalidCredentialsException();
+        if(input != null) {
+            if (!AuthUtils.validate(input, pattern)) {
+                throw new InvalidCredentialsException();
+            }
         }
     }
 
-    private void userExists(UserRequestDto userRequestDto) {
-        if (userRepository.findByUsername(userRequestDto.getUsername()).isPresent()) {
+    private void checkIfUsernameExists(String username) {
+        if (userRepository.findByUsername(username).isPresent()) {
             throw new UserInfoExistsException();
         }
-        if (userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) {
+    }
+
+    private void checkIfEmailExists(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new UserInfoExistsException();
         }
     }
 
-    public UserResponseDto editUser(Long userId, UserPatchRequestDto userPatch, UserRequestDto userRequestDto){
-        userExists(userRequestDto);
-
-        userRepository.updateUser(userId, userPatch.getFirstName(), userPatch.getLastName(), userPatch.getUsername(), userPatch.getEmail(), userPatch.getOccupation());
-
-        return getUserById(userId);
-    }
-
-    public UserResponseDto getUserById(Long userId) {
-        return new UserResponseDto().from(userRepository
+    private User getUserById(Long userId) {
+        return userRepository
                 .findById(userId)
-                .orElseThrow(UserNotFoundException::new));
+                .orElseThrow(UserNotFoundException::new);
     }
 
+    private void checkTokenMatchesUser(UUID token, Long userId) {
+        if(!authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
+            throw new UserUnauthorisedException();
+        }
+    }
+
+    private void checkIfUpdatedCredentialsExist(String patchUsername, String patchEmail, Long userId) {
+        User user = getUserById(userId);
+        if(patchUsername != null && !patchUsername.equals(user.getUsername())) {
+            checkIfUsernameExists(patchUsername);
+        }
+        if(patchEmail != null && !patchEmail.equals(user.getEmail())) {
+            checkIfEmailExists(patchEmail);
+        }
+    }
 }
