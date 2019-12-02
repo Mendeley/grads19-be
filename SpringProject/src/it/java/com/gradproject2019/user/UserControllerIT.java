@@ -1,5 +1,7 @@
 package com.gradproject2019.user;
 
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
+import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
@@ -20,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -141,6 +144,28 @@ public class UserControllerIT extends TestUtils {
         Assert.assertEquals("User unauthorized to perform action.", response.getBody().getMessage());
     }
 
+    @Test
+    public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
+        URI uri = new URI(baseUri);
+        clearRepositories();
+
+        ResponseEntity<List<UserResponseDto>> response = getUserList(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(true, response.getBody().isEmpty());
+    }
+
+    @Test
+    public void shouldReturn200AndListOfUsersWhenDatabasePopulated() throws URISyntaxException {
+        URI uri = new URI(baseUri);
+
+        ResponseEntity<List<UserResponseDto>> response = getUserList(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedUser.getUsername(), response.getBody().get(0).getUsername());
+        Assert.assertEquals(savedUser.getId(), response.getBody().get(0).getId());
+    }
+
     private ResponseEntity<String> postUser(URI uri, HttpEntity<UserRequestDto> request) {
         return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
     }
@@ -159,6 +184,10 @@ public class UserControllerIT extends TestUtils {
 
     private ResponseEntity<ErrorEntity> getUserByIdExpectingAuthError(URI uri) {
         return restTemplate.exchange(uri , GET, new HttpEntity<>(failingHeaders), ErrorEntity.class);
+    }
+
+    private ResponseEntity<List<UserResponseDto>> getUserList(URI uri) {
+        return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<List<UserResponseDto>>() {});
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {

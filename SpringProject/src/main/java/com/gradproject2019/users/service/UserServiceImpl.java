@@ -2,6 +2,7 @@ package com.gradproject2019.users.service;
 
 import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.service.AuthServiceImpl;
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
@@ -13,7 +14,9 @@ import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.gradproject2019.users.data.UserRequestDto.from;
 
@@ -31,6 +34,13 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository, AuthServiceImpl authServiceImpl) {
         this.userRepository = userRepository;
         this.authServiceImpl = authServiceImpl;
+    }
+
+    @Override
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserResponseDto().from(user))
+                .collect(Collectors.toList());
     }
 
     @Override
