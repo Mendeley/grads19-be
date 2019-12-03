@@ -8,12 +8,14 @@ import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.exception.UserAlreadyInterestedException;
 import com.gradproject2019.userConference.persistance.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
+import org.springframework.stereotype.Service;
 
 
 import java.util.UUID;
 
 import static com.gradproject2019.userConference.data.UserConferenceRequestDto.from;
 
+@Service
 public class UserConferenceServiceImpl  implements UserConferenceService{
 
     private  UserConferenceRepository userConferenceRepository;
