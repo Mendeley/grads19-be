@@ -155,6 +155,26 @@ public class UserControllerIT extends TestUtils {
 //        Assert.assertEquals(1L, userRepository.count());
 //    }
 
+    @Test
+    public void shouldReturn200andEmptyListWhenNoUsers() {
+
+    }
+
+    @Test
+    public void shouldReturn200AndListOfUsersWhenUserExists() {
+
+    }
+
+    @Test
+    public void shouldReturnUsersMatchingFirstNameCharSequence() {
+
+    }
+
+    @Test
+    public void shouldReturnUsersMatchingLastNameCharSequence() {
+
+    }
+
     private ResponseEntity<String> postUser(HttpEntity<UserRequestDto> request) {
         return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
     }

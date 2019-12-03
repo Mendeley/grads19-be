@@ -13,12 +13,12 @@ spring:
 
   logging:
     level: error
-    level.org.hibernate.SQL: debug
+    level.org.hibernate.SQL: DEBUG
     pattern:
       console: '%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n'
 
   jpa:
-      hibernate:
-      ddl-auto: create-drop
+    hibernate:
+    ddl-auto: create-drop
   main:
       banner-mode: 'off'
