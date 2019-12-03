@@ -24,9 +24,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(path = "/users/search/{searchInput}")
-    public ResponseEntity<List<UserResponseDto>> searchByName(@PathVariable("searchInput") String searchInput) {
-        List<UserResponseDto> users = userService.searchByName(searchInput);
+    @GetMapping(path = "/users/search")
+    public ResponseEntity<List<UserResponseDto>> searchByName(@RequestParam String query) {
+        List<UserResponseDto> users = userService.searchByName(query);
         return ResponseEntity.ok(users);
     }
 

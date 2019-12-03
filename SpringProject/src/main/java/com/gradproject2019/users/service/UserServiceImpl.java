@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDto> searchByName(String searchInput) {
-        return userRepository.searchByName(searchInput).stream()
+    public List<UserResponseDto> searchByName(String query) {
+        return userRepository.searchByName(query).stream()
                 .map(user -> UserResponseDto.UserResponseDtoBuilder.anUserResponseDto().withFirstName(user.getFirstName()).withLastName(user.getLastName()).withId(user.getId()).build())
                 .collect(Collectors.toList());
     }

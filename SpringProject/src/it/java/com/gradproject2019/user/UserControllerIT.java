@@ -17,6 +17,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -138,7 +139,7 @@ public class UserControllerIT extends TestUtils {
     @Test
     public void shouldReturn200andEmptyListWhenNoUsers() throws URISyntaxException {
         clearRepositories();
-        URI uri = new URI(baseUri + "/search/qwerty");
+        URI uri = new URI(baseUri + "/search?query=qwerty");
 
         ResponseEntity<List<UserResponseDto>> response = searchByName(uri);
 
@@ -148,7 +149,7 @@ public class UserControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200AndUsersMatchingFirstNameCharSequence() throws URISyntaxException {
-        URI uri = new URI(baseUri + "/search/karam");
+        URI uri = new URI(baseUri + "/search?query=karam");
 
         ResponseEntity<List<UserResponseDto>> response = searchByName(uri);
 
@@ -161,7 +162,7 @@ public class UserControllerIT extends TestUtils {
 
     @Test
     public void shouldReturnUsersMatchingLastNameCharSequence() throws URISyntaxException {
-        URI uri = new URI(baseUri + "/search/kapoor");
+        URI uri = new URI(baseUri + "/search?query=kapoor");
 
         ResponseEntity<List<UserResponseDto>> response = searchByName(uri);
 
@@ -177,7 +178,7 @@ public class UserControllerIT extends TestUtils {
         User userZ = userRepository.saveAndFlush(new User("KaramZ", "Karam", "ZKapoor", "KSinghZ@gmail.com", "Qwerty!1", "Florist"));
         User userA = userRepository.saveAndFlush(new User("KaramA", "Karam", "AKapoor", "KSinghA@gmail.com", "Qwerty!1", "Tailor"));
 
-        URI uri = new URI(baseUri + "/search/karam");
+        URI uri = new URI(baseUri + "/search?query=karam");
 
         ResponseEntity<List<UserResponseDto>> response = searchByName(uri);
 

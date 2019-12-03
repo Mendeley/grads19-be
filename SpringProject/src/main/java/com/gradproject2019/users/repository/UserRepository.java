@@ -38,6 +38,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT * FROM users WHERE email = :email", nativeQuery = true)
     Optional<User> findByEmail(@Param("email") String email);
 
-    @Query(value = "SELECT * FROM users WHERE first_name like CONCAT('%', :searchInput,'%') OR last_name like CONCAT('%', :searchInput, '%') ORDER BY last_name ASC", nativeQuery = true)
-    List<User> searchByName(@Param("searchInput") String searchInput);
+    @Query(value = "SELECT * FROM users WHERE first_name like CONCAT('%', :query,'%') OR last_name like CONCAT('%', :query, '%') ORDER BY last_name ASC", nativeQuery = true)
+    List<User> searchByName(@Param("query") String query);
 }
