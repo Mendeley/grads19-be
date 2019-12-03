@@ -1,6 +1,5 @@
 package com.gradproject2019.users.service;
 
-import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
