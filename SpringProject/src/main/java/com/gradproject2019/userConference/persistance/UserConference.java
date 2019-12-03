@@ -1,4 +1,4 @@
-package com.gradproject2019.userConferences.persistance;
+package com.gradproject2019.userConference.persistance;
 
 
 import javax.persistence.*;
