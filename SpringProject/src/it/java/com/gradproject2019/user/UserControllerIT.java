@@ -135,44 +135,57 @@ public class UserControllerIT extends TestUtils {
         Assert.assertEquals("User unauthorized to perform action.", response.getBody().getMessage());
     }
 
-//    @Test
-//    public void shouldReturn200AndEmptyListWhenNoUsers() {
-//        clearRepositories();
-//
-//        ResponseEntity<List<UserResponseDto>> response = getUserList();
-//
-//        Assert.assertEquals(200, response.getStatusCodeValue());
-//        Assert.assertEquals(true, response.getBody().isEmpty());
-//    }
-//
-//    @Test
-//    public void shouldReturn200AndListOfUsersWhenUserExists() {
-//        ResponseEntity<List<UserResponseDto>> response = getUserList();
-//
-//        Assert.assertEquals(200, response.getStatusCodeValue());
-//        Assert.assertEquals(savedUser.getFirstName(), response.getBody().get(0).getFirstName());
-//        Assert.assertEquals(savedUser.getId(), response.getBody().get(0).getId());
-//        Assert.assertEquals(1L, userRepository.count());
-//    }
-
     @Test
-    public void shouldReturn200andEmptyListWhenNoUsers() {
+    public void shouldReturn200andEmptyListWhenNoUsers() throws URISyntaxException {
+        clearRepositories();
+        URI uri = new URI(baseUri + "/search/qwerty");
 
+        ResponseEntity<List<UserResponseDto>> response = searchByName(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(true, response.getBody().isEmpty());
     }
 
     @Test
-    public void shouldReturn200AndListOfUsersWhenUserExists() {
+    public void shouldReturn200AndUsersMatchingFirstNameCharSequence() throws URISyntaxException {
+        URI uri = new URI(baseUri + "/search/karam");
 
+        ResponseEntity<List<UserResponseDto>> response = searchByName(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedUser.getFirstName(), response.getBody().get(0).getFirstName());
+        Assert.assertEquals(savedUser.getLastName(), response.getBody().get(0).getLastName());
+        Assert.assertEquals(savedUser.getId(), response.getBody().get(0).getId());
+        Assert.assertEquals(1, response.getBody().size());
     }
 
     @Test
-    public void shouldReturnUsersMatchingFirstNameCharSequence() {
+    public void shouldReturnUsersMatchingLastNameCharSequence() throws URISyntaxException {
+        URI uri = new URI(baseUri + "/search/kapoor");
 
+        ResponseEntity<List<UserResponseDto>> response = searchByName(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedUser.getFirstName(), response.getBody().get(0).getFirstName());
+        Assert.assertEquals(savedUser.getLastName(), response.getBody().get(0).getLastName());
+        Assert.assertEquals(savedUser.getId(), response.getBody().get(0).getId());
+        Assert.assertEquals(1, response.getBody().size());
     }
 
     @Test
-    public void shouldReturnUsersMatchingLastNameCharSequence() {
+    public void shouldReturnMatchingUsersInAlphabeticalOrder() throws URISyntaxException {
+        User userZ = userRepository.saveAndFlush(new User("KaramZ", "Karam", "ZKapoor", "KSinghZ@gmail.com", "Qwerty!1", "Florist"));
+        User userA = userRepository.saveAndFlush(new User("KaramA", "Karam", "AKapoor", "KSinghA@gmail.com", "Qwerty!1", "Tailor"));
 
+        URI uri = new URI(baseUri + "/search/karam");
+
+        ResponseEntity<List<UserResponseDto>> response = searchByName(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(3, response.getBody().size());
+        Assert.assertEquals(userA.getLastName(), response.getBody().get(0).getLastName());
+        Assert.assertEquals(savedUser.getLastName(), response.getBody().get(1).getLastName());
+        Assert.assertEquals(userZ.getLastName(), response.getBody().get(2).getLastName());
     }
 
     private ResponseEntity<String> postUser(HttpEntity<UserRequestDto> request) {
@@ -195,9 +208,9 @@ public class UserControllerIT extends TestUtils {
         return restTemplate.exchange(uri2 , GET, new HttpEntity<>(failingHeaders), ErrorEntity.class);
     }
 
-//    private ResponseEntity<List<UserResponseDto>> getUserList() {
-//        return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<List<UserResponseDto>>() {});
-//    }
+    private ResponseEntity<List<UserResponseDto>> searchByName(URI uri) {
+        return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<List<UserResponseDto>>() {});
+    }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {
         return UserRequestDto
