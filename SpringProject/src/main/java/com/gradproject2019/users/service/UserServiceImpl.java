@@ -2,7 +2,6 @@ package com.gradproject2019.users.service;
 
 import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.service.AuthServiceImpl;
-import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
@@ -37,9 +36,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDto> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(user -> new UserResponseDto().from(user))
+    public List<UserResponseDto> searchByName(String searchInput) {
+        return userRepository.searchByName(searchInput).stream()
+                .map(user -> UserResponseDto.UserResponseDtoBuilder.anUserResponseDto().withFirstName(user.getFirstName()).withLastName(user.getLastName()).withId(user.getId()).build())
                 .collect(Collectors.toList());
     }
 

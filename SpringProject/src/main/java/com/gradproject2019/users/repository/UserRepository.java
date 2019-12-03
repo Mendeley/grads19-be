@@ -1,6 +1,7 @@
 package com.gradproject2019.users.repository;
 
 import com.gradproject2019.users.persistance.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.awt.print.Pageable;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,4 +38,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT * FROM users where email = :email", nativeQuery = true)
     Optional<User> findByEmail(@Param("email") String email);
 
+    @Query(value = "SELECT DISTINCT * FROM users where firstName OR lastName like '%:searchInput%'", nativeQuery = true)
+    List<User> searchByName(@Param("searchInput") String searchInput);
 }

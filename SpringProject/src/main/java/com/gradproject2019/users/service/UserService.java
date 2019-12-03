@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface UserService {
 
-    List<UserResponseDto> getAllUsers();
+    List<UserResponseDto> searchByName(String searchInput);
 
     UserResponseDto saveUser(UserRequestDto userRequestDto);
 

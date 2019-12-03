@@ -1,17 +1,20 @@
 package com.gradproject2019.users.controller;
 
-import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -21,9 +24,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(path = "/users")
-    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        List<UserResponseDto> users = userService.getAllUsers();
+    @GetMapping(path = "/users/search/{searchInput}")
+    public ResponseEntity<List<UserResponseDto>> searchByName(@PathVariable("searchInput") String searchInput) {
+        List<UserResponseDto> users = userService.searchByName(searchInput);
         return ResponseEntity.ok(users);
     }
 
