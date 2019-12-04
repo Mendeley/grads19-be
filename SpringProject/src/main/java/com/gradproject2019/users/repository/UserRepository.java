@@ -21,14 +21,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "lastName = IfNull(:lastName, lastName), " +
             "username = IfNull(:username, username), " +
             "email = IfNull(:email, email), " +
-            "occupation = IfNull(:occupation, occupation) " +
+            "occupation = IfNull(:occupation, occupation), " +
+            "managerId = IfNull(:managerId, managerId) " +
             "WHERE id = :id")
     void updateUser(@Param("id") Long id,
                     @Param("firstName") String firstName,
                     @Param("lastName") String lastName,
                     @Param("username") String username,
                     @Param("email") String email,
-                    @Param("occupation") String occupation);
+                    @Param("occupation") String occupation,
+                    @Param("managerId") Long managerId);
 
     @Query(value =
             "SELECT * " +

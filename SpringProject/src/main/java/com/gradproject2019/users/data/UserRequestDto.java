@@ -27,6 +27,8 @@ public class UserRequestDto {
     @NotNull(message = "Invalid entry in occupation field.")
     private String occupation;
 
+    private Long managerId;
+
     public UserRequestDto() {
     }
 
@@ -54,6 +56,10 @@ public class UserRequestDto {
         return occupation;
     }
 
+    public Long getManagerId() {
+        return managerId;
+    }
+
     public static User from(UserRequestDto userRequestDto) {
         return anUser()
                 .withUsername(userRequestDto.getUsername())
@@ -62,6 +68,7 @@ public class UserRequestDto {
                 .withEmail(userRequestDto.getEmail())
                 .withPassword(userRequestDto.getPassword())
                 .withOccupation(userRequestDto.getOccupation())
+                .withManagerId(userRequestDto.getManagerId())
                 .build();
     }
 
@@ -72,6 +79,7 @@ public class UserRequestDto {
         private String email;
         private String password;
         private String occupation;
+        private Long managerId;
 
         private UserRequestDtoBuilder() {
         }
@@ -110,6 +118,11 @@ public class UserRequestDto {
             return this;
         }
 
+        public UserRequestDtoBuilder withManagerId(Long managerId) {
+            this.managerId = managerId;
+            return this;
+        }
+
         public UserRequestDto build() {
             UserRequestDto userRequestDto = new UserRequestDto();
             userRequestDto.password = this.password;
@@ -118,6 +131,7 @@ public class UserRequestDto {
             userRequestDto.lastName = this.lastName;
             userRequestDto.occupation = this.occupation;
             userRequestDto.firstName = this.firstName;
+            userRequestDto.managerId = this.managerId;
             return userRequestDto;
         }
     }

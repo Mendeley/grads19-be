@@ -6,6 +6,7 @@ public class UserPatchRequestDto {
     private String lastName;
     private String email;
     private String occupation;
+    private Long managerId;
 
     public UserPatchRequestDto() {
     }
@@ -20,6 +21,8 @@ public class UserPatchRequestDto {
 
     public String getOccupation() { return occupation; }
 
+    public Long getManagerId() { return managerId;}
+
 
     public static final class UserPatchRequestDtoBuilder {
         private String username;
@@ -27,6 +30,7 @@ public class UserPatchRequestDto {
         private String lastName;
         private String email;
         private String occupation;
+        private Long managerId;
 
         private UserPatchRequestDtoBuilder() {
         }
@@ -60,6 +64,11 @@ public class UserPatchRequestDto {
             return this;
         }
 
+        public UserPatchRequestDtoBuilder withManagerId(Long managerId) {
+            this.managerId = managerId;
+            return this;
+        }
+
         public UserPatchRequestDto build() {
             UserPatchRequestDto userPatchRequestDto = new UserPatchRequestDto();
             userPatchRequestDto.firstName = this.firstName;
@@ -67,6 +76,7 @@ public class UserPatchRequestDto {
             userPatchRequestDto.occupation = this.occupation;
             userPatchRequestDto.email = this.email;
             userPatchRequestDto.lastName = this.lastName;
+            userPatchRequestDto.managerId = this.managerId;
             return userPatchRequestDto;
         }
     }

@@ -42,7 +42,7 @@ public class TestUtils {
         clearRepositories();
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         hashedPassword = AuthUtils.hash("P455w0rd!");
-        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist");
+        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist", null);
         savedUser = userRepository.saveAndFlush(user);
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
         authRepository.saveAndFlush(testToken);
