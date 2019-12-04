@@ -188,6 +188,19 @@ public class UserControllerIT extends TestUtils {
         Assert.assertEquals(userZ.getLastName(), response.getBody().get(2).getLastName());
     }
 
+    @Test
+    public void shouldReturnUsersMatchingFullName() throws URISyntaxException {
+        URI uri = new URI(baseUri + "/search?query=karam%20kapoor");
+
+        ResponseEntity<List<UserResponseDto>> response = searchByName(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedUser.getFirstName(), response.getBody().get(0).getFirstName());
+        Assert.assertEquals(savedUser.getLastName(), response.getBody().get(0).getLastName());
+        Assert.assertEquals(savedUser.getId(), response.getBody().get(0).getId());
+        Assert.assertEquals(1, response.getBody().size());
+    }
+
     private ResponseEntity<String> postUser(HttpEntity<UserRequestDto> request) {
         return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
     }
