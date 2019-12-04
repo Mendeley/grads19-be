@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -29,10 +30,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     @Param("email") String email,
                     @Param("occupation") String occupation);
 
-    @Query(value = "SELECT * FROM users where username = :username", nativeQuery = true)
+    @Query(value =
+            "SELECT * " +
+            "FROM users " +
+            "WHERE username = :username",
+            nativeQuery = true)
     Optional<User> findByUsername(@Param("username") String username);
 
-    @Query(value = "SELECT * FROM users where email = :email", nativeQuery = true)
+    @Query(value =
+            "SELECT * " +
+            "FROM users " +
+            "WHERE email = :email",
+            nativeQuery = true)
     Optional<User> findByEmail(@Param("email") String email);
 
+    @Query(value =
+            "SELECT * " +
+            "FROM users " +
+            "WHERE CONCAT(first_name, ' ', last_name) " +
+            "LIKE CONCAT('%', :query, '%') " +
+            "ORDER BY last_name ASC",
+            nativeQuery = true)
+    List<User> searchByName(@Param("query") String query);
 }
