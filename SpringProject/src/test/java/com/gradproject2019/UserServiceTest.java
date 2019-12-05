@@ -5,12 +5,14 @@ import com.gradproject2019.auth.persistance.Token;
 import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
+import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.InvalidCredentialsException;
 import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.UserNotFoundException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.users.service.UserServiceImpl;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,9 +36,15 @@ public class UserServiceTest {
     @Mock
     private AuthServiceImpl authServiceImpl;
 
-    private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", null);
+    private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty", null);
+    private final User qwerty2 = new User( 2L, "qwerty2", "qwerty2", "qwerty2", "qwerty2@qwerty.com", "Qwerty!1", "qwerty2", 3L);
+    private final User qwerty3 = new User( 3L, "qwerty3", "qwerty3", "qwerty3", "qwerty3@qwerty.com", "Qwerty!1", "qwerty3", 1L);
     private final Token token = new Token(1L, UUID.randomUUID());
+    private final Token token2 = new Token(2L, UUID.randomUUID());
     private final Long userId = 1L;
+    private final Long userId2 = 2L;
+    private final Long userId3 = 3L;
+
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenRegistrationUsernameExists() {
@@ -106,6 +114,50 @@ public class UserServiceTest {
         given(userRepository.findByEmail(update.getEmail())).willReturn(Optional.of(createUser("newqwerty@newqwerty.com", "notqwerty")));
 
         userService.editUser(token.getToken(), userId, update);
+    }
+
+    @Test(expected = UserUnauthorisedException.class)
+    public void shouldThrowErrorWhenRequestingManagerDoesNotMatchRequestedUser() {
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
+        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+        given(userRepository.findById(userId2)).willReturn(Optional.of(qwerty2));
+
+        userService.findUserById(userId2, token.getToken());
+    }
+
+    @Test
+    public void shouldPassWhenRequestingUserDoesMatchRequestedUsersManager() {
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
+        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+        given(userRepository.findById(userId3)).willReturn(Optional.of(qwerty3));
+
+        UserResponseDto response = userService.findUserById(userId3, token.getToken());
+
+        Assert.assertEquals(qwerty3.getId(),response.getId());
+        Assert.assertEquals(qwerty3.getFirstName(),response.getFirstName());
+    }
+
+    @Test
+    public void shouldPassWhenRequestingUsersManagerDoesMatchRequestedUser() {
+        given(authServiceImpl.getTokenById(token2.getToken())).willReturn(token2);
+        given(userRepository.findById(userId2)).willReturn(Optional.of(qwerty2));
+        given(userRepository.findById(userId3)).willReturn(Optional.of(qwerty3));
+
+        UserResponseDto response = userService.findUserById(userId3, token2.getToken());
+
+        Assert.assertEquals(qwerty3.getId(),response.getId());
+        Assert.assertEquals(qwerty3.getFirstName(),response.getFirstName());
+    }
+
+    @Test
+    public void shouldPassWhenRequestingUserDoesMatchRequestedUser() {
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
+        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+
+        UserResponseDto response = userService.findUserById(userId, token.getToken());
+
+        Assert.assertEquals(qwerty.getId(),response.getId());
+        Assert.assertEquals(qwerty.getFirstName(),response.getFirstName());
     }
 
     private UserRequestDto createUserRequestDto( String email, String username) {

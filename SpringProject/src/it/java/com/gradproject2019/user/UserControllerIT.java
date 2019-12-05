@@ -139,7 +139,7 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn401WhenGettingUserByIDUnauthorised() {
+    public void shouldReturn401WhenGettingUserByIdUnauthorised() {
         ResponseEntity<ErrorEntity> response = getUserByIdExpectingAuthError();
 
         Assert.assertEquals(401, response.getStatusCodeValue());
