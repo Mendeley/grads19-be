@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 
-
 @Validated
 public class UserConferenceResponseDto {
 
@@ -28,7 +27,6 @@ public class UserConferenceResponseDto {
                 .withConferenceId(userConference.getConferenceId())
                 .build();
     }
-
 
     public static final class UserConferenceResponseDtoBuilder {
         private Long userId;

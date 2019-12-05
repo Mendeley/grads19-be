@@ -46,6 +46,4 @@ public class UserConferenceServiceImpl  implements UserConferenceService{
             throw new UserUnauthorisedException();
         }
     }
-
-
 }

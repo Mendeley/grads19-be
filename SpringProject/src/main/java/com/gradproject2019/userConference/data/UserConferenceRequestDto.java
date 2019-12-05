@@ -9,8 +9,6 @@ import static com.gradproject2019.userConference.persistance.UserConference.User
 
 @Validated
 public class UserConferenceRequestDto {
-//    @NotNull
-//    private Long id;
 
     @NotNull
     private Long userId;
@@ -18,12 +16,13 @@ public class UserConferenceRequestDto {
     @NotNull
     private Long conferenceId;
 
-    public UserConferenceRequestDto() {
+    public UserConferenceRequestDto(@NotNull Long userId, @NotNull Long conferenceId) {
+        this.userId = userId;
+        this.conferenceId = conferenceId;
     }
 
-//    public Long getId() { return id;}
-//
-//    public void setId(Long id) { this.id = id; }
+    public UserConferenceRequestDto() {
+    }
 
     public Long getUserId() { return userId; }
 
@@ -31,15 +30,12 @@ public class UserConferenceRequestDto {
 
     public static UserConference from(UserConferenceRequestDto userConferenceRequestDto) {
         return anUserConference()
-                //.withId(userConferenceRequestDto.getId())
                 .withUserId(userConferenceRequestDto.getUserId())
                 .withConferenceId(userConferenceRequestDto.getConferenceId())
                 .build();
     }
 
-
     public static final class UserConferenceRequestDtoBuilder {
-        //private Long id;
         private Long userId;
         private Long conferenceId;
 
@@ -49,11 +45,6 @@ public class UserConferenceRequestDto {
         public static UserConferenceRequestDtoBuilder anUserConferenceRequestDto() {
             return new UserConferenceRequestDtoBuilder();
         }
-
-//        public UserConferenceRequestDtoBuilder withId(Long id) {
-//            this.id = id;
-//            return this;
-//        }
 
         public UserConferenceRequestDtoBuilder withUserId(Long userId) {
             this.userId = userId;
@@ -67,7 +58,6 @@ public class UserConferenceRequestDto {
 
         public UserConferenceRequestDto build() {
             UserConferenceRequestDto userConferenceRequestDto = new UserConferenceRequestDto();
-           // userConferenceRequestDto.id = this.id;
             userConferenceRequestDto.userId = this.userId;
             userConferenceRequestDto.conferenceId = this.conferenceId;
             return userConferenceRequestDto;

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.validation.Valid;
-import java.util.Map;
 import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -22,10 +21,9 @@ public class UserConferenceController {
     @Autowired
     private UserConferenceService userConferenceService;
 
-    @PostMapping(path = "users/{id}/conferences") //not sure on this path
+    @PostMapping(path = "/user_conferences")
     public ResponseEntity<UserConferenceResponseDto> saveInterest(@Valid @RequestHeader("Authorization") UUID token, @RequestBody UserConferenceRequestDto userConferenceRequestDto) {
         UserConferenceResponseDto newInterest = userConferenceService.saveInterest(token, userConferenceRequestDto);
         return ResponseEntity.ok(newInterest);
     }
-
 }
