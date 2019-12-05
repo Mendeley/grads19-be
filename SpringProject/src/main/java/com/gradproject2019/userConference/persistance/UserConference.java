@@ -6,18 +6,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user_conferences")
 public class UserConference {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    private Long id;
+
+//    private Long id;
+
     private Long userId;
+
     private Long conferenceId;
 
     public UserConference() {
     }
 
-    public Long getId() { return id; }
+//    public Long getId() { return id; }
 
-    public void setId(Long id) { this.id = id; }
+//    public void setId(Long id) { id = id; }
 
     public Long getUserId() { return userId; }
 
@@ -29,21 +30,22 @@ public class UserConference {
 
 
     public static final class UserConferenceBuilder {
-        private Long id;
         private Long userId;
         private Long conferenceId;
+//        private Long id;
 
-        private UserConferenceBuilder() {
+        public UserConferenceBuilder() {
         }
 
         public static UserConferenceBuilder anUserConference() {
             return new UserConferenceBuilder();
         }
 
-        public UserConferenceBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
+//        public UserConferenceBuilder withId(Long id) {
+//            this.id = id;
+//            return this;
+//        }
+
 
         public UserConferenceBuilder withUserId(Long userId) {
             this.userId = userId;
@@ -57,7 +59,7 @@ public class UserConference {
 
         public UserConference build() {
             UserConference userConference = new UserConference();
-            userConference.setId(id);
+//            userConference.setId(id);
             userConference.setUserId(userId);
             userConference.setConferenceId(conferenceId);
             return userConference;

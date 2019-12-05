@@ -8,8 +8,8 @@ import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.exception.UserAlreadyInterestedException;
 import com.gradproject2019.userConference.persistance.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-
 
 import java.util.UUID;
 
@@ -27,15 +27,16 @@ public class UserConferenceServiceImpl  implements UserConferenceService{
     }
 
     @Override
-    public UserConferenceResponseDto saveInterest(UserConferenceRequestDto userConferenceRequestDto, UUID token) {
+    public UserConferenceResponseDto saveInterest(UUID token, UserConferenceRequestDto userConferenceRequestDto) {
         UserConference userConference = from(userConferenceRequestDto);
-        //check if user logged in
+
         checkUserAuthorised(token);
-        //check if already interested
 
-
-
-        return new UserConferenceResponseDto().from(userConferenceRepository.saveAndFlush(userConference));
+        try {
+            return new UserConferenceResponseDto().from(userConferenceRepository.saveAndFlush(userConference));
+        } catch(DuplicateKeyException e){
+            throw new UserAlreadyInterestedException();
+        }
     }
 
     private void checkUserAuthorised(UUID token) {
@@ -46,9 +47,5 @@ public class UserConferenceServiceImpl  implements UserConferenceService{
         }
     }
 
-    private void checkUserNotAlreadyInterested(Long userId, Long conferenceId){
-        if(userConferenceRepository.findByUserId(userId).isPresent() && userConferenceRepository.findByConferenceId(conferenceId).isPresent())
-            throw new UserAlreadyInterestedException();
-    }
 
 }

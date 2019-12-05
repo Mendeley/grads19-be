@@ -1,5 +1,5 @@
 CREATE TABLE user_conferences (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    PRIMARY KEY (user_id, conference_id),
     user_id BIGINT UNSIGNED,
     conference_id BIGINT UNSIGNED,
     FOREIGN KEY (user_id) REFERENCES users(id),

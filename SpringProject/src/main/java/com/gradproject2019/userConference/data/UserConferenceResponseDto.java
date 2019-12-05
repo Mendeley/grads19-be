@@ -8,8 +8,6 @@ import javax.validation.constraints.NotNull;
 
 @Validated
 public class UserConferenceResponseDto {
-    @NotNull
-    private Long id;
 
     @NotNull
     private Long userId;
@@ -20,15 +18,12 @@ public class UserConferenceResponseDto {
     public UserConferenceResponseDto() {
     }
 
-    public Long getId() { return id; }
-
     public Long getUserId() { return userId; }
 
     public Long getConferenceId() { return conferenceId; }
 
     public UserConferenceResponseDto from(UserConference userConference) {
         return UserConferenceResponseDtoBuilder.anUserConferenceResponseDto()
-                .withId(userConference.getId())
                 .withUserId(userConference.getUserId())
                 .withConferenceId(userConference.getConferenceId())
                 .build();
@@ -36,7 +31,6 @@ public class UserConferenceResponseDto {
 
 
     public static final class UserConferenceResponseDtoBuilder {
-        private Long id;
         private Long userId;
         private Long conferenceId;
 
@@ -45,11 +39,6 @@ public class UserConferenceResponseDto {
 
         public static UserConferenceResponseDtoBuilder anUserConferenceResponseDto() {
             return new UserConferenceResponseDtoBuilder();
-        }
-
-        public UserConferenceResponseDtoBuilder withId(Long id) {
-            this.id = id;
-            return this;
         }
 
         public UserConferenceResponseDtoBuilder withUserId(Long userId) {
@@ -65,7 +54,6 @@ public class UserConferenceResponseDto {
         public UserConferenceResponseDto build() {
             UserConferenceResponseDto userConferenceResponseDto = new UserConferenceResponseDto();
             userConferenceResponseDto.userId = this.userId;
-            userConferenceResponseDto.id = this.id;
             userConferenceResponseDto.conferenceId = this.conferenceId;
             return userConferenceResponseDto;
         }

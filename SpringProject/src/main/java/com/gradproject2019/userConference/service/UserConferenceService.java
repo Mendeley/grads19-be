@@ -9,5 +9,5 @@ import java.util.UUID;
 @Service
 public interface UserConferenceService {
 
-    UserConferenceResponseDto saveInterest(UserConferenceRequestDto userConferenceRequestDto, UUID token);
+    UserConferenceResponseDto saveInterest(UUID token, UserConferenceRequestDto userConferenceRequestDto);
 }
