@@ -5,5 +5,6 @@ CREATE TABLE users (
     last_name VARCHAR(255),
     email VARCHAR(255),
     password CHAR(60),
-    occupation VARCHAR(255)
+    occupation VARCHAR(255),
+    manager_id BIGINT UNSIGNED
 );

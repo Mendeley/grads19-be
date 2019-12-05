@@ -34,7 +34,7 @@ public class UserServiceTest {
     @Mock
     private AuthServiceImpl authServiceImpl;
 
-    private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty");
+    private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", null);
     private final Token token = new Token(1L, UUID.randomUUID());
     private final Long userId = 1L;
 
