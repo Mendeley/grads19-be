@@ -27,7 +27,8 @@ public class ConferenceRequestDto {
     @NotNull(message = "Invalid entry in conference topic field.")
     private String topic;
 
-    public ConferenceRequestDto() { }
+    public ConferenceRequestDto() {
+    }
 
     public Long getId() {
         return id;
@@ -55,13 +56,13 @@ public class ConferenceRequestDto {
 
     public static Conference from(ConferenceRequestDto conferenceRequestDto) {
         return aConference()
-                    .withId(conferenceRequestDto.getId())
-                    .withName(conferenceRequestDto.getName())
-                    .withDateTime(conferenceRequestDto.getDateTime())
-                    .withCity(conferenceRequestDto.getCity())
-                    .withDescription(conferenceRequestDto.getDescription())
-                    .withTopic(conferenceRequestDto.getTopic())
-                    .build();
+                .withId(conferenceRequestDto.getId())
+                .withName(conferenceRequestDto.getName())
+                .withDateTime(conferenceRequestDto.getDateTime())
+                .withCity(conferenceRequestDto.getCity())
+                .withDescription(conferenceRequestDto.getDescription())
+                .withTopic(conferenceRequestDto.getTopic())
+                .build();
     }
 
     public static final class ConferenceRequestDtoBuilder {
@@ -83,6 +84,7 @@ public class ConferenceRequestDto {
             this.id = id;
             return this;
         }
+
         public ConferenceRequestDtoBuilder withName(String name) {
             this.name = name;
             return this;

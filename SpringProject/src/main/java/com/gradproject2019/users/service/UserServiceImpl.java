@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkCredentials(String input, String pattern) {
-        if(input != null) {
+        if (input != null) {
             if (!AuthUtils.validate(input, pattern)) {
                 throw new InvalidCredentialsException();
             }
@@ -99,17 +99,17 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkTokenMatchesUser(UUID token, Long userId) {
-        if(!authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
+        if (!authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
             throw new UserUnauthorisedException();
         }
     }
 
     private void checkIfUpdatedCredentialsExist(String patchUsername, String patchEmail, Long userId) {
         User user = getUserById(userId);
-        if(patchUsername != null && !patchUsername.equals(user.getUsername())) {
+        if (patchUsername != null && !patchUsername.equals(user.getUsername())) {
             checkIfUsernameExists(patchUsername);
         }
-        if(patchEmail != null && !patchEmail.equals(user.getEmail())) {
+        if (patchEmail != null && !patchEmail.equals(user.getEmail())) {
             checkIfEmailExists(patchEmail);
         }
     }

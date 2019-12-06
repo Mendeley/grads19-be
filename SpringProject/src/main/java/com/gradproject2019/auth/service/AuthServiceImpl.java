@@ -1,11 +1,11 @@
 package com.gradproject2019.auth.service;
 
 import com.gradproject2019.auth.data.LoginDto;
+import com.gradproject2019.auth.exception.InvalidCredentialsException;
 import com.gradproject2019.auth.exception.TokenNotFoundException;
 import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.persistance.Token;
 import com.gradproject2019.auth.repository.AuthRepository;
-import com.gradproject2019.auth.exception.InvalidCredentialsException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
@@ -27,11 +27,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Token login(LoginDto loginDto) {
-       User user = userRepository
-               .findByUsername(loginDto.getUsername())
-               .orElseThrow(InvalidCredentialsException::new);
-       checkPasswordHashMatch(loginDto.getPassword(), user.getPassword());
-       return authRepository.saveAndFlush(createToken(user.getId()));
+        User user = userRepository
+                .findByUsername(loginDto.getUsername())
+                .orElseThrow(InvalidCredentialsException::new);
+        checkPasswordHashMatch(loginDto.getPassword(), user.getPassword());
+        return authRepository.saveAndFlush(createToken(user.getId()));
     }
 
     private void checkPasswordHashMatch(String password, String hash) {
@@ -55,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public void checkTokenExists(UUID token) {
-        if(!authRepository.findById(token).isPresent()) {
+        if (!authRepository.findById(token).isPresent()) {
             throw new TokenNotFoundException();
         }
     }

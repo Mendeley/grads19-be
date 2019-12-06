@@ -34,14 +34,14 @@ public class UserServiceTest {
     @Mock
     private AuthServiceImpl authServiceImpl;
 
-    private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty");
+    private final User qwerty = new User(1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty");
     private final Token token = new Token(1L, UUID.randomUUID());
     private final Long userId = 1L;
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenRegistrationUsernameExists() {
         given(userRepository.findByUsername("qwerty")).willReturn(Optional.of(qwerty));
-        UserRequestDto copycat = createUserRequestDto ("notqwerty@qwerty.com", "qwerty");
+        UserRequestDto copycat = createUserRequestDto("notqwerty@qwerty.com", "qwerty");
 
         userService.saveUser(copycat);
     }
@@ -49,7 +49,7 @@ public class UserServiceTest {
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenRegistrationEmailExists() {
         given(userRepository.findByEmail("qwerty@qwerty.com")).willReturn(Optional.of(qwerty));
-        UserRequestDto copycat = createUserRequestDto("qwerty@qwerty.com","notqwerty");
+        UserRequestDto copycat = createUserRequestDto("qwerty@qwerty.com", "notqwerty");
 
         userService.saveUser(copycat);
     }
@@ -108,7 +108,7 @@ public class UserServiceTest {
         userService.editUser(token.getToken(), userId, update);
     }
 
-    private UserRequestDto createUserRequestDto( String email, String username) {
+    private UserRequestDto createUserRequestDto(String email, String username) {
         return UserRequestDto
                 .UserRequestDtoBuilder
                 .anUserRequestDto()

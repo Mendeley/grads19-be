@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class UserConferenceServiceImpl  implements UserConferenceService{
+public class UserConferenceServiceImpl implements UserConferenceService {
 
-    private  UserConferenceRepository userConferenceRepository;
+    private UserConferenceRepository userConferenceRepository;
     private AuthService authService;
 
     public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthService authService) {
@@ -33,7 +33,7 @@ public class UserConferenceServiceImpl  implements UserConferenceService{
         try {
             UserConference savedUserConference = userConferenceRepository.saveAndFlush(userConference);
             return new UserConferenceResponseDto().from(savedUserConference);
-        } catch(DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             throw new UserAlreadyInterestedException();
         }
     }

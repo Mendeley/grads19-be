@@ -77,11 +77,12 @@ public class ConferenceServiceImpl implements ConferenceService {
             if (!dateTime.isAfter(Instant.now())) {
                 throw new InvalidConferenceFieldException();
             }
-        } catch (NullPointerException ignored) {}
+        } catch (NullPointerException ignored) {
+        }
     }
 
     private void checkConferenceExists(Long conferenceId) {
-        if(!conferenceRepository.existsById(conferenceId)) {
+        if (!conferenceRepository.existsById(conferenceId)) {
             throw new ConferenceNotFoundException();
         }
     }

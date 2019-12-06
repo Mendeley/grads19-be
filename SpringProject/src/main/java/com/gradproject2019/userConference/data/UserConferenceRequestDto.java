@@ -24,9 +24,13 @@ public class UserConferenceRequestDto {
     public UserConferenceRequestDto() {
     }
 
-    public Long getUserId() { return userId; }
+    public Long getUserId() {
+        return userId;
+    }
 
-    public Long getConferenceId() { return conferenceId; }
+    public Long getConferenceId() {
+        return conferenceId;
+    }
 
     public UserConference from(UserConferenceRequestDto userConferenceRequestDto) {
         return anUserConference()

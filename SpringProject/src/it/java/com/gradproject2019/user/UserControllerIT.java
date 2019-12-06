@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 import static org.springframework.http.HttpMethod.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerIT extends TestUtils {
 
     @LocalServerPort
@@ -89,8 +89,8 @@ public class UserControllerIT extends TestUtils {
     @Test
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
         URI uri = new URI(baseUri + "/" + savedUser.getId());
-        String newUsername= "sophiaUsername";
-        String newFirstName= "Sophia";
+        String newUsername = "sophiaUsername";
+        String newFirstName = "Sophia";
         UserPatchRequestDto request = createPatchRequestDto(newUsername, newFirstName, null, null, null);
 
         ResponseEntity<UserResponseDto> response = editUser(uri, request);
@@ -121,7 +121,7 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn401WhenGettingUserByIDUnauthorised() throws URISyntaxException{
+    public void shouldReturn401WhenGettingUserByIDUnauthorised() throws URISyntaxException {
         URI uri = new URI(baseUri + "/" + savedUser.getId());
 
         ResponseEntity<ErrorEntity> response = getUserByIdExpectingAuthError(uri);
@@ -142,11 +142,13 @@ public class UserControllerIT extends TestUtils {
     }
 
     private ResponseEntity<String> postUser(URI uri, HttpEntity<UserRequestDto> request) {
-        return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
+        return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {
+        });
     }
 
     private ResponseEntity<UserResponseDto> editUser(URI uri, UserPatchRequestDto request) {
-        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserResponseDto>() {});
+        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserResponseDto>() {
+        });
     }
 
     private ResponseEntity<ErrorEntity> editUserExpectingAuthError(URI uri, UserPatchRequestDto request) {
@@ -154,11 +156,11 @@ public class UserControllerIT extends TestUtils {
     }
 
     private ResponseEntity<User> getUserById(URI uri) {
-        return restTemplate.exchange(uri , GET, new HttpEntity<>(passingHeaders), User.class);
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(passingHeaders), User.class);
     }
 
     private ResponseEntity<ErrorEntity> getUserByIdExpectingAuthError(URI uri) {
-        return restTemplate.exchange(uri , GET, new HttpEntity<>(failingHeaders), ErrorEntity.class);
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(failingHeaders), ErrorEntity.class);
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation) {

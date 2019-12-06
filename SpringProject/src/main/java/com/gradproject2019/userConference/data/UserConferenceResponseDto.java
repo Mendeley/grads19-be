@@ -17,9 +17,13 @@ public class UserConferenceResponseDto {
     public UserConferenceResponseDto() {
     }
 
-    public Long getUserId() { return userId; }
+    public Long getUserId() {
+        return userId;
+    }
 
-    public Long getConferenceId() { return conferenceId; }
+    public Long getConferenceId() {
+        return conferenceId;
+    }
 
     public UserConferenceResponseDto from(UserConference userConference) {
         return UserConferenceResponseDtoBuilder.anUserConferenceResponseDto()

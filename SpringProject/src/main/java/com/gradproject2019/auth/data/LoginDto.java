@@ -12,7 +12,8 @@ public class LoginDto {
     @NotNull(message = "Invalid entry in login password field.")
     private String password;
 
-    public LoginDto() { }
+    public LoginDto() {
+    }
 
     public String getUsername() {
         return username;

@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -21,10 +20,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static com.gradproject2019.userConference.data.UserConferenceRequestDto.UserConferenceRequestDtoBuilder.anUserConferenceRequestDto;
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.POST;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserConferenceControllerIT extends TestUtils {
     @LocalServerPort
     int testServerPort;
@@ -68,11 +67,13 @@ public class UserConferenceControllerIT extends TestUtils {
     }
 
     private ResponseEntity<UserConferenceResponseDto> saveInterest(URI uri, UserConferenceRequestDto request) {
-        return restTemplate.exchange(uri, POST, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserConferenceResponseDto>() {});
+        return restTemplate.exchange(uri, POST, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserConferenceResponseDto>() {
+        });
     }
 
     private ResponseEntity<UserConferenceResponseDto> saveInterestExpectingAuthError(URI uri, UserConferenceRequestDto request) {
-        return restTemplate.exchange(uri, POST, new HttpEntity<>(request, failingHeaders), new ParameterizedTypeReference<UserConferenceResponseDto>() {});
+        return restTemplate.exchange(uri, POST, new HttpEntity<>(request, failingHeaders), new ParameterizedTypeReference<UserConferenceResponseDto>() {
+        });
     }
 
     private UserConferenceRequestDto createRequestDto(Long userId, Long conferenceId) {
