@@ -15,6 +15,9 @@ public class UserConferenceId implements Serializable {
         this.conferenceId = conferenceId;
     }
 
+    public UserConferenceId() {
+    }
+
     public Long getUserId() {
         return userId;
     }

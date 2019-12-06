@@ -21,8 +21,9 @@ public class UserConferenceController {
     @Autowired
     private UserConferenceService userConferenceService;
 
-    @PostMapping(path = "/user_conferences")
-    public ResponseEntity<UserConferenceResponseDto> saveInterest(@Valid @RequestHeader("Authorization") UUID token, @RequestBody UserConferenceRequestDto userConferenceRequestDto) {
+    @PostMapping(path = "/user-conferences")
+    public ResponseEntity<UserConferenceResponseDto> saveInterest(@Valid @RequestHeader("Authorization") UUID token,
+                                                                  @RequestBody UserConferenceRequestDto userConferenceRequestDto) {
         UserConferenceResponseDto newInterest = userConferenceService.saveInterest(token, userConferenceRequestDto);
         return ResponseEntity.ok(newInterest);
     }

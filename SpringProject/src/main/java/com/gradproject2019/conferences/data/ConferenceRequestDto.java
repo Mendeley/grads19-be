@@ -10,6 +10,8 @@ import static com.gradproject2019.conferences.persistance.Conference.ConferenceB
 
 @Validated
 public class ConferenceRequestDto {
+    private Long id;
+
     @NotNull(message = "Invalid entry in conference name field.")
     private String name;
 
@@ -26,6 +28,10 @@ public class ConferenceRequestDto {
     private String topic;
 
     public ConferenceRequestDto() { }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -49,6 +55,7 @@ public class ConferenceRequestDto {
 
     public static Conference from(ConferenceRequestDto conferenceRequestDto) {
         return aConference()
+                    .withId(conferenceRequestDto.getId())
                     .withName(conferenceRequestDto.getName())
                     .withDateTime(conferenceRequestDto.getDateTime())
                     .withCity(conferenceRequestDto.getCity())
@@ -58,6 +65,7 @@ public class ConferenceRequestDto {
     }
 
     public static final class ConferenceRequestDtoBuilder {
+        private Long id;
         private String name;
         private Instant dateTime;
         private String city;
@@ -71,6 +79,10 @@ public class ConferenceRequestDto {
             return new ConferenceRequestDtoBuilder();
         }
 
+        public ConferenceRequestDtoBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
         public ConferenceRequestDtoBuilder withName(String name) {
             this.name = name;
             return this;
@@ -98,6 +110,7 @@ public class ConferenceRequestDto {
 
         public ConferenceRequestDto build() {
             ConferenceRequestDto conferenceRequestDto = new ConferenceRequestDto();
+            conferenceRequestDto.id = this.id;
             conferenceRequestDto.description = this.description;
             conferenceRequestDto.city = this.city;
             conferenceRequestDto.topic = this.topic;

@@ -28,7 +28,7 @@ public class UserConferenceRequestDto {
 
     public Long getConferenceId() { return conferenceId; }
 
-    public static UserConference from(UserConferenceRequestDto userConferenceRequestDto) {
+    public UserConference from(UserConferenceRequestDto userConferenceRequestDto) {
         return anUserConference()
                 .withUserId(userConferenceRequestDto.getUserId())
                 .withConferenceId(userConferenceRequestDto.getConferenceId())

@@ -10,4 +10,6 @@ public interface AuthService {
     Token login(LoginDto loginDto);
 
     void logout(UUID token);
+
+    void checkTokenExists(UUID token);
 }
