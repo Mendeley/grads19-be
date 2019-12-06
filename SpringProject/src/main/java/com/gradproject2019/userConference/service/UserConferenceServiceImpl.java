@@ -30,7 +30,7 @@ public class UserConferenceServiceImpl  implements UserConferenceService{
     public UserConferenceResponseDto saveInterest(UUID token, UserConferenceRequestDto userConferenceRequestDto) {
         UserConference userConference = from(userConferenceRequestDto);
 
-        checkUserAuthorised(token);
+        //checkUserAuthorised(token);
 
         try {
             return new UserConferenceResponseDto().from(userConferenceRepository.saveAndFlush(userConference));
