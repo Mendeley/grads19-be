@@ -120,27 +120,15 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean tokenMatchesUser(UUID token, Long userId) {
-        boolean tokenMatchesUser = false;
-        if(authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
-            tokenMatchesUser = true;
-        }
-        return tokenMatchesUser;
+        return authServiceImpl.getTokenById(token).getUserId().equals(userId);
     }
 
     private boolean userIdMatchesManagerId(User requestingUser, User requestedUser) {
-        boolean userIdMatchesManagerId = false;
-        if(requestedUser.getManagerId() != null && requestingUser.getId().equals(requestedUser.getManagerId())) {
-            userIdMatchesManagerId = true;
-        }
-        return userIdMatchesManagerId;
+        return requestedUser.getManagerId() != null && requestingUser.getId().equals(requestedUser.getManagerId());
     }
 
     private boolean managerIdMatchesUserId(User requestingUser, User requestedUser) {
-        boolean managerIdMatchesUserId = false;
-        if(requestingUser.getManagerId() != null && requestingUser.getManagerId().equals(requestedUser.getId())) {
-            managerIdMatchesUserId = true;
-        }
-        return managerIdMatchesUserId;
+        return requestingUser.getManagerId() != null && requestingUser.getManagerId().equals(requestedUser.getId());
     }
 
     private void checkUserRequestingIsAuthorized(Long requestedUserId, UUID token) {
