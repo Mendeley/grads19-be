@@ -1,6 +1,5 @@
 package com.gradproject2019;
 
-import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.persistance.Token;
 import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.users.data.UserPatchRequestDto;
@@ -9,6 +8,7 @@ import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.InvalidCredentialsException;
 import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.UserNotFoundException;
+import com.gradproject2019.users.exception.UserRecognisedButUnauthorizedException;
 import com.gradproject2019.users.persistance.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.users.service.UserServiceImpl;
@@ -62,7 +62,7 @@ public class UserServiceTest {
         userService.saveUser(copycat);
     }
 
-    @Test(expected = UserUnauthorisedException.class)
+    @Test(expected = UserRecognisedButUnauthorizedException.class)
     public void shouldThrowErrorWhenTokenDoesNotMatchUserId() {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
@@ -116,7 +116,7 @@ public class UserServiceTest {
         userService.editUser(token.getToken(), userId, update);
     }
 
-    @Test(expected = UserUnauthorisedException.class)
+    @Test(expected = UserRecognisedButUnauthorizedException.class)
     public void shouldThrowErrorWhenRequestingManagerDoesNotMatchRequestedUser() {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
