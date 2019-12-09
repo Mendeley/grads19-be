@@ -1,15 +1,15 @@
 package com.gradproject2019;
 
-import com.gradproject2019.auth.persistance.Token;
+import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.InvalidCredentialsException;
+import com.gradproject2019.users.exception.UserForbiddenException;
 import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.UserNotFoundException;
-import com.gradproject2019.users.exception.UserForbiddenException;
-import com.gradproject2019.users.persistance.User;
+import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.users.service.UserServiceImpl;
 import org.junit.Assert;
@@ -49,7 +49,7 @@ public class UserServiceTest {
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenRegistrationUsernameExists() {
         given(userRepository.findByUsername("qwerty")).willReturn(Optional.of(qwerty));
-        UserRequestDto copycat = createUserRequestDto ("notqwerty@qwerty.com", "qwerty");
+        UserRequestDto copycat = createUserRequestDto("notqwerty@qwerty.com", "qwerty");
 
         userService.saveUser(copycat);
     }
@@ -57,7 +57,7 @@ public class UserServiceTest {
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenRegistrationEmailExists() {
         given(userRepository.findByEmail("qwerty@qwerty.com")).willReturn(Optional.of(qwerty));
-        UserRequestDto copycat = createUserRequestDto("qwerty@qwerty.com","notqwerty");
+        UserRequestDto copycat = createUserRequestDto("qwerty@qwerty.com", "notqwerty");
 
         userService.saveUser(copycat);
     }
@@ -160,7 +160,7 @@ public class UserServiceTest {
         Assert.assertEquals(qwerty.getFirstName(),response.getFirstName());
     }
 
-    private UserRequestDto createUserRequestDto( String email, String username) {
+    private UserRequestDto createUserRequestDto(String email, String username) {
         return UserRequestDto
                 .UserRequestDtoBuilder
                 .anUserRequestDto()

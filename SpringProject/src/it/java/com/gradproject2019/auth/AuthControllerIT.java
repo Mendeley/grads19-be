@@ -1,7 +1,7 @@
 package com.gradproject2019.auth;
 
 import com.gradproject2019.auth.data.LoginDto;
-import com.gradproject2019.auth.persistance.Token;
+import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
 import org.junit.After;
@@ -22,7 +22,7 @@ import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerIT extends TestUtils {
 
     @LocalServerPort
@@ -94,7 +94,7 @@ public class AuthControllerIT extends TestUtils {
     }
 
     private ResponseEntity<Token> login() {
-        return restTemplate.exchange(loginUri, POST,  new HttpEntity<>(loginDto), Token.class);
+        return restTemplate.exchange(loginUri, POST, new HttpEntity<>(loginDto), Token.class);
     }
 
     private ResponseEntity<ErrorEntity> loginExpectingError(HttpEntity<LoginDto> request) {

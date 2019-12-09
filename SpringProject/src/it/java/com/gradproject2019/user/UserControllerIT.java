@@ -3,7 +3,7 @@ package com.gradproject2019.user;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
-import com.gradproject2019.users.persistance.User;
+import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
 import org.junit.After;
@@ -25,7 +25,7 @@ import java.util.List;
 import static org.springframework.http.HttpMethod.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerIT extends TestUtils {
 
     @LocalServerPort
@@ -100,8 +100,8 @@ public class UserControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200AndEditOnlyNotNullFields() {
-        String newUsername= "sophiaUsername";
-        String newFirstName= "Sophia";
+        String newUsername = "sophiaUsername";
+        String newFirstName = "Sophia";
         UserPatchRequestDto request = createPatchRequestDto(newUsername, newFirstName, null, null, null, null);
 
         ResponseEntity<UserResponseDto> response = editUser(request);
@@ -117,7 +117,7 @@ public class UserControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn404WhenUpdatedManagerDoesNotExist() {
-        UserPatchRequestDto request = createPatchRequestDto(null, null, null, null, null, savedUser.getId()+1);
+        UserPatchRequestDto request = createPatchRequestDto(null, null, null, null, null, savedUser.getId() + 1);
 
         ResponseEntity<ErrorEntity> response = editUserExpectingError(request);
 
@@ -243,11 +243,11 @@ public class UserControllerIT extends TestUtils {
     }
 
     private ResponseEntity<User> getUserById() {
-        return restTemplate.exchange(uri2 , GET, new HttpEntity<>(passingHeaders), User.class);
+        return restTemplate.exchange(uri2, GET, new HttpEntity<>(passingHeaders), User.class);
     }
 
     private ResponseEntity<ErrorEntity> getUserByIdExpectingAuthError() {
-        return restTemplate.exchange(uri2 , GET, new HttpEntity<>(failingHeaders), ErrorEntity.class);
+        return restTemplate.exchange(uri2, GET, new HttpEntity<>(failingHeaders), ErrorEntity.class);
     }
 
     private ResponseEntity<List<UserResponseDto>> searchByName(URI uri) {

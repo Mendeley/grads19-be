@@ -5,7 +5,7 @@ import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.*;
-import com.gradproject2019.users.persistance.User;
+import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
 import org.springframework.stereotype.Service;
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkCredentials(String input, String pattern) {
-        if(input != null) {
+        if (input != null) {
             if (!AuthUtils.validate(input, pattern)) {
                 throw new InvalidCredentialsException();
             }
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkTokenMatchesUser(UUID token, Long userId) {
-        if(!authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
+        if (!authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
             throw new UserForbiddenException();
         }
     }
@@ -130,10 +130,10 @@ public class UserServiceImpl implements UserService {
 
     private void checkIfUpdatedCredentialsExist(String patchUsername, String patchEmail, Long userId) {
         User user = getUserById(userId);
-        if(patchUsername != null && !patchUsername.equals(user.getUsername())) {
+        if (patchUsername != null && !patchUsername.equals(user.getUsername())) {
             checkIfUsernameExists(patchUsername);
         }
-        if(patchEmail != null && !patchEmail.equals(user.getEmail())) {
+        if (patchEmail != null && !patchEmail.equals(user.getEmail())) {
             checkIfEmailExists(patchEmail);
         }
     }

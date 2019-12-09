@@ -1,10 +1,10 @@
 package com.gradproject2019.conferences.data;
 
-import com.gradproject2019.conferences.persistance.Conference;
+import com.gradproject2019.conferences.persistence.Conference;
 
 import java.time.Instant;
 
-import static com.gradproject2019.conferences.persistance.Conference.ConferenceBuilder.aConference;
+import static com.gradproject2019.conferences.persistence.Conference.ConferenceBuilder.aConference;
 
 public class ConferencePatchRequestDto {
     private String name;

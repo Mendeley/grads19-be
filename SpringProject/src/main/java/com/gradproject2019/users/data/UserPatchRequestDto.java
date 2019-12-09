@@ -11,15 +11,25 @@ public class UserPatchRequestDto {
     public UserPatchRequestDto() {
     }
 
-    public String getUsername() { return username; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getFirstName() { return firstName; }
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public String getLastName() { return lastName; }
+    public String getLastName() {
+        return lastName;
+    }
 
-    public String getEmail() { return email; }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getOccupation() { return occupation; }
+    public String getOccupation() {
+        return occupation;
+    }
 
     public Long getManagerId() { return managerId;}
 
