@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -18,6 +19,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping(path = "/users/search")
+    public ResponseEntity<List<UserResponseDto>> searchByName(@RequestParam String query) {
+        List<UserResponseDto> users = userService.searchByName(query);
+        return ResponseEntity.ok(users);
+    }
 
     @PostMapping(path = "/users")
     public ResponseEntity<UserResponseDto> saveUser(@Valid @RequestBody UserRequestDto userRequestDto) {

@@ -6,6 +6,7 @@ import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.InvalidCredentialsException;
+import com.gradproject2019.users.exception.ManagerNotFoundException;
 import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.UserNotFoundException;
 import com.gradproject2019.users.persistence.User;
@@ -13,7 +14,9 @@ import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.gradproject2019.users.data.UserRequestDto.from;
 
@@ -31,6 +34,13 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository, AuthServiceImpl authServiceImpl) {
         this.userRepository = userRepository;
         this.authServiceImpl = authServiceImpl;
+    }
+
+    @Override
+    public List<UserResponseDto> searchByName(String query) {
+        return userRepository.searchByName(query).stream()
+                .map(user -> UserResponseDto.UserResponseDtoBuilder.anUserResponseDto().withFirstName(user.getFirstName()).withLastName(user.getLastName()).withId(user.getId()).build())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -53,7 +63,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto editUser(UUID token, Long userId, UserPatchRequestDto userPatchRequestDto) {
         checkValidUpdate(token, userId, userPatchRequestDto);
 
-        userRepository.updateUser(userId, userPatchRequestDto.getFirstName(), userPatchRequestDto.getLastName(), userPatchRequestDto.getUsername(), userPatchRequestDto.getEmail(), userPatchRequestDto.getOccupation());
+        userRepository.updateUser(userId, userPatchRequestDto.getFirstName(), userPatchRequestDto.getLastName(), userPatchRequestDto.getUsername(), userPatchRequestDto.getEmail(), userPatchRequestDto.getOccupation(), userPatchRequestDto.getManagerId());
         return new UserResponseDto().from(getUserById(userId));
     }
 
@@ -63,6 +73,7 @@ public class UserServiceImpl implements UserService {
         checkCredentials(userRequestDto.getEmail(), EMAIL_VALIDATION_PATTERN);
         checkIfUsernameExists(userRequestDto.getUsername());
         checkIfEmailExists(userRequestDto.getEmail());
+        checkIfManagerExists(userRequestDto.getManagerId());
     }
 
     private void checkValidUpdate(UUID token, Long userId, UserPatchRequestDto userPatchRequestDto) {
@@ -70,6 +81,7 @@ public class UserServiceImpl implements UserService {
         checkCredentials(userPatchRequestDto.getUsername(), USERNAME_VALIDATION_PATTERN);
         checkCredentials(userPatchRequestDto.getEmail(), EMAIL_VALIDATION_PATTERN);
         checkIfUpdatedCredentialsExist(userPatchRequestDto.getUsername(), userPatchRequestDto.getEmail(), userId);
+        checkIfManagerExists(userPatchRequestDto.getManagerId());
     }
 
     private void checkCredentials(String input, String pattern) {
@@ -96,6 +108,12 @@ public class UserServiceImpl implements UserService {
         return userRepository
                 .findById(userId)
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    private void checkIfManagerExists(Long managerId) {
+        if(managerId!=null && !userRepository.findById(managerId).isPresent()) {
+            throw new ManagerNotFoundException();
+        }
     }
 
     private void checkTokenMatchesUser(UUID token, Long userId) {

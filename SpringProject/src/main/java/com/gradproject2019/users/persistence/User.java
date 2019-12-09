@@ -14,11 +14,12 @@ public class User {
     private String email;
     private String password;
     private String occupation;
+    private Long managerId;
 
     public User() {
     }
 
-    public User(Long id, String username, String firstName, String lastName, String email, String password, String occupation) {
+    public User(Long id, String username, String firstName, String lastName, String email, String password, String occupation, Long managerId) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -26,15 +27,17 @@ public class User {
         this.email = email;
         this.password = password;
         this.occupation = occupation;
+        this.managerId = managerId;
     }
 
-    public User(String username, String firstName, String lastName, String email, String password, String occupation) {
+    public User(String username, String firstName, String lastName, String email, String password, String occupation, Long managerId) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.occupation = occupation;
+        this.managerId = managerId;
     }
 
     public Long getId() {
@@ -69,6 +72,10 @@ public class User {
         return occupation;
     }
 
+    public Long getManagerId() {
+        return managerId;
+    }
+
     public static final class UserBuilder {
         private Long id;
         private String username;
@@ -77,6 +84,7 @@ public class User {
         private String email;
         private String password;
         private String occupation;
+        private Long managerId;
 
         private UserBuilder() {
         }
@@ -120,8 +128,13 @@ public class User {
             return this;
         }
 
+        public UserBuilder withManagerId(Long managerId) {
+            this.managerId = managerId;
+            return this;
+        }
+
         public User build() {
-            return new User(id, username, firstName, lastName, email, password, occupation);
+            return new User(id, username, firstName, lastName, email, password, occupation, managerId);
         }
     }
 }

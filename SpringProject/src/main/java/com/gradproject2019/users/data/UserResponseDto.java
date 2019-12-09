@@ -27,6 +27,8 @@ public class UserResponseDto {
     @NotNull
     private String occupation;
 
+    private Long managerId;
+
     public UserResponseDto() {
     }
 
@@ -54,6 +56,8 @@ public class UserResponseDto {
         return occupation;
     }
 
+    public Long getManagerId() { return managerId; }
+
     public UserResponseDto from(User user) {
         return anUserResponseDto()
                 .withId(user.getId())
@@ -62,6 +66,7 @@ public class UserResponseDto {
                 .withLastName(user.getLastName())
                 .withEmail(user.getEmail())
                 .withOccupation(user.getOccupation())
+                .withManagerId(user.getManagerId())
                 .build();
     }
 
@@ -72,6 +77,7 @@ public class UserResponseDto {
         private String lastName;
         private String email;
         private String occupation;
+        private Long managerId;
 
         private UserResponseDtoBuilder() {
         }
@@ -110,6 +116,11 @@ public class UserResponseDto {
             return this;
         }
 
+        public UserResponseDtoBuilder withManagerId(Long managerId) {
+            this.managerId = managerId;
+            return this;
+        }
+
         public UserResponseDto build() {
             UserResponseDto userResponseDto = new UserResponseDto();
             userResponseDto.id = this.id;
@@ -118,6 +129,7 @@ public class UserResponseDto {
             userResponseDto.firstName = this.firstName;
             userResponseDto.lastName = this.lastName;
             userResponseDto.occupation = this.occupation;
+            userResponseDto.managerId = this.managerId;
             return userResponseDto;
         }
     }

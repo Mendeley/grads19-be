@@ -46,7 +46,7 @@ public class ConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn200AndEmptyListWhenDatabaseEmpty() throws URISyntaxException {
+    public void shouldReturn200AndEmptyListWhenNoConferences() throws URISyntaxException {
         clearRepositories();
         URI uri = new URI(baseUri);
 
@@ -57,7 +57,7 @@ public class ConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn200AndListOfConferencesWhenDatabasePopulated() throws URISyntaxException {
+    public void shouldReturn200AndListOfConferencesWhenConferenceExists() throws URISyntaxException {
         URI uri = new URI(baseUri);
 
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceList(uri);
@@ -162,7 +162,6 @@ public class ConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200AndEditOnlyNotNullFields() throws URISyntaxException {
-        //  Conference savedConference = conferenceRepository.saveAndFlush(conference);
         URI uri = new URI(baseUri + "/" + savedConference.getId());
         String newName = "Harry's conference";
         String newCity = "Manchester/North";

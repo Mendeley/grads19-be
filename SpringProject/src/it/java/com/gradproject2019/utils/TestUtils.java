@@ -51,7 +51,7 @@ public class TestUtils {
         clearRepositories();
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         hashedPassword = AuthUtils.hash("P455w0rd!");
-        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist");
+        user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist", null);
         conference = new Conference(1L, "GraceCon", Instant.now(), "Manchester", "COol", "Sophia");
         savedUser = userRepository.saveAndFlush(user);
         savedConference = conferenceRepository.saveAndFlush(conference);
