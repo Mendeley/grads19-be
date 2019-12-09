@@ -118,38 +118,40 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkTokenMatchesUser(UUID token, Long userId) {
-        if(!authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
+        if(!tokenMatchesUser(token, userId)) {
             throw new UserUnauthorisedException();
         }
     }
 
-    private void checkIdMatchesManagerId(User requestingUser, User requestedUser) {
-        if(!requestingUser.getId().equals(requestedUser.getManagerId())) {
-            throw new UserUnauthorisedException();
+    private boolean tokenMatchesUser(UUID token, Long userId) {
+        boolean tokenMatchesUser = false;
+        if(authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
+            tokenMatchesUser = true;
         }
+        return tokenMatchesUser;
     }
 
-    private void checkManagerIdMatchesId(User requestingUser, User requestedUser) {
-        if(!requestingUser.getManagerId().equals(requestedUser.getId())) {
-            throw new UserUnauthorisedException();
+    private boolean userIdMatchesManagerId(User requestingUser, User requestedUser) {
+        boolean userIdMatchesManagerId = false;
+        if(requestedUser.getManagerId() != null && requestingUser.getId().equals(requestedUser.getManagerId())) {
+            userIdMatchesManagerId = true;
         }
+        return userIdMatchesManagerId;
+    }
+
+    private boolean managerIdMatchesUserId(User requestingUser, User requestedUser) {
+        boolean managerIdMatchesUserId = false;
+        if(requestingUser.getManagerId() != null && requestingUser.getManagerId().equals(requestedUser.getId())) {
+            managerIdMatchesUserId = true;
+        }
+        return managerIdMatchesUserId;
     }
 
     private void checkUserRequestingIsAuthorized(Long requestedUserId, UUID token) {
         User requestingUser = getUserById(authServiceImpl.getTokenById(token).getUserId());
-        User requestedUser =getUserById(requestedUserId);
-        try {
-            checkTokenMatchesUser(token, requestedUserId);
-        } catch (UserUnauthorisedException a) {
-            try {
-                checkIdMatchesManagerId(requestingUser, requestedUser);
-            } catch (UserUnauthorisedException | NullPointerException b) {
-                try {
-                checkManagerIdMatchesId(requestingUser, requestedUser);
-                } catch (NullPointerException c) {
-                    throw new UserUnauthorisedException();
-                }
-            }
+        User requestedUser = getUserById(requestedUserId);
+        if (!tokenMatchesUser(token, requestedUserId) && !userIdMatchesManagerId(requestingUser, requestedUser) && !managerIdMatchesUserId(requestingUser, requestedUser)) {
+            throw new UserUnauthorisedException();
         }
     }
 
