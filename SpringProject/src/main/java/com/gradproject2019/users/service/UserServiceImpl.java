@@ -114,28 +114,17 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkTokenMatchesUser(UUID token, Long userId) {
-        if(!tokenMatchesUser(token, userId)) {
+        if(!authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
             throw new UserForbiddenException();
         }
-    }
-
-    private boolean tokenMatchesUser(UUID token, Long userId) {
-        return authServiceImpl.getTokenById(token).getUserId().equals(userId);
-    }
-
-    private boolean userIdMatchesManagerId(User requestingUser, User requestedUser) {
-        return requestedUser.getManagerId() != null && requestingUser.getId().equals(requestedUser.getManagerId());
-    }
-
-    private boolean managerIdMatchesUserId(User requestingUser, User requestedUser) {
-        return requestingUser.getManagerId() != null && requestingUser.getManagerId().equals(requestedUser.getId());
     }
 
     private void checkUserRequestingIsAuthorized(Long requestedUserId, UUID token) {
         User requestingUser = getUserById(authServiceImpl.getTokenById(token).getUserId());
         User requestedUser = getUserById(requestedUserId);
-        if (!tokenMatchesUser(token, requestedUserId) && !userIdMatchesManagerId(requestingUser, requestedUser) && !managerIdMatchesUserId(requestingUser, requestedUser)) {
-            throw new UserForbiddenException();
+        if (!(requestedUser.getManagerId() != null && requestingUser.getId().equals(requestedUser.getManagerId()))
+                && !(requestingUser.getManagerId() != null && requestingUser.getManagerId().equals(requestedUser.getId()))) {
+            checkTokenMatchesUser(token, requestedUserId);
         }
     }
 
