@@ -1,7 +1,7 @@
 package com.gradproject2019.auth.controller;
 
 import com.gradproject2019.auth.data.LoginDto;
-import com.gradproject2019.auth.persistance.Token;
+import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.auth.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

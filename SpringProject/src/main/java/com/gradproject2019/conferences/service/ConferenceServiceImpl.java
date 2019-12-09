@@ -8,7 +8,7 @@ import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
-import com.gradproject2019.conferences.persistance.Conference;
+import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import org.springframework.stereotype.Service;
 
@@ -73,15 +73,17 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     private void checkNotInPast(Instant dateTime) {
-        try {
-            if (!dateTime.isAfter(Instant.now())) {
-                throw new InvalidConferenceFieldException();
-            }
-        } catch (NullPointerException ignored) {}
+        if (dateTime == null) {
+            return;
+        }
+        if (!dateTime.isAfter(Instant.now())) {
+            throw new InvalidConferenceFieldException();
+        }
     }
 
+
     private void checkConferenceExists(Long conferenceId) {
-        if(!conferenceRepository.existsById(conferenceId)) {
+        if (!conferenceRepository.existsById(conferenceId)) {
             throw new ConferenceNotFoundException();
         }
     }

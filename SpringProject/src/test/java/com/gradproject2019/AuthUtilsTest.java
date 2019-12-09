@@ -56,14 +56,15 @@ public class AuthUtilsTest {
     }
 
     @Test
-       public void shouldCheckEmailContainsNoSpaces() {
+    public void shouldCheckEmailContainsNoSpaces() {
         Assert.assertFalse(AuthUtils.validate("gracesophia @gmailcom", UserServiceImpl.EMAIL_VALIDATION_PATTERN));
     }
 
     @Test
-    public void shouldCheckUsernameIsValidAgainstRegex () {
+    public void shouldCheckUsernameIsValidAgainstRegex() {
         Assert.assertTrue(AuthUtils.validate("SophiaGrace", UserServiceImpl.USERNAME_VALIDATION_PATTERN));
     }
+
     @Test
     public void shouldCheckUsernameContainsNoSpaces() {
         Assert.assertFalse(AuthUtils.validate("Sophia Grace", UserServiceImpl.USERNAME_VALIDATION_PATTERN));

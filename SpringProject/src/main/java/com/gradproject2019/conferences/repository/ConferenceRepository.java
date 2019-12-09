@@ -1,6 +1,6 @@
 package com.gradproject2019.conferences.repository;
 
-import com.gradproject2019.conferences.persistance.Conference;
+import com.gradproject2019.conferences.persistence.Conference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

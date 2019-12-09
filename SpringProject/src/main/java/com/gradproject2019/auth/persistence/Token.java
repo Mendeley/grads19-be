@@ -1,8 +1,10 @@
-package com.gradproject2019.auth.persistance;
+package com.gradproject2019.auth.persistence;
 
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity

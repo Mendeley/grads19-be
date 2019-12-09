@@ -13,7 +13,7 @@ public final class AuthUtils {
         return matcher.matches();
     }
 
-    public static String hash(String password){
+    public static String hash(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 

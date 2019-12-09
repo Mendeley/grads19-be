@@ -2,7 +2,7 @@ package com.gradproject2019;
 
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
-import com.gradproject2019.conferences.persistance.Conference;
+import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.conferences.service.ConferenceServiceImpl;
 import org.junit.Test;

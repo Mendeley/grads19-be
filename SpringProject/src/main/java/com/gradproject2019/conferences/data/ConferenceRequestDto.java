@@ -1,15 +1,17 @@
 package com.gradproject2019.conferences.data;
 
-import com.gradproject2019.conferences.persistance.Conference;
+import com.gradproject2019.conferences.persistence.Conference;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-import static com.gradproject2019.conferences.persistance.Conference.ConferenceBuilder.aConference;
+import static com.gradproject2019.conferences.persistence.Conference.ConferenceBuilder.aConference;
 
 @Validated
 public class ConferenceRequestDto {
+    private Long id;
+
     @NotNull(message = "Invalid entry in conference name field.")
     private String name;
 
@@ -25,7 +27,12 @@ public class ConferenceRequestDto {
     @NotNull(message = "Invalid entry in conference topic field.")
     private String topic;
 
-    public ConferenceRequestDto() { }
+    public ConferenceRequestDto() {
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -49,15 +56,17 @@ public class ConferenceRequestDto {
 
     public static Conference from(ConferenceRequestDto conferenceRequestDto) {
         return aConference()
-                    .withName(conferenceRequestDto.getName())
-                    .withDateTime(conferenceRequestDto.getDateTime())
-                    .withCity(conferenceRequestDto.getCity())
-                    .withDescription(conferenceRequestDto.getDescription())
-                    .withTopic(conferenceRequestDto.getTopic())
-                    .build();
+                .withId(conferenceRequestDto.getId())
+                .withName(conferenceRequestDto.getName())
+                .withDateTime(conferenceRequestDto.getDateTime())
+                .withCity(conferenceRequestDto.getCity())
+                .withDescription(conferenceRequestDto.getDescription())
+                .withTopic(conferenceRequestDto.getTopic())
+                .build();
     }
 
     public static final class ConferenceRequestDtoBuilder {
+        private Long id;
         private String name;
         private Instant dateTime;
         private String city;
@@ -69,6 +78,11 @@ public class ConferenceRequestDto {
 
         public static ConferenceRequestDtoBuilder aConferenceRequestDto() {
             return new ConferenceRequestDtoBuilder();
+        }
+
+        public ConferenceRequestDtoBuilder withId(Long id) {
+            this.id = id;
+            return this;
         }
 
         public ConferenceRequestDtoBuilder withName(String name) {
@@ -98,6 +112,7 @@ public class ConferenceRequestDto {
 
         public ConferenceRequestDto build() {
             ConferenceRequestDto conferenceRequestDto = new ConferenceRequestDto();
+            conferenceRequestDto.id = this.id;
             conferenceRequestDto.description = this.description;
             conferenceRequestDto.city = this.city;
             conferenceRequestDto.topic = this.topic;
