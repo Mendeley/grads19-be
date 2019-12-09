@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkTokenMatchesUser(UUID token, Long userId) {
         if(!tokenMatchesUser(token, userId)) {
-            throw new UserRecognisedButUnauthorizedException();
+            throw new UserForbiddenException();
         }
     }
 
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
         User requestingUser = getUserById(authServiceImpl.getTokenById(token).getUserId());
         User requestedUser = getUserById(requestedUserId);
         if (!tokenMatchesUser(token, requestedUserId) && !userIdMatchesManagerId(requestingUser, requestedUser) && !managerIdMatchesUserId(requestingUser, requestedUser)) {
-            throw new UserRecognisedButUnauthorizedException();
+            throw new UserForbiddenException();
         }
     }
 
