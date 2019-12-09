@@ -3,7 +3,7 @@ package com.gradproject2019.user;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
-import com.gradproject2019.users.persistance.User;
+import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
 import org.junit.After;

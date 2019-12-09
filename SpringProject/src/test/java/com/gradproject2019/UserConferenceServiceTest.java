@@ -1,10 +1,10 @@
 package com.gradproject2019;
 
-import com.gradproject2019.auth.persistance.Token;
+import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
-import com.gradproject2019.userConference.persistance.UserConference;
+import com.gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
 import com.gradproject2019.userConference.service.UserConferenceServiceImpl;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static com.gradproject2019.userConference.persistance.UserConference.UserConferenceBuilder.anUserConference;
+import static com.gradproject2019.userConference.persistence.UserConference.UserConferenceBuilder.anUserConference;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;

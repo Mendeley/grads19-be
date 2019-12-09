@@ -1,4 +1,4 @@
-package com.gradproject2019.users.persistance;
+package com.gradproject2019.users.persistence;
 
 import javax.persistence.*;
 

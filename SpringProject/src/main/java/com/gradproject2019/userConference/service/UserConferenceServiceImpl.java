@@ -6,7 +6,7 @@ import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.exception.UserAlreadyInterestedException;
-import com.gradproject2019.userConference.persistance.UserConference;
+import com.gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;

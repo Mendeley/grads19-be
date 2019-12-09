@@ -1,6 +1,7 @@
-package com.gradproject2019.userConference.persistance;
+package com.gradproject2019.userConference.persistence;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "user_conferences")

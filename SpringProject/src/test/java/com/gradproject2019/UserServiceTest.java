@@ -1,14 +1,14 @@
 package com.gradproject2019;
 
 import com.gradproject2019.auth.exception.UserUnauthorisedException;
-import com.gradproject2019.auth.persistance.Token;
+import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.exception.InvalidCredentialsException;
 import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.UserNotFoundException;
-import com.gradproject2019.users.persistance.User;
+import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.users.service.UserServiceImpl;
 import org.junit.Test;

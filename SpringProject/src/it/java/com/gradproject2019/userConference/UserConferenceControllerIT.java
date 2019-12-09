@@ -2,7 +2,7 @@ package com.gradproject2019.userConference;
 
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
-import com.gradproject2019.userConference.persistance.UserConference;
+import com.gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -28,12 +28,12 @@ public class UserConferenceControllerIT extends TestUtils {
     @LocalServerPort
     int testServerPort;
 
-    private String baseUri;
+    private URI baseUri;
 
     @Before
-    public void setUp() {
+    public void setUp() throws URISyntaxException {
         universalSetUp();
-        baseUri = "http://localhost:" + testServerPort + "/user-conferences";
+        baseUri = new URI("http://localhost:" + testServerPort + "/user-conferences");
     }
 
     @After
@@ -42,11 +42,10 @@ public class UserConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn200AndSaveInterestInConference() throws URISyntaxException {
-        URI uri = new URI(baseUri);
+    public void shouldReturn200AndSaveInterestInConference() {
         UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
 
-        ResponseEntity<UserConferenceResponseDto> response = saveInterest(uri, userConferenceRequestDto);
+        ResponseEntity<UserConferenceResponseDto> response = saveInterest(baseUri, userConferenceRequestDto);
         UserConference retrievedUserConference = userConferenceRepository.findAll().get(0);
 
         Assert.assertEquals(200, response.getStatusCodeValue());
@@ -55,12 +54,10 @@ public class UserConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn401WhenUserNotLoggedIn() throws URISyntaxException {
-        URI uri = new URI(baseUri);
-
+    public void shouldReturn401WhenUserNotLoggedIn() {
         UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
 
-        ResponseEntity<UserConferenceResponseDto> response = saveInterestExpectingAuthError(uri, userConferenceRequestDto);
+        ResponseEntity<UserConferenceResponseDto> response = saveInterestExpectingAuthError(baseUri, userConferenceRequestDto);
 
         Assert.assertEquals(401, response.getStatusCodeValue());
 

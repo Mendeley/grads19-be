@@ -1,4 +1,4 @@
-package com.gradproject2019.userConference.persistance;
+package com.gradproject2019.userConference.persistence;
 
 
 import java.io.Serializable;

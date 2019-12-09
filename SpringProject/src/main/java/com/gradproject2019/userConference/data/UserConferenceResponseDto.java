@@ -1,6 +1,6 @@
 package com.gradproject2019.userConference.data;
 
-import com.gradproject2019.userConference.persistance.UserConference;
+import com.gradproject2019.userConference.persistence.UserConference;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;

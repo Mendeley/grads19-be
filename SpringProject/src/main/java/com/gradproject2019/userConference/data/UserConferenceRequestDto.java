@@ -1,11 +1,11 @@
 package com.gradproject2019.userConference.data;
 
-import com.gradproject2019.userConference.persistance.UserConference;
+import com.gradproject2019.userConference.persistence.UserConference;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 
-import static com.gradproject2019.userConference.persistance.UserConference.UserConferenceBuilder.anUserConference;
+import static com.gradproject2019.userConference.persistence.UserConference.UserConferenceBuilder.anUserConference;
 
 @Validated
 public class UserConferenceRequestDto {

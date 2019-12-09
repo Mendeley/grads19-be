@@ -1,4 +1,4 @@
-package com.gradproject2019.auth.persistance;
+package com.gradproject2019.auth.persistence;
 
 import org.hibernate.annotations.Type;
 

@@ -1,11 +1,11 @@
 package com.gradproject2019.users.data;
 
-import com.gradproject2019.users.persistance.User;
+import com.gradproject2019.users.persistence.User;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 
-import static com.gradproject2019.users.persistance.User.UserBuilder.anUser;
+import static com.gradproject2019.users.persistence.User.UserBuilder.anUser;
 
 @Validated
 public class UserRequestDto {

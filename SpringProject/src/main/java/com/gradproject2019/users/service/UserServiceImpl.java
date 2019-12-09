@@ -8,7 +8,7 @@ import com.gradproject2019.users.data.UserResponseDto;
 import com.gradproject2019.users.exception.InvalidCredentialsException;
 import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.UserNotFoundException;
-import com.gradproject2019.users.persistance.User;
+import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
 import org.springframework.stereotype.Service;
