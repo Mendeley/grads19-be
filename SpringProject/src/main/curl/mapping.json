@@ -1,0 +1,20 @@
+{
+  "index" :{
+    "mappings" : {
+      "properties" : {
+        "name" : {
+          "type" : "text"
+        },
+        "city" : {
+          "type" : "keyword"
+        },
+        "description" : {
+          "type" : "text"
+        },
+        "topic" : {
+          "type" : "keyword"
+        }
+      }
+    }
+  }
+}

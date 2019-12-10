@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Sophia's Conference",
+    "city": "London",
+    "description": "A conference about Sophia",
+    "topic": "People"
+  },
+
+  {
+    "name": "Grace's Conference",
+    "city": "Sheffield",
+    "description": "All about why Sheffield is the best city in the world",
+    "topic": "Travel"
+  },
+
+  {
+    "name": "Karen's Conference",
+    "city": "Rome",
+    "description": "Its-a conference about-a pasta",
+    "topic": "Food"
+  }
+]
