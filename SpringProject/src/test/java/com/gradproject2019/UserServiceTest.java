@@ -45,6 +45,10 @@ public class UserServiceTest {
     private final Long userId2 = 2L;
     private final Long userId3 = 3L;
 
+    private void setUpUserAndToken(User user, Token token) {
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+    }
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenRegistrationUsernameExists() {
@@ -97,8 +101,7 @@ public class UserServiceTest {
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenNewUsernameExist() {
-        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
-        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+        setUpUserAndToken(qwerty, token);
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
         given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.of(createUser("notqwerty@qwerty.com", "newqwerty")));
 
@@ -107,8 +110,7 @@ public class UserServiceTest {
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenNewEmailExists() {
-        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
-        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+        setUpUserAndToken(qwerty, token);
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
         given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.empty());
         given(userRepository.findByEmail(update.getEmail())).willReturn(Optional.of(createUser("newqwerty@newqwerty.com", "notqwerty")));
@@ -118,8 +120,7 @@ public class UserServiceTest {
 
     @Test(expected = UserForbiddenException.class)
     public void shouldThrowErrorWhenRequestingManagerDoesNotMatchRequestedUser() {
-        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
-        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+        setUpUserAndToken(qwerty, token);
         given(userRepository.findById(userId2)).willReturn(Optional.of(qwerty2));
 
         userService.findUserById(userId2, token.getToken());
@@ -127,8 +128,7 @@ public class UserServiceTest {
 
     @Test
     public void shouldPassWhenRequestingUserDoesMatchRequestedUsersManager() {
-        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
-        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+        setUpUserAndToken(qwerty, token);
         given(userRepository.findById(userId3)).willReturn(Optional.of(qwerty3));
 
         UserResponseDto response = userService.findUserById(userId3, token.getToken());
@@ -139,8 +139,7 @@ public class UserServiceTest {
 
     @Test
     public void shouldPassWhenRequestingUsersManagerDoesMatchRequestedUser() {
-        given(authServiceImpl.getTokenById(token2.getToken())).willReturn(token2);
-        given(userRepository.findById(userId2)).willReturn(Optional.of(qwerty2));
+        setUpUserAndToken(qwerty2, token2);
         given(userRepository.findById(userId3)).willReturn(Optional.of(qwerty3));
 
         UserResponseDto response = userService.findUserById(userId3, token2.getToken());
@@ -151,8 +150,7 @@ public class UserServiceTest {
 
     @Test
     public void shouldPassWhenRequestingUserDoesMatchRequestedUser() {
-        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
-        given(userRepository.findById(userId)).willReturn(Optional.of(qwerty));
+        setUpUserAndToken(qwerty, token);
 
         UserResponseDto response = userService.findUserById(userId, token.getToken());
 
