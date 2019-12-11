@@ -1,14 +1,10 @@
 package com.gradproject2019.users.service;
 
-import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
-import com.gradproject2019.users.exception.InvalidCredentialsException;
-import com.gradproject2019.users.exception.ManagerNotFoundException;
-import com.gradproject2019.users.exception.UserInfoExistsException;
-import com.gradproject2019.users.exception.UserNotFoundException;
+import com.gradproject2019.users.exception.*;
 import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
@@ -55,7 +51,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto findUserById(Long userId, UUID token) {
-        authServiceImpl.getTokenById(token);
+        checkUserRequestingIsAuthorized(userId, token);
+
         return new UserResponseDto().from(getUserById(userId));
     }
 
@@ -118,7 +115,15 @@ public class UserServiceImpl implements UserService {
 
     private void checkTokenMatchesUser(UUID token, Long userId) {
         if (!authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
-            throw new UserUnauthorisedException();
+            throw new UserForbiddenException();
+        }
+    }
+
+    private void checkUserRequestingIsAuthorized(Long requestedUserId, UUID token) {
+        User requestingUser = getUserById(authServiceImpl.getTokenById(token).getUserId());
+        getUserById(requestedUserId);
+        if (userRepository.hasManagerEmployeeRelationship(requestedUserId, requestingUser.getId(), requestingUser.getManagerId()) < 1) {
+            checkTokenMatchesUser(token, requestedUserId);
         }
     }
 
