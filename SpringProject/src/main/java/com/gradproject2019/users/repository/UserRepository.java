@@ -54,4 +54,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "ORDER BY last_name ASC",
             nativeQuery = true)
     List<User> searchByName(@Param("query") String query);
+
+    @Query(value = "SELECT EXISTS(" +
+            "SELECT 1 " +
+            "FROM users " +
+            "WHERE id = :requestedUserId " +
+            "AND " +
+            "(" +
+            "(manager_id IS NOT NULL " +
+            "AND manager_id = :requestingUserId) " +
+            "OR " +
+            "(:requestingUserManagerId IS NOT NULL " +
+            "AND id = :requestingUserManagerId)" +
+            "))",
+            nativeQuery = true)
+    int hasManagerEmployeeRelationship(@Param("requestedUserId") Long requestedUserId,
+                                       @Param("requestingUserId") Long requestingUserId,
+                                       @Param("requestingUserManagerId") Long requestingUserManagerId);
 }
