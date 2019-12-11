@@ -38,12 +38,10 @@ public class UserServiceTest {
 
     private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty", null);
     private final User qwerty2 = new User( 2L, "qwerty2", "qwerty2", "qwerty2", "qwerty2@qwerty.com", "Qwerty!1", "qwerty2", 3L);
-    private final User qwerty3 = new User( 3L, "qwerty3", "qwerty3", "qwerty3", "qwerty3@qwerty.com", "Qwerty!1", "qwerty3", 1L);
     private final Token token = new Token(1L, UUID.randomUUID());
-    private final Token token2 = new Token(2L, UUID.randomUUID());
     private final Long userId = 1L;
     private final Long userId2 = 2L;
-    private final Long userId3 = 3L;
+
 
     private void setUpUserAndToken(User user, Token token) {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
@@ -122,35 +120,15 @@ public class UserServiceTest {
     public void shouldThrowErrorWhenRequestingManagerDoesNotMatchRequestedUser() {
         setUpUserAndToken(qwerty, token);
         given(userRepository.findById(userId2)).willReturn(Optional.of(qwerty2));
+        given(userRepository.hasManagerEmployeeRelationship(userId2, userId, qwerty.getManagerId())).willReturn(0);
 
         userService.findUserById(userId2, token.getToken());
     }
 
     @Test
-    public void shouldPassWhenRequestingUserDoesMatchRequestedUsersManager() {
-        setUpUserAndToken(qwerty, token);
-        given(userRepository.findById(userId3)).willReturn(Optional.of(qwerty3));
-
-        UserResponseDto response = userService.findUserById(userId3, token.getToken());
-
-        Assert.assertEquals(qwerty3.getId(),response.getId());
-        Assert.assertEquals(qwerty3.getFirstName(),response.getFirstName());
-    }
-
-    @Test
-    public void shouldPassWhenRequestingUsersManagerDoesMatchRequestedUser() {
-        setUpUserAndToken(qwerty2, token2);
-        given(userRepository.findById(userId3)).willReturn(Optional.of(qwerty3));
-
-        UserResponseDto response = userService.findUserById(userId3, token2.getToken());
-
-        Assert.assertEquals(qwerty3.getId(),response.getId());
-        Assert.assertEquals(qwerty3.getFirstName(),response.getFirstName());
-    }
-
-    @Test
     public void shouldPassWhenRequestingUserDoesMatchRequestedUser() {
         setUpUserAndToken(qwerty, token);
+        given(userRepository.hasManagerEmployeeRelationship(userId, userId, qwerty.getManagerId())).willReturn(0);
 
         UserResponseDto response = userService.findUserById(userId, token.getToken());
 

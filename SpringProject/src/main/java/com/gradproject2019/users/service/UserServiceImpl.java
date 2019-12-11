@@ -121,9 +121,8 @@ public class UserServiceImpl implements UserService {
 
     private void checkUserRequestingIsAuthorized(Long requestedUserId, UUID token) {
         User requestingUser = getUserById(authServiceImpl.getTokenById(token).getUserId());
-        User requestedUser = getUserById(requestedUserId);
-        if (!(requestedUser.getManagerId() != null && requestingUser.getId().equals(requestedUser.getManagerId()))
-                && !(requestingUser.getManagerId() != null && requestingUser.getManagerId().equals(requestedUser.getId()))) {
+        getUserById(requestedUserId);
+        if (userRepository.hasManagerEmployeeRelationship(requestedUserId, requestingUser.getId(), requestingUser.getManagerId()) < 1) {
             checkTokenMatchesUser(token, requestedUserId);
         }
     }
