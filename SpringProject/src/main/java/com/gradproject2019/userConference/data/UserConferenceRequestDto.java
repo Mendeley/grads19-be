@@ -1,19 +1,23 @@
 package com.gradproject2019.userConference.data;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gradproject2019.userConference.persistence.UserConference;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import static com.gradproject2019.userConference.persistence.UserConference.UserConferenceBuilder.anUserConference;
 
-@Validated
+@Valid
 public class UserConferenceRequestDto {
 
     @NotNull
+    @JsonProperty("user_id")
     private Long userId;
 
     @NotNull
+    @JsonProperty("conference_id")
     private Long conferenceId;
 
     public UserConferenceRequestDto(@NotNull Long userId, @NotNull Long conferenceId) {
