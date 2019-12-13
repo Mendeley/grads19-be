@@ -54,6 +54,28 @@ public class UserConferenceControllerIT extends TestUtils {
     }
 
     @Test
+    public void shouldReturn401AndNotSaveWhenUserNotLoggedIn() {
+        UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
+
+        ResponseEntity<UserConferenceResponseDto> response = saveInterestExpectingAuthError(baseUri, userConferenceRequestDto);
+
+        Assert.assertEquals(401, response.getStatusCodeValue());
+
+    }
+//
+//    @Test
+//    public void shouldReturnListOfConferencesUserIsInterestedIn() {
+//        UserUserConference userConference = savedUser.getId() savedConference.getId();
+//
+//        //ResponseEntity<UserConferenceResponseDto> response = saveInterest(baseUri, userConferenceRequestDto);
+//        UserConference retrievedUserConference = userConferenceRepository.saveAndFlush(userConference);
+//
+//        Assert.assertEquals(200, response.getStatusCodeValue());
+//        Assert.assertEquals(userConferenceRequestDto.getUserId(), retrievedUserConference.getUserId());
+//        Assert.assertEquals(userConferenceRequestDto.getConferenceId(), retrievedUserConference.getConferenceId());
+//    }
+
+    @Test
     public void shouldReturn401WhenUserNotLoggedIn() {
         UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
 
@@ -62,6 +84,18 @@ public class UserConferenceControllerIT extends TestUtils {
         Assert.assertEquals(401, response.getStatusCodeValue());
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     private ResponseEntity<UserConferenceResponseDto> saveInterest(URI uri, UserConferenceRequestDto request) {
         return restTemplate.exchange(uri, POST, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserConferenceResponseDto>() {
