@@ -22,7 +22,7 @@ public class UserConferenceController {
     private UserConferenceService userConferenceService;
 
     @PostMapping(path = "/user-conferences")
-    public ResponseEntity<UserConferenceResponseDto> saveInterest(@Valid @RequestHeader("Authorization") UUID token,
+    public ResponseEntity<UserConferenceResponseDto> saveInterest(@RequestHeader("Authorization") UUID token,
                                                                   @RequestBody UserConferenceRequestDto userConferenceRequestDto) {
         UserConferenceResponseDto newInterest = userConferenceService.saveInterest(token, userConferenceRequestDto);
         return ResponseEntity.ok(newInterest);
