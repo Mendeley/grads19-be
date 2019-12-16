@@ -8,7 +8,7 @@ import edu.uci.ics.crawler4j.url.WebURL;
 import java.util.regex.Pattern;
 
 public class Scraper extends WebCrawler {
-
+    private ScraperOutput scraperOutput;
     private final static Pattern Exclusions = Pattern.compile(".*(\\.(css|js|xml|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
 
     @Override
@@ -29,6 +29,13 @@ public class Scraper extends WebCrawler {
 
             System.out.println(text);
             System.out.println(html);
+
+            //TODO: Ensure that the scraper output is not created if values are null or there's an exception
+            if (text != null && html != null) scraperOutput = new ScraperOutput(text, html);
         }
+    }
+
+    public ScraperOutput getScraperOutput() {
+        return scraperOutput;
     }
 }
