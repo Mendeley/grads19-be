@@ -17,4 +17,5 @@ ARG DEPENDENCY=/app/target/dependency
 COPY --from=Build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=Build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=Build ${DEPENDENCY}/BOOT-INF/classes /app
+EXPOSE 8080
 ENTRYPOINT ["java","-cp","app:app/lib/*","com.gradproject2019.Application"]
