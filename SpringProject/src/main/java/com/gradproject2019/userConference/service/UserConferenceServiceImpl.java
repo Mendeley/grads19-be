@@ -5,6 +5,7 @@ import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
+import com.gradproject2019.conferences.service.ConferenceService;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.exception.UserAlreadyInterestedException;
@@ -13,6 +14,7 @@ import com.gradproject2019.userConference.repository.UserConferenceRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,10 +23,12 @@ public class UserConferenceServiceImpl implements UserConferenceService {
 
     private UserConferenceRepository userConferenceRepository;
     private AuthService authService;
+    private ConferenceService conferenceService;
 
-    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthService authService) {
+    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthService authService, ConferenceService conferenceService) {
         this.userConferenceRepository = userConferenceRepository;
         this.authService = authService;
+        this.conferenceService = conferenceService;
     }
 
     @Override
@@ -43,14 +47,15 @@ public class UserConferenceServiceImpl implements UserConferenceService {
 
     @Override
     public List<ConferenceResponseDto> getConferenceByUserId(UUID token, Long userId) {
+        List<ConferenceResponseDto> conferenceResponseDtos = new ArrayList<>();
 
         checkUserAuthorised(token);
-        //use userId to return a list of conference Ids
-        List<UserConference> conferenceId = UserConferenceResponseDto.from(userConferenceRepository.findByUserId(userId));
-        //use the list of conference Ids to get the conferences
-        //return list of conferences
-        //return UserConferenceResponseDto.from(userConferenceRepository.findByUserId(userId));
-        return null;
+        List<UserConference> userConferences = userConferenceRepository.findByUserId(userId);
+
+        for(UserConference userConference: userConferences) {
+            conferenceResponseDtos.add(conferenceService.getConferenceById(userConference.getConferenceId()));
+        }
+        return conferenceResponseDtos;
     }
 
     private void checkUserAuthorised(UUID token) {
