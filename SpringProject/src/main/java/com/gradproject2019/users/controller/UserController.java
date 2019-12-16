@@ -44,9 +44,9 @@ public class UserController {
         return ResponseEntity.ok(userResponseDto);
     }
 
-    @GetMapping(path = "/users/employee/{managerId}")
+    @GetMapping(path = "/users/employee/{userId}")
     public ResponseEntity<List<UserResponseDto>> getUserByManagerId(@RequestHeader("Authorization") UUID token, @PathVariable("id") Long managerId) {
-        List<UserResponseDto> userResponseDto = userService.findByManagerId(token, managerId);
+        List<UserResponseDto> userResponseDto = userService.findUserByManagerId(token, managerId);
         return ResponseEntity.ok(userResponseDto);
     }
 }

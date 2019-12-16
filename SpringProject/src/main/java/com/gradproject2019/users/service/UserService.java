@@ -17,5 +17,5 @@ public interface UserService {
 
     UserResponseDto findUserById(Long userId, UUID token);
 
-    List<UserResponseDto> findByManagerId(UUID token, Long managerId);
+    List<UserResponseDto> findUserByManagerId(UUID token, Long managerId);
 }

@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List <UserResponseDto> findByManagerId(UUID token, Long managerId) {
+    public List <UserResponseDto> findUserByManagerId(UUID token, Long managerId) {
         checkTokenMatchesUser(token, managerId);
         return userRepository.findByManagerId(managerId).stream()
                 .map(user->new UserResponseDto().from(user))
