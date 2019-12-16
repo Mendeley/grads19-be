@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkIfManagerExists(Long managerId) {
-        if(managerId!=null && !userRepository.findById(managerId).isPresent()) {
+        if (managerId != null && !userRepository.findById(managerId).isPresent()) {
             throw new ManagerNotFoundException();
         }
     }
