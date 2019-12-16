@@ -17,36 +17,37 @@ import java.util.UUID;
 @Controller
 public class ConferenceController {
 
-    @Autowired
-    private ConferenceService conferenceService;
+@Autowired
+private ConferenceService conferenceService;
 
-    @GetMapping(path = "/conferences")
-    public ResponseEntity<List<ConferenceResponseDto>> getAllConferences() {
+@GetMapping(path = "/conferences")
+public ResponseEntity<List<ConferenceResponseDto>> getAllConferences() {
         List<ConferenceResponseDto> conferences = conferenceService.getAllConferences();
         return ResponseEntity.ok(conferences);
-    }
+        }
 
-    @GetMapping(path = "/conferences/{id}")
-    public ResponseEntity<ConferenceResponseDto> getConferenceById(@PathVariable("id") Long conferenceId) {
+@GetMapping(path = "/conferences/{id}")
+public ResponseEntity<ConferenceResponseDto> getConferenceById(@PathVariable("id") Long conferenceId) {
         ConferenceResponseDto conferenceResponseDto = conferenceService.getConferenceById(conferenceId);
         return ResponseEntity.ok(conferenceResponseDto);
-    }
+        }
 
-    @PostMapping(path = "/conferences")
-    public ResponseEntity<ConferenceResponseDto> saveConference(@RequestHeader("Authorization") UUID token, @Valid @RequestBody ConferenceRequestDto conferenceRequestDto) {
+@PostMapping(path = "/conferences")
+public ResponseEntity<ConferenceResponseDto> saveConference(@RequestHeader("Authorization") UUID token, @Valid @RequestBody ConferenceRequestDto conferenceRequestDto) {
         ConferenceResponseDto newConference = conferenceService.saveConference(token, conferenceRequestDto);
         return ResponseEntity.ok(newConference);
-    }
+        }
 
-    @DeleteMapping(path = "/conferences/{id}")
-    public ResponseEntity<Void> deleteConference(@RequestHeader("Authorization") UUID token, @PathVariable("id") Long conferenceId) {
+@DeleteMapping(path = "/conferences/{id}")
+public ResponseEntity<Void> deleteConference(@RequestHeader("Authorization") UUID token, @PathVariable("id") Long conferenceId) {
         conferenceService.deleteConference(token, conferenceId);
         return ResponseEntity.noContent().build();
-    }
+        }
 
-    @PatchMapping(path = "/conferences/{id}")
-    public ResponseEntity<ConferenceResponseDto> editConference(@RequestHeader("Authorization") UUID token, @RequestBody ConferencePatchRequestDto conferencePatchRequestDto, @PathVariable("id") Long conferenceId) {
+@PatchMapping(path = "/conferences/{id}")
+public ResponseEntity<ConferenceResponseDto> editConference(@RequestHeader("Authorization") UUID token, @RequestBody ConferencePatchRequestDto conferencePatchRequestDto, @PathVariable("id") Long conferenceId) {
         ConferenceResponseDto conferenceResponseDto = conferenceService.editConference(token, conferenceId, conferencePatchRequestDto);
         return ResponseEntity.ok(conferenceResponseDto);
-    }
+        }
+
 }
