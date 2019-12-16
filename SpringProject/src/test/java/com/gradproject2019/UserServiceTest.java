@@ -19,9 +19,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,9 +41,19 @@ public class UserServiceTest {
 
     private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty", null);
     private final User qwerty2 = new User( 2L, "qwerty2", "qwerty2", "qwerty2", "qwerty2@qwerty.com", "Qwerty!1", "qwerty2", 3L);
+    private final User qwerty3 = new User( 3L, "qwerty3", "qwerty3", "qwerty3", "qwerty3@qwerty.com", "Qwerty!3", "qwerty3", null);
+    private final User qwerty4 = new User( 4L, "qwerty4", "qwerty4", "qwerty4", "qwerty4@qwerty.com", "Qwerty!4", "qwerty4", 3L);
+    private final User qwerty5 = new User( 5L, "qwerty5", "qwerty5", "qwerty5", "qwerty5@qwerty.com", "Qwerty!5", "qwerty5", 3L);
+
     private final Token token = new Token(1L, UUID.randomUUID());
+    private final Token token2 = new Token(2L, UUID.randomUUID());
+    private final Token token3 = new Token(3L, UUID.randomUUID());
+    private final Token token4 = new Token(4L, UUID.randomUUID());
+    private final Token token5 = new Token(5L, UUID.randomUUID());
+
     private final Long userId = 1L;
     private final Long userId2 = 2L;
+    private final Long userId3 = 3L;
 
 
     private void setUpUserAndToken(User user, Token token) {
@@ -134,6 +147,20 @@ public class UserServiceTest {
 
         Assert.assertEquals(qwerty.getId(),response.getId());
         Assert.assertEquals(qwerty.getFirstName(),response.getFirstName());
+    }
+
+    @Test
+    public void shouldReturnListOfUsersWhenManagerExists() {
+        given(userRepository.findByManagerId(3L)).willReturn((List.of(qwerty2, qwerty4, qwerty5)));
+
+        List <UserResponseDto> response = userService.findByManagerId(token3.getToken(), qwerty3.getManagerId());
+
+//        assertThat(response)
+//                .extracting(UserResponseDto::getId, UserResponseDto::getManagerId)
+//                .containsExactly(tuple(qwerty2.getId(), qwerty2.getManagerId()));
+
+        assertThat(qwerty3.getManagerId()).isEqualTo(3L);
+
     }
 
     private UserRequestDto createUserRequestDto(String email, String username) {

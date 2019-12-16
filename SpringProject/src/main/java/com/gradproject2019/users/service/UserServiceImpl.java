@@ -64,6 +64,14 @@ public class UserServiceImpl implements UserService {
         return new UserResponseDto().from(getUserById(userId));
     }
 
+    @Override
+    public List <UserResponseDto> findByManagerId(UUID token, Long managerId) {
+        checkTokenMatchesUser(token, managerId);
+        return userRepository.findByManagerId(managerId).stream()
+                .map(user->new UserResponseDto().from(user))
+                .collect(Collectors.toList());
+    }
+
     private void checkValidSave(UserRequestDto userRequestDto) {
         checkCredentials(userRequestDto.getPassword(), PASSWORD_VALIDATION_PATTERN);
         checkCredentials(userRequestDto.getUsername(), USERNAME_VALIDATION_PATTERN);
@@ -136,4 +144,5 @@ public class UserServiceImpl implements UserService {
             checkIfEmailExists(patchEmail);
         }
     }
+
 }

@@ -81,7 +81,6 @@ public class ConferenceServiceImpl implements ConferenceService {
         }
     }
 
-
     private void checkConferenceExists(Long conferenceId) {
         if (!conferenceRepository.existsById(conferenceId)) {
             throw new ConferenceNotFoundException();
