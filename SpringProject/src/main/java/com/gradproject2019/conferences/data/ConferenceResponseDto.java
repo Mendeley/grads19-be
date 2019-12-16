@@ -29,6 +29,9 @@ public class ConferenceResponseDto {
     public ConferenceResponseDto() {
     }
 
+
+
+
     public Long getId() {
         return id;
     }
@@ -53,7 +56,7 @@ public class ConferenceResponseDto {
         return topic;
     }
 
-    public ConferenceResponseDto from(Conference conference) {
+    public static ConferenceResponseDto from(Conference conference) {
         return new ConferenceResponseDtoBuilder()
                 .withId(conference.getId())
                 .withName(conference.getName())
