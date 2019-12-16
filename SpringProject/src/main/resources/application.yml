@@ -4,7 +4,7 @@ spring:
   datasource:
     platform: mysql
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/conference_finder?autoReconnect=true
+    url: jdbc:mysql://mysql:3306/conference_finder?autoReconnect=true
     password: password
     username: root
     hikari:
