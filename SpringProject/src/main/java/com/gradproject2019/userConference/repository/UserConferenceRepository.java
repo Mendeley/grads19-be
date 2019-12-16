@@ -15,9 +15,15 @@ public interface UserConferenceRepository extends JpaRepository<UserConference, 
 
     @Query(value =
             "SELECT * " +
-                    "FROM user_conference " +
-                    "WHERE user_id :userId",
+                    "FROM user_conferences " +
+                    "WHERE user_id = :userId",
             nativeQuery = true)
     List<UserConference> findByUserId(@Param("userId") Long userId);
 
+    @Query(value =
+            "SELECT * " +
+                    "FROM user_conferences " +
+                    "WHERE conference_id = :conferenceId",
+            nativeQuery = true)
+    List<UserConference> findByConferenceId(@Param("conferenceId") Long conferenceId);
 }

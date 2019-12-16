@@ -65,4 +65,12 @@ public class UserConferenceServiceImpl implements UserConferenceService {
             throw new UserUnauthorisedException();
         }
     }
+
+    @Override
+    public boolean checkUserIsInterestedInConference(Long conferenceId){
+        if (userConferenceRepository.findByConferenceId(conferenceId).size() == 0) {
+            return false;
+        }
+        else {return true;}
+    }
 }
