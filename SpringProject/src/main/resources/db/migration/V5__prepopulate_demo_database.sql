@@ -6,18 +6,29 @@ INSERT INTO conferences(name, date_time, city, description, topic)
     ('Freedom To Operate Conference', '2020-10-30 11:34:11', 'London', 'From 10times.com: The Freedom To Operate Conference is a platform to understand the background, defining terms and objectives; fundamentals of FTO search scope, methods for searching for claimed features, using basic legal status tools to assist .', 'Legal');
 
 INSERT INTO users(username, first_name, last_name, email, password, occupation)
-    VALUES("qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "qwerty"),
-    ("qwertyButCool", "qwerty", "butcool", "qwertyButCool@qwerty.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "qwertyButCool"),
-    ("JimKirk", "James", "Kirk", "jamestkirk@starfleet.gov", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Captain"),
-    ("Scotty", "Montgomery", "Scott", "scottyknowsbest@starfleet.gov", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Chief Engineer"),
-    ("Bones", "Leonard", "McCoy", "bonesmcoy@starfleet.gov", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "A doctor not a ... Jim!"),
-    ("MMerrett", "Michael", "Merrett", "michaelmerrett@placeholder.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Software Engineer"),
-    ("Zezima", "Karam", "Kapoor", "zezimarulez69@runescape.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "GOAT"),
-    ("Sophia", "Sophia", "Montes Bolah", "s.montesbolah@placeholder.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Software Engineer"),
-    ("Grace", "Grace", "Burley-Jones", "g.burleyjones@placeholder.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Software Engineer"),
-    ("Karen", "Karen", "Zamani-Pickford", "k.zamani-pickford@placeholder.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Software Engineer");
+    VALUES("qwerty", "Qwerty", "Test", "qwertytest@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Demo User"),
+    ("qwertyA", "Qwerty", "Alpha", "qwertyalpha@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Demo User"),
+    ("qwertyG", "Qwerty", "Gamma", "qwertygamma@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Demo User"),
+    ("qwertyO", "Qwerty", "Omega", "qwertyomega@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Demo User"),
+    ("qwertyD", "Qwerty", "Delta", "qwertydelta@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Demo User"),
+    ("MMerrett", "Michael", "Merrett", "m.merrett@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Software Engineer"),
+    ("KKapoor", "Karam", "Kapoor", "k.kapoor@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Dev Ops"),
+    ("SMontesBolah", "Sophia", "Montes Bolah", "s.montesbolah@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Software Engineer"),
+    ("GBurleyJones", "Grace", "Burley-Jones", "g.burleyjones@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Software Engineer"),
+    ("KZamaniPickford", "Karen", "Zamani-Pickford", "k.zamani-pickford@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Software Engineer"),
+    ("manager", "Manager", "Test", "managertest@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Demo Manager");
 
-SET @manager = (SELECT id FROM users WHERE username = "JimKirk");
+SET @manager = (SELECT id FROM users WHERE username = "manager");
 
 INSERT INTO users(username, first_name, last_name, email, password, occupation, manager_id)
-    VALUE("qwertyWithManager", "qwertyWithManager", "qwertyWithManager", "qwertyWithManager@qwertyWithManager.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "qwertyWithManager", @manager);
+    VALUES("qwertyWithManager", "Qwerty", "With Manager", "qwertywithmanager@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Demo Employee", @manager),
+    ("qwertyWithManager2", "Qwerty2", "With Manager", "qwerty2withmanager@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Demo Employee", @manager),
+    ("qwertyWithManager3", "Qwerty3", "With Manager", "qwerty3withmanager@email.com", "$2a$10$rRbskGuL.nq8B28H0ZbrNOV1KvobJ3zbeoDbeJ5Pdhf8x27EswaY2", "Demo Employee", @manager);
+
+SET @conference1 = (SELECT id FROM conferences WHERE topic = "Marketing");
+SET @conference2 = (SELECT id FROM conferences WHERE topic = "Sport");
+SET @user_with_conferences = (SELECT id FROM users WHERE username = "qwerty");
+
+INSERT INTO user_conferences(user_id, conference_id)
+    VALUES(@user_with_conferences, @conference1),
+    (@user_with_conferences, @conference2);
