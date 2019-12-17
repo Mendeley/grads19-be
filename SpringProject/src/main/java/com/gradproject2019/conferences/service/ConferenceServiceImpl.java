@@ -10,6 +10,9 @@ import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
+import com.gradproject2019.conferences.repository.SearchRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -71,6 +74,31 @@ public class ConferenceServiceImpl implements ConferenceService {
         checkNotInPast(conference.getDateTime());
         return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
+
+//
+
+    @Override
+    public Page<Conference> findByConferenceName(String name, Pageable pageable) {
+        return SearchRepository.findByConferenceName(name, pageable);
+    }
+
+    @Override
+    public Page<Conference> findByConferenceCity(String city, Pageable pageable) {
+        return SearchRepository.findByConferenceCity(city, pageable);
+    }
+
+    @Override
+    public Page<Conference> findByConferenceDescription(String description, Pageable pageable) {
+        return SearchRepository.findByConferenceDescription(description, pageable);
+    }
+
+    @Override
+    public Page<Conference> findByConferenceTopic(String topic, Pageable pageable) {
+        return SearchRepository.findByConferenceTopic(topic, pageable);
+    }
+
+
+
 
     private void checkNotInPast(Instant dateTime) {
         try {

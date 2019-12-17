@@ -4,6 +4,7 @@ import com.gradproject2019.conferences.data.ConferencePatchRequestDto;
 import com.gradproject2019.conferences.data.ConferenceRequestDto;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.service.ConferenceService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
 public class ConferenceController {
@@ -21,8 +24,20 @@ public class ConferenceController {
     private ConferenceService conferenceService;
 
     @GetMapping(path = "/conferences")
-    public ResponseEntity<List<ConferenceResponseDto>> getAllConferences() {
-        List<ConferenceResponseDto> conferences = conferenceService.getAllConferences();
+    public ResponseEntity<List<ConferenceResponseDto>> getAllConferences(
+            @RequestParam String name,
+            @RequestParam String city,
+            @RequestParam String description,
+            @RequestParam String topic) {
+
+        List<ConferenceResponseDto> conferences;
+
+        if (isNotEmpty(name) || isNotEmpty(city) || isNotEmpty(description) || isNotEmpty(topic)) {
+            conferences = conferenceService.searchConferences(name, city, description, topic);
+        } else {
+            conferences = conferenceService.getAllConferences();
+        }
+
         return ResponseEntity.ok(conferences);
     }
 
