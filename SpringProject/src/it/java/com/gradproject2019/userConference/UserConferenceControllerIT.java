@@ -65,13 +65,16 @@ public class UserConferenceControllerIT extends TestUtils {
         Assert.assertEquals(401, response.getStatusCodeValue());
 
     }
+
     @Test
     public void shouldReturn200AndListOfConferencesUserIsInterestedIn() throws URISyntaxException {
-        URI uri = new URI (baseUri + "/" + savedConference.getId());
+        UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
+        URI uri = new URI(baseUri + "/" + savedConference.getId());
 
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceByUserId(uri);
 
         Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(userConferenceRequestDto, response.getBody());
     }
 
     private ResponseEntity<UserConferenceResponseDto> saveInterest(URI uri, UserConferenceRequestDto request) {
@@ -86,11 +89,6 @@ public class UserConferenceControllerIT extends TestUtils {
 
     private ResponseEntity<List<ConferenceResponseDto>> getConferenceByUserId(URI uri) {
         return restTemplate.exchange(uri, GET, new HttpEntity<>(passingHeaders), new ParameterizedTypeReference<List<ConferenceResponseDto>>() {
-        });
-    }
-
-    private ResponseEntity<List<ConferenceResponseDto>> getConferenceByUserIdExpectingAuthError(URI uri) {
-        return restTemplate.exchange(uri, GET, new HttpEntity<>(failingHeaders), new ParameterizedTypeReference<List<ConferenceResponseDto>>() {
         });
     }
 

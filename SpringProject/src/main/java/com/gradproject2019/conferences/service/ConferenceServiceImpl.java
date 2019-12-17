@@ -28,12 +28,10 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     private AuthService authService;
 
-    private UserConferenceService userConferenceService;
 
-    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthService authService, UserConferenceService userConferenceService) {
+    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthService authService) {
         this.conferenceRepository = conferenceRepository;
         this.authService = authService;
-        this.userConferenceService = userConferenceService;
     }
 
     @Override
@@ -58,7 +56,6 @@ public class ConferenceServiceImpl implements ConferenceService {
     public void deleteConference(UUID token, Long conferenceId) {
         checkUserAuthorised(token);
         checkConferenceExists(conferenceId);
-        checkIfUserIsInterested(conferenceId);
         conferenceRepository.deleteById(conferenceId);
     }
 
@@ -99,14 +96,6 @@ public class ConferenceServiceImpl implements ConferenceService {
             authService.checkTokenExists(token);
         } catch (TokenNotFoundException e) {
             throw new UserUnauthorisedException();
-        }
-    }
-
-    private void checkIfUserIsInterested(Long conferenceId) {
-        if(!userConferenceService.checkUserIsInterestedInConference(conferenceId)){
-
-        }else{
-            //need to delete user interest
         }
     }
 }

@@ -4,7 +4,6 @@ import com.gradproject2019.auth.exception.TokenNotFoundException;
 import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
-import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.service.ConferenceService;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
@@ -39,7 +38,8 @@ public class UserConferenceServiceImpl implements UserConferenceService {
 
         try {
             UserConference savedUserConference = userConferenceRepository.saveAndFlush(userConference);
-            return new UserConferenceResponseDto().from(savedUserConference);
+            new UserConferenceResponseDto();
+            return UserConferenceResponseDto.from(savedUserConference);
         } catch (DuplicateKeyException e) {
             throw new UserAlreadyInterestedException();
         }
@@ -47,12 +47,12 @@ public class UserConferenceServiceImpl implements UserConferenceService {
 
     @Override
     public List<ConferenceResponseDto> getConferenceByUserId(UUID token, Long userId) {
-        List<ConferenceResponseDto> conferenceResponseDtos = new ArrayList<>();
-
         checkUserAuthorised(token);
+        List<ConferenceResponseDto> conferenceResponseDtos = new ArrayList<>();
         List<UserConference> userConferences = userConferenceRepository.findByUserId(userId);
 
-        for(UserConference userConference: userConferences) {
+        for (UserConference userConference : userConferences) {
+
             conferenceResponseDtos.add(conferenceService.getConferenceById(userConference.getConferenceId()));
         }
         return conferenceResponseDtos;
@@ -64,13 +64,5 @@ public class UserConferenceServiceImpl implements UserConferenceService {
         } catch (TokenNotFoundException e) {
             throw new UserUnauthorisedException();
         }
-    }
-
-    @Override
-    public boolean checkUserIsInterestedInConference(Long conferenceId){
-        if (userConferenceRepository.findByConferenceId(conferenceId).size() == 0) {
-            return false;
-        }
-        else {return true;}
     }
 }

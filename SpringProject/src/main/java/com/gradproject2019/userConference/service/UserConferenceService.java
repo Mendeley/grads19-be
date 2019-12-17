@@ -1,10 +1,8 @@
 package com.gradproject2019.userConference.service;
 
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
-import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
-import com.gradproject2019.userConference.persistence.UserConference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +14,4 @@ public interface UserConferenceService {
     UserConferenceResponseDto saveInterest(UUID token, UserConferenceRequestDto userConferenceRequestDto);
 
     List<ConferenceResponseDto> getConferenceByUserId(UUID token, Long userId);
-
-    boolean checkUserIsInterestedInConference(Long conferenceId);
 }

@@ -2,6 +2,7 @@ package com.gradproject2019;
 
 import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.auth.service.AuthService;
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.persistence.UserConference;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.gradproject2019.userConference.persistence.UserConference.UserConferenceBuilder.anUserConference;
@@ -46,6 +48,20 @@ public class UserConferenceServiceTest {
 
         assertThat(userConference.getConferenceId()).isEqualTo(userConferenceResponseDto.getConferenceId());
         assertThat(userConference.getUserId()).isEqualTo(userConferenceResponseDto.getUserId());
+
+    }
+
+    @Test
+    public void shouldGetInterestInConference() {
+        UserConference userConference = anUserConference()
+                .withUserId(1L)
+                .withConferenceId(1L)
+                .build();
+        given(userConferenceRepository.saveAndFlush(any(UserConference.class))).willReturn(userConference);
+
+        List<ConferenceResponseDto> conferenceResponseDtoList = userConferenceService.getConferenceByUserId(token.getToken(), userConference.getUserId());
+
+        assertThat(userConference.getConferenceId()).isEqualTo(conferenceResponseDtoList.get(0).getId());
 
     }
 }
