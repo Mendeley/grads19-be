@@ -114,6 +114,17 @@
                     <target>9</target>
                 </configuration>
             </plugin>
+
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.21.0</version>
+				<configuration>
+					<includes>
+						<include>*Test.java</include>
+						<include>*IT.java</include>
+					</includes>
+				</configuration>
+			</plugin>
         </plugins>
 	</build>
 </project>
