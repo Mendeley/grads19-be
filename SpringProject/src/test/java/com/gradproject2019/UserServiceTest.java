@@ -146,13 +146,30 @@ public class UserServiceTest {
 
     @Test
     public void shouldReturnListOfUsersWhenManagerExists() {
-        given(userRepository.findByManagerId(managerId)).willReturn((List.of(user2, user4, user5)));
         given(authServiceImpl.getTokenById(managerToken.getToken())).willReturn(managerToken);
+        given(userRepository.findByManagerId(managerId)).willReturn((List.of(user2, user4, user5)));
 
         List <UserResponseDto> users = userService.findUserByManagerId(managerToken.getToken(), managerId);
 
         Assert.assertEquals(users.size(), 3);
         assertThat(users).extracting(UserResponseDto::getId).containsExactlyInAnyOrder(2L, 4L, 5L);
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenUserIsNotAManager() {
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
+        given(userRepository.findByManagerId(userId)).willReturn(List.of());
+
+        List <UserResponseDto> users = userService.findUserByManagerId(token.getToken(), userId);
+
+        Assert.assertEquals(users.size(), 0);
+    }
+
+    @Test (expected  = UserForbiddenException.class)
+    public void shouldThrowErrorWhenManagerTokenDoesNotMatch() {
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
+
+        userService.findUserByManagerId(token.getToken(), userId2);
     }
 
     private UserRequestDto createUserRequestDto(String email, String username) {

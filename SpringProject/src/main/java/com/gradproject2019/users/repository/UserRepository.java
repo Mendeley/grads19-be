@@ -72,6 +72,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                        @Param("requestingUserId") Long requestingUserId,
                                        @Param("requestingUserManagerId") Long requestingUserManagerId);
 
-    @Query(value="SELECT * FROM users WHERE managerId=:managerId", nativeQuery=true)
+    @Query(value="SELECT * FROM users WHERE manager_id=:managerId", nativeQuery=true)
     List<User>findByManagerId(@Param("managerId")Long managerId);
 }

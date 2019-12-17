@@ -1,6 +1,7 @@
 package com.gradproject2019.user;
 
 import com.gradproject2019.auth.persistence.Token;
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
@@ -26,6 +27,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.*;
 
 @RunWith(SpringRunner.class)
@@ -38,6 +40,8 @@ public class UserControllerIT extends TestUtils {
     private String baseUri;
     private URI uri;
     private URI uri2;
+    private URI uri3;
+    private URI uri4;
 
     @Before
     public void setUp() throws URISyntaxException {
@@ -45,6 +49,8 @@ public class UserControllerIT extends TestUtils {
         baseUri = "http://localhost:" + testServerPort + "/users";
         uri = new URI(baseUri);
         uri2 = new URI(baseUri + "/" + savedUser.getId());
+        uri3 = new URI(baseUri + "/employee/" + savedManager.getId());
+        uri4 = new URI(baseUri + "/employee/" + savedUserWithManager.getId());
     }
 
     @After
@@ -177,6 +183,28 @@ public class UserControllerIT extends TestUtils {
     }
 
     @Test
+    public void shouldReturn200WhenGettingEmployeesByUserId() {
+        ResponseEntity<List<UserResponseDto>> response = getUserByManagerId(uri3);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        //NOTE: add more tests here to test what is being returns when getUserByManager hit
+    }
+
+    @Test
+    public void shouldReturn401WhenUserUnauthorisedToGetEmployees () {
+        ResponseEntity<List<UserResponseDto>> response = getUserByManagerIdAuthError(uri3);
+
+        Assert.assertEquals(401, response.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenUserHasNoEmployees() {
+        ResponseEntity<List<UserResponseDto>> response = getUserByManagerId(uri4);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+    }
+
+    @Test
     public void shouldReturn401WhenGettingUserByIdUnauthorisedDueToToken() {
         ResponseEntity<ErrorEntity> response = getUserByIdExpectingAuthError();
 
@@ -194,7 +222,6 @@ public class UserControllerIT extends TestUtils {
         Assert.assertEquals(403, response.getStatusCodeValue());
         Assert.assertEquals("User forbidden to perform action.", response.getBody().getMessage());
     }
-
 
     @Test
     public void shouldReturn401WhenUnauthorisedEdit() {
@@ -217,6 +244,7 @@ public class UserControllerIT extends TestUtils {
         Assert.assertEquals(true, response.getBody().isEmpty());
     }
 
+    //NOTE KZP FIX THIS BELOW
     @Test
     public void shouldReturn200AndUsersMatchingFirstNameCharSequence() throws URISyntaxException {
         URI uri = new URI(baseUri + "/search?query=karam");
@@ -227,7 +255,7 @@ public class UserControllerIT extends TestUtils {
         Assert.assertEquals(savedUser.getFirstName(), response.getBody().get(0).getFirstName());
         Assert.assertEquals(savedUser.getLastName(), response.getBody().get(0).getLastName());
         Assert.assertEquals(savedUser.getId(), response.getBody().get(0).getId());
-        Assert.assertEquals(1, response.getBody().size());
+        Assert.assertEquals(3, response.getBody().size());
     }
 
     @Test
@@ -306,6 +334,14 @@ public class UserControllerIT extends TestUtils {
 
     private ResponseEntity<List<UserResponseDto>> searchByName(URI uri) {
         return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<List<UserResponseDto>>() {});
+    }
+
+    private ResponseEntity <List<UserResponseDto>> getUserByManagerId(URI uri) {
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(passingHeaders), new ParameterizedTypeReference<List<UserResponseDto>>() {} );
+    }
+
+    private ResponseEntity <List<UserResponseDto>> getUserByManagerIdAuthError(URI uri) {
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(failingHeaders), new ParameterizedTypeReference<List<UserResponseDto>>() {} );
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation, Long managerId) {

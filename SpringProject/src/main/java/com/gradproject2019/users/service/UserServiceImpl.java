@@ -144,5 +144,4 @@ public class UserServiceImpl implements UserService {
             checkIfEmailExists(patchEmail);
         }
     }
-
 }

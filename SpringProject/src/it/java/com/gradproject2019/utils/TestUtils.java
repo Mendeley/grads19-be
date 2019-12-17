@@ -34,11 +34,17 @@ public class TestUtils {
     private User user;
     private Conference conference;
     public User savedUser;
+    public User userWithManager;
+    public User manager;
     public Conference savedConference;
     private String hashedPassword;
     public Token testToken;
     public HttpHeaders passingHeaders;
     public HttpHeaders failingHeaders;
+    public User savedUserWithManager;
+    public User savedManager;
+    public Token managerToken;
+    public Token userWithManagerToken;
 
     public void clearRepositories() {
         authRepository.deleteAll();
@@ -52,12 +58,20 @@ public class TestUtils {
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         hashedPassword = AuthUtils.hash("P455w0rd!");
         user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist", null);
+        userWithManager = new User(2L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist", 3L);
+        manager = new User(3L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist", null);
         conference = new Conference(1L, "GraceCon", Instant.now(), "Manchester", "COol", "Sophia");
         savedUser = userRepository.saveAndFlush(user);
+        savedUserWithManager = userRepository.saveAndFlush(userWithManager);
+        savedManager = userRepository.saveAndFlush(manager);
         savedConference = conferenceRepository.saveAndFlush(conference);
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
+        managerToken = new Token(savedManager.getId(), UUID.randomUUID());
+        userWithManagerToken = new Token(savedUserWithManager.getId(), UUID.randomUUID());
         authRepository.saveAndFlush(testToken);
-        constructPassingHeader(testToken.getToken());
+        authRepository.saveAndFlush(managerToken);
+        //constructPassingHeader(testToken.getToken());
+        constructPassingHeader(managerToken.getToken());
         constructFailingHeader();
     }
 
