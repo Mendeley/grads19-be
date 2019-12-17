@@ -1,0 +1,35 @@
+
+{
+    "settings": {
+        "index" : {
+            "number_of_shards": 3,
+            "number_of_replicas": 2
+        },
+        "analysis": {
+            "analyzer": {
+                "analyzer-name": {
+                    "type": "custom",
+                    "tokenizer": "keyword",
+                    "filter": "lowercase"
+                }
+            }
+        },
+        "mappings" : {
+            "properties" : {
+                "name" : {
+                    "type" : "text",
+                    "analyzer": "analyzer-name"
+                },
+                "city" : {
+                    "type" : "keyword"
+                },
+                "description" : {
+                    "type" : "text"
+                },
+                "topic" : {
+                    "type" : "keyword"
+                }
+            }
+        }
+    }
+}

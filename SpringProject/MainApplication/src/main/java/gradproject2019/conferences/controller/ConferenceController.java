@@ -13,6 +13,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
 @RequestMapping("/conferences")
@@ -21,9 +23,22 @@ public class ConferenceController {
     @Autowired
     private ConferenceService conferenceService;
 
-    @GetMapping
-    public ResponseEntity<List<ConferenceResponseDto>> getAllConferences() {
-        List<ConferenceResponseDto> conferences = conferenceService.getAllConferences();
+
+    @GetMapping(path = "/conferences")
+    public ResponseEntity<List<ConferenceResponseDto>> getAllConferences(
+            @RequestParam String name,
+            @RequestParam String city,
+            @RequestParam String description,
+            @RequestParam String topic) {
+
+        List<ConferenceResponseDto> conferences;
+
+        if (isNotEmpty(name) || isNotEmpty(city) || isNotEmpty(description) || isNotEmpty(topic)) {
+            conferences = conferenceService.searchConferences(name, city, description, topic);
+        } else {
+            conferences = conferenceService.getAllConferences();
+        }
+
         return ResponseEntity.ok(conferences);
     }
 
