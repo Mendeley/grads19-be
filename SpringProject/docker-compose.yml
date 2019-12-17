@@ -1,23 +1,15 @@
-
-  version: '2.0'
-  services:
-    elasticsearch:
-      image: docker.elastic.co/elasticsearch/elasticsearch:7.5.0
-      container_name: elasticsearch
-      environment:
-        - node.name=elasticsearch
-        - cluster.name=docker-cluster
-        - cluster.initial_master_nodes=elasticsearch
-        - bootstrap.memory_lock=true
-        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      ulimits:
-        memlock:
-          soft: -1
-          hard: -1
-      ports:
-        - "9200:9200"
-        - "9300:9300"
-      expose:
-        - "9200
-      networks:
-        - elastic
+version: '2.0'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    container_name: com.gradproject2019.elasticsearch
+    environment:
+      - node.name=es
+      - cluster.name=docker-cluster
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    expose:
+      - "9200"
+      - "9300"
