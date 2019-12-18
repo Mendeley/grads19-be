@@ -1,6 +1,7 @@
 package com.gradproject2019.conferences.data;
 
 import com.gradproject2019.conferences.persistance.Conference;
+import com.gradproject2019.conferences.persistance.EsConference;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
@@ -61,6 +62,17 @@ public class ConferenceResponseDto {
                 .withCity(conference.getCity())
                 .withDescription(conference.getDescription())
                 .withTopic(conference.getTopic())
+                .build();
+    }
+
+    public ConferenceResponseDto from(EsConference esConference) {
+        return new ConferenceResponseDtoBuilder()
+                .withId(esConference.getId())
+                .withName(esConference.getName())
+//                .withDateTime(esConference.getDateTime()) //FIXME: add to EsConference
+                .withCity(esConference.getCity())
+                .withDescription(esConference.getDescription())
+                .withTopic(esConference.getTopic())
                 .build();
     }
 

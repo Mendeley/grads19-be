@@ -10,9 +10,8 @@ import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import com.gradproject2019.conferences.persistance.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
-import com.gradproject2019.conferences.repository.SearchRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.gradproject2019.conferences.repository.ConferenceSearchRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -26,12 +25,13 @@ import static com.gradproject2019.conferences.data.ConferenceRequestDto.from;
 public class ConferenceServiceImpl implements ConferenceService {
 
     private ConferenceRepository conferenceRepository;
-
     private AuthServiceImpl authServiceImpl;
+    private ConferenceSearchRepository conferenceSearchRepository;
 
-    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl) {
+    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl, ConferenceSearchRepository conferenceSearchRepository) {
         this.conferenceRepository = conferenceRepository;
         this.authServiceImpl = authServiceImpl;
+        this.conferenceSearchRepository = conferenceSearchRepository;
     }
 
     @Override
@@ -75,30 +75,31 @@ public class ConferenceServiceImpl implements ConferenceService {
         return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
 
+
 //
 
-    @Override
-    public Page<Conference> findByConferenceName(String name, Pageable pageable) {
-        return SearchRepository.findByConferenceName(name, pageable);
-    }
+//    @Override
+//    public Page<Conference> findByConferenceName(String name, Pageable pageable) {
+//        return SearchRepository.findByConferenceName(name, pageable);
+//    }
+//
+//    @Override
+//    public Page<Conference> findByConferenceCity(String city, Pageable pageable) {
+//        return SearchRepository.findByConferenceCity(city, pageable);
+//    }
+//
+//    @Override
+//    public Page<Conference> findByConferenceDescription(String description, Pageable pageable) {
+//        return SearchRepository.findByConferenceDescription(description, pageable);
+//    }
 
     @Override
-    public Page<Conference> findByConferenceCity(String city, Pageable pageable) {
-        return SearchRepository.findByConferenceCity(city, pageable);
+    public List<ConferenceResponseDto> findByConferenceTopic(String topic, Integer page, Integer size) {
+        return conferenceSearchRepository.findByTopic(topic, PageRequest.of(page, size))
+                .get()
+                .map(c -> new ConferenceResponseDto().from(c))
+                .collect(Collectors.toList());
     }
-
-    @Override
-    public Page<Conference> findByConferenceDescription(String description, Pageable pageable) {
-        return SearchRepository.findByConferenceDescription(description, pageable);
-    }
-
-    @Override
-    public Page<Conference> findByConferenceTopic(String topic, Pageable pageable) {
-        return SearchRepository.findByConferenceTopic(topic, pageable);
-    }
-
-
-
 
     private void checkNotInPast(Instant dateTime) {
         try {
@@ -109,7 +110,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     private void checkConferenceExists(Long conferenceId) {
-        if(!conferenceRepository.existsById(conferenceId)) {
+        if (!conferenceRepository.existsById(conferenceId)) {
             throw new ConferenceNotFoundException();
         }
     }

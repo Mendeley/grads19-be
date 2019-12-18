@@ -25,11 +25,11 @@ public interface ConferenceService {
 
     //List<ConferenceResponseDto> searchConferences(String name, String city, String description, String topic, Pageable pageable);
 
-    Page<Conference> findByConferenceName(String name, Pageable pageable);
+    //Page<Conference> findByConferenceName(String name, Pageable pageable);
 
-    Page<Conference> findByConferenceCity(String city, Pageable pageable);
+    //Page<Conference> findByConferenceCity(String city, Pageable pageable);
 
-    Page<Conference> findByConferenceDescription(String description, Pageable pageable);
+    //Page<Conference> findByConferenceDescription(String description, Pageable pageable);
 
-    Page<Conference> findByConferenceTopic(String topic, Pageable pageable);
+    List<ConferenceResponseDto> findByConferenceTopic(String topic, Integer page, Integer size);
 }

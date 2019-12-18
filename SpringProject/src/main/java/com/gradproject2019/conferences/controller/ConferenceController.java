@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -25,15 +26,17 @@ public class ConferenceController {
 
     @GetMapping(path = "/conferences")
     public ResponseEntity<List<ConferenceResponseDto>> getAllConferences(
-            @RequestParam String name,
-            @RequestParam String city,
-            @RequestParam String description,
-            @RequestParam String topic) {
+            //@RequestParam String name,
+            //@RequestParam String city,
+            //@RequestParam String description,
+            @RequestParam String topic,
+            @RequestParam Integer page,
+            @RequestParam Integer size) {
 
         List<ConferenceResponseDto> conferences;
 
-        if (isNotEmpty(name) || isNotEmpty(city) || isNotEmpty(description) || isNotEmpty(topic)) {
-            conferences = conferenceService.searchConferences(name, city, description, topic);
+        if (isNotEmpty(topic)) {
+            conferences = conferenceService.findByConferenceTopic(topic, page, size);
         } else {
             conferences = conferenceService.getAllConferences();
         }
