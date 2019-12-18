@@ -17,6 +17,12 @@ spring:
     pattern:
       console: '%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n'
 
+  data:
+    elasticsearch:
+      properties:
+        host: localhost
+        port: 9200
+
   jpa:
     hibernate:
     ddl-auto: create-drop

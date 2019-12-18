@@ -29,13 +29,15 @@ public class ConferenceServiceImpl implements ConferenceService {
     private ConferenceRepository conferenceRepository;
 
     private AuthServiceImpl authServiceImpl;
+    private ConferenceSearchRepository conferenceSearchRepository;
 
     private UserConferenceServiceImpl userConferenceServiceImpl;
 
-    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl, @Lazy UserConferenceServiceImpl userConferenceServiceImpl) {
+    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl, ConferenceSearchRepository conferenceSearchRepository, @Lazy UserConferenceServiceImpl userConferenceServiceImpl) {
         this.conferenceRepository = conferenceRepository;
         this.authServiceImpl = authServiceImpl;
         this.userConferenceServiceImpl = userConferenceServiceImpl;
+        this.conferenceSearchRepository = conferenceSearchRepository;
     }
 
     @Override
@@ -83,28 +85,28 @@ public class ConferenceServiceImpl implements ConferenceService {
 
 //
 
-    @Override
-    public Page<Conference> findByConferenceName(String name, Pageable pageable) {
-        return SearchRepository.findByConferenceName(name, pageable);
-    }
+//    @Override
+//    public Page<Conference> findByConferenceName(String name, Pageable pageable) {
+//        return SearchRepository.findByConferenceName(name, pageable);
+//    }
+//
+//    @Override
+//    public Page<Conference> findByConferenceCity(String city, Pageable pageable) {
+//        return SearchRepository.findByConferenceCity(city, pageable);
+//    }
+//
+//    @Override
+//    public Page<Conference> findByConferenceDescription(String description, Pageable pageable) {
+//        return SearchRepository.findByConferenceDescription(description, pageable);
+//    }
 
     @Override
-    public Page<Conference> findByConferenceCity(String city, Pageable pageable) {
-        return SearchRepository.findByConferenceCity(city, pageable);
+    public List<ConferenceResponseDto> findByConferenceTopic(String topic, Integer page, Integer size) {
+        return conferenceSearchRepository.findByTopic(topic, PageRequest.of(page, size))
+                .get()
+                .map(c -> new ConferenceResponseDto().from(c))
+                .collect(Collectors.toList());
     }
-
-    @Override
-    public Page<Conference> findByConferenceDescription(String description, Pageable pageable) {
-        return SearchRepository.findByConferenceDescription(description, pageable);
-    }
-
-    @Override
-    public Page<Conference> findByConferenceTopic(String topic, Pageable pageable) {
-        return SearchRepository.findByConferenceTopic(topic, pageable);
-    }
-
-
-
 
     private void checkNotInPast(Instant dateTime) {
         if (dateTime == null) {

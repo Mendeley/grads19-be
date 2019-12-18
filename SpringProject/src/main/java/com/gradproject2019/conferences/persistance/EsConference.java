@@ -8,10 +8,10 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 
 @Document(indexName = "conferences_index", type = "conference")
-public class ESConference {
+public class EsConference {
 
     @Id
-    private String id;
+    private Long id;
 
     @Field(type = Text)
     private String name;
@@ -25,10 +25,10 @@ public class ESConference {
     @Field(type = Keyword)
     private String topic;
 
-    public ESConference() {
+    public EsConference() {
     }
 
-    public ESConference(String id, String name, String city, String description, String topic) {
+    public EsConference(Long id, String name, String city, String description, String topic) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -36,7 +36,7 @@ public class ESConference {
         this.topic = topic;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -56,7 +56,7 @@ public class ESConference {
         return topic;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

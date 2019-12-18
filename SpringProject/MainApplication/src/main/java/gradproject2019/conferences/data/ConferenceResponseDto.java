@@ -64,6 +64,17 @@ public class ConferenceResponseDto {
                 .build();
     }
 
+    public ConferenceResponseDto from(EsConference esConference) {
+        return new ConferenceResponseDtoBuilder()
+                .withId(esConference.getId())
+                .withName(esConference.getName())
+//                .withDateTime(esConference.getDateTime()) //FIXME: add to EsConference
+                .withCity(esConference.getCity())
+                .withDescription(esConference.getDescription())
+                .withTopic(esConference.getTopic())
+                .build();
+    }
+
     public static final class ConferenceResponseDtoBuilder {
         private Long id;
         private String name;
