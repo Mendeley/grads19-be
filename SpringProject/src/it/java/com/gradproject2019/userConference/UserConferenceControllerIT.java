@@ -46,7 +46,7 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200AndSaveInterestInConference() {
-        UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
+        UserConferenceRequestDto userConferenceRequestDto = userConferenceCreateRequestDto(savedUser.getId(), savedConference.getId());
 
         ResponseEntity<UserConferenceResponseDto> response = saveInterest(baseUri, userConferenceRequestDto);
         UserConference retrievedUserConference = userConferenceRepository.findAll().get(0);
@@ -58,7 +58,7 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn401AndNotSaveWhenUserNotLoggedIn() {
-        UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
+        UserConferenceRequestDto userConferenceRequestDto = userConferenceCreateRequestDto(savedUser.getId(), savedConference.getId());
 
         ResponseEntity<UserConferenceResponseDto> response = saveInterestExpectingAuthError(baseUri, userConferenceRequestDto);
 
@@ -68,13 +68,15 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200AndListOfConferencesUserIsInterestedIn() throws URISyntaxException {
-        UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
-        URI uri = new URI(baseUri + "/" + savedConference.getId());
+
+        URI uri = new URI(baseUri + "/" + savedUser.getId());
 
         ResponseEntity<List<ConferenceResponseDto>> response = getConferenceByUserId(uri);
 
         Assert.assertEquals(200, response.getStatusCodeValue());
-        Assert.assertEquals(userConferenceRequestDto, response.getBody());
+        Assert.assertEquals(savedConference.getName(), response.getBody().get(0).getName());
+        Assert.assertEquals(savedConference.getId(), response.getBody().get(0).getId());
+
     }
 
     private ResponseEntity<UserConferenceResponseDto> saveInterest(URI uri, UserConferenceRequestDto request) {
@@ -92,8 +94,13 @@ public class UserConferenceControllerIT extends TestUtils {
         });
     }
 
+    private ResponseEntity<List<ConferenceResponseDto>> getConferenceByUserIdExpectingAuthError(URI uri) {
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(failingHeaders), new ParameterizedTypeReference<List<ConferenceResponseDto>>() {
+        });
+    }
 
-    private UserConferenceRequestDto createRequestDto(Long userId, Long conferenceId) {
+
+    private UserConferenceRequestDto userConferenceCreateRequestDto(Long userId, Long conferenceId) {
         return anUserConferenceRequestDto()
                 .withConferenceId(conferenceId)
                 .withUserId(userId)

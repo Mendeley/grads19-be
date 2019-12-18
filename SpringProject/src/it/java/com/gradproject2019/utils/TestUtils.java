@@ -6,6 +6,7 @@ import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
+import com.gradproject2019.userConference.service.UserConferenceService;
 import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class TestUtils {
 
     @Autowired
     public UserConferenceRepository userConferenceRepository;
+
+    @Autowired
+    public UserConferenceService userConferenceService;
 
     @Autowired
     public TestRestTemplate restTemplate;

@@ -52,9 +52,9 @@ public class UserConferenceServiceImpl implements UserConferenceService {
         List<UserConference> userConferences = userConferenceRepository.findByUserId(userId);
 
         for (UserConference userConference : userConferences) {
-
             conferenceResponseDtos.add(conferenceService.getConferenceById(userConference.getConferenceId()));
         }
+
         return conferenceResponseDtos;
     }
 
