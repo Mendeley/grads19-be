@@ -2,6 +2,7 @@ package com.gradproject2019.utils;
 
 import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.auth.repository.AuthRepository;
+import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.userConference.persistence.UserConference;
@@ -20,6 +21,9 @@ import java.util.UUID;
 public class TestUtils {
     @Autowired
     public AuthRepository authRepository;
+
+    @Autowired
+    public AuthService authService;
 
     @Autowired
     public UserRepository userRepository;

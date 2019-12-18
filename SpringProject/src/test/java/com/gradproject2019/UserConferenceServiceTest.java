@@ -1,10 +1,7 @@
 package com.gradproject2019;
 
 import com.gradproject2019.auth.persistence.Token;
-import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
-import com.gradproject2019.conferences.persistence.Conference;
-import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.conferences.service.ConferenceService;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
@@ -18,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.gradproject2019.conferences.data.ConferenceResponseDto.ConferenceResponseDtoBuilder.aConferenceResponseDto;

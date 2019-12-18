@@ -4,6 +4,7 @@ import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.persistence.UserConference;
+import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -79,6 +80,29 @@ public class UserConferenceControllerIT extends TestUtils {
 
     }
 
+    @Test
+    public void shouldReturn200AndEmptyListWhenUserNotInterestedInConference() throws URISyntaxException {
+
+        URI uri = new URI(baseUri + "/" + 2L);
+
+        ResponseEntity<List<ConferenceResponseDto>> response = getConferenceByUserId(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(response.getBody().size(), 0);
+
+    }
+
+    @Test
+    public void shouldReturn401WhenUserNotLoggedIn() throws URISyntaxException {
+
+        URI uri = new URI(baseUri + "/" + savedUser.getId());
+
+        ResponseEntity<ErrorEntity> response = getConferenceByUserIdExpectingAuthError(uri);
+
+        Assert.assertEquals(401, response.getStatusCodeValue());
+
+    }
+
     private ResponseEntity<UserConferenceResponseDto> saveInterest(URI uri, UserConferenceRequestDto request) {
         return restTemplate.exchange(uri, POST, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserConferenceResponseDto>() {
         });
@@ -94,8 +118,8 @@ public class UserConferenceControllerIT extends TestUtils {
         });
     }
 
-    private ResponseEntity<List<ConferenceResponseDto>> getConferenceByUserIdExpectingAuthError(URI uri) {
-        return restTemplate.exchange(uri, GET, new HttpEntity<>(failingHeaders), new ParameterizedTypeReference<List<ConferenceResponseDto>>() {
+    private ResponseEntity<ErrorEntity> getConferenceByUserIdExpectingAuthError(URI uri) {
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(failingHeaders), new ParameterizedTypeReference<ErrorEntity>() {
         });
     }
 
