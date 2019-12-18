@@ -6,10 +6,7 @@ import com.gradproject2019.userConference.service.UserConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -26,5 +23,11 @@ public class UserConferenceController {
                                                                   @RequestBody UserConferenceRequestDto userConferenceRequestDto) {
         UserConferenceResponseDto newInterest = userConferenceService.saveInterest(token, userConferenceRequestDto);
         return ResponseEntity.ok(newInterest);
+    }
+
+    @DeleteMapping(path = "/user-conferences/{userId}/{conferenceId}")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") UUID token, @PathVariable("userId") Long userId, @PathVariable("conferenceId") Long conferenceId) {
+        userConferenceService.deleteInterest(token, userId, conferenceId);
+        return ResponseEntity.noContent().build();
     }
 }

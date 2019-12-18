@@ -4,6 +4,7 @@ import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
+import com.gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
 import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
@@ -35,6 +36,7 @@ public class TestUtils {
     private Conference conference;
     public User savedUser;
     public Conference savedConference;
+    public UserConference savedUserConference;
     private String hashedPassword;
     public Token testToken;
     public HttpHeaders passingHeaders;
@@ -55,6 +57,7 @@ public class TestUtils {
         conference = new Conference(1L, "GraceCon", Instant.now(), "Manchester", "COol", "Sophia");
         savedUser = userRepository.saveAndFlush(user);
         savedConference = conferenceRepository.saveAndFlush(conference);
+        savedUserConference = userConferenceRepository.saveAndFlush(new UserConference(savedUser.getId(), savedConference.getId()));
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
         authRepository.saveAndFlush(testToken);
         constructPassingHeader(testToken.getToken());

@@ -1,5 +1,7 @@
 package com.gradproject2019;
 
+import com.gradproject2019.auth.persistence.Token;
+import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.persistence.Conference;
@@ -14,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -23,7 +26,7 @@ import static org.mockito.BDDMockito.given;
 public class ConferenceServiceTest {
 
     @InjectMocks
-    private ConferenceServiceImpl conferenceService;
+    private ConferenceServiceImpl conferenceServiceImpl;
 
     @Mock
     private ConferenceRepository conferenceRepository;
@@ -35,7 +38,7 @@ public class ConferenceServiceTest {
     public void shouldGetListOfAllConferences() {
         given(conferenceRepository.findAll()).willReturn(List.of(conference1, conference2));
 
-        Iterable<ConferenceResponseDto> conferences = conferenceService.getAllConferences();
+        Iterable<ConferenceResponseDto> conferences = conferenceServiceImpl.getAllConferences();
 
         assertThat(conferences)
                 .extracting(ConferenceResponseDto::getId, ConferenceResponseDto::getName, ConferenceResponseDto::getCity)
@@ -46,7 +49,7 @@ public class ConferenceServiceTest {
     public void shouldGetConferenceById() {
         given(conferenceRepository.findById(1L)).willReturn(Optional.of(conference1));
 
-        ConferenceResponseDto conferenceById = conferenceService.getConferenceById(1L);
+        ConferenceResponseDto conferenceById = conferenceServiceImpl.getConferenceById(1L);
 
         assertThat(conferenceById.getId()).isEqualTo(1L);
         assertThat(conferenceById.getName()).isEqualTo(conference1.getName());
@@ -54,6 +57,6 @@ public class ConferenceServiceTest {
 
     @Test(expected = ConferenceNotFoundException.class)
     public void shouldThrowErrorWhenIdNotRecognised() {
-        conferenceService.getConferenceById(1000000000L);
+        conferenceServiceImpl.getConferenceById(1000000000L);
     }
 }

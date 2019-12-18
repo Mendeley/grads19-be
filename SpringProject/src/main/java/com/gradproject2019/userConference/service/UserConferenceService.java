@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface UserConferenceService {
 
     UserConferenceResponseDto saveInterest(UUID token, UserConferenceRequestDto userConferenceRequestDto);
+
+    void deleteInterest(UUID token, Long userId, Long conferenceId);
 }

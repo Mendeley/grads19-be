@@ -60,7 +60,6 @@ public class UserConferenceControllerIT extends TestUtils {
         ResponseEntity<UserConferenceResponseDto> response = saveInterestExpectingAuthError(baseUri, userConferenceRequestDto);
 
         Assert.assertEquals(401, response.getStatusCodeValue());
-
     }
 
     private ResponseEntity<UserConferenceResponseDto> saveInterest(URI uri, UserConferenceRequestDto request) {
