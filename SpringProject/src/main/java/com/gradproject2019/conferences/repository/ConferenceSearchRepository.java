@@ -7,11 +7,11 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 public interface ConferenceSearchRepository extends ElasticsearchRepository<EsConference, String> {
 
-//    Page<Conference> findByConferenceName(String name, Pageable pageable)
+//    Page<Conference> findByName(String name, Pageable pageable)
 //
-//    Page<Conference> findByConferenceCity(String city, Pageable pageable);
+//    Page<Conference> findByCity(String city, Pageable pageable);
 //
-//    Page<Conference> findByConferenceDescription(String description, Pageable pageable);
+//    Page<Conference> findByDescription(String description, Pageable pageable);
 
      Page<EsConference> findByTopic(String topic, Pageable pageable);
 }

@@ -1,11 +1,13 @@
 package com.gradproject2019.conferences.persistance;
 
-import static org.springframework.data.elasticsearch.annotations.FieldType.Text;
-import static org.springframework.data.elasticsearch.annotations.FieldType.Keyword;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import java.time.Instant;
+
+import static org.springframework.data.elasticsearch.annotations.FieldType.*;
 
 @Document(indexName = "conferences_index", type = "conference")
 public class EsConference {
@@ -15,6 +17,9 @@ public class EsConference {
 
     @Field(type = Text)
     private String name;
+
+    @Field(type = Date )
+    private Instant dateTime;
 
     @Field(type = Keyword)
     private String city;
@@ -28,9 +33,10 @@ public class EsConference {
     public EsConference() {
     }
 
-    public EsConference(Long id, String name, String city, String description, String topic) {
+    public EsConference(Long id, String name, Instant dateTime, String city, String description, String topic) {
         this.id = id;
         this.name = name;
+        this.dateTime = dateTime;
         this.city = city;
         this.description = description;
         this.topic = topic;
@@ -42,6 +48,10 @@ public class EsConference {
 
     public String getName() {
         return name;
+    }
+
+    public Instant getDateTime() {
+        return dateTime;
     }
 
     public String getCity() {
@@ -62,6 +72,10 @@ public class EsConference {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setDateTime(Instant dateTime) {
+        this.dateTime = dateTime;
     }
 
     public void setCity(String city) {

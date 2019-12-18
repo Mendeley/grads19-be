@@ -36,6 +36,8 @@ public class ConferenceControllerIT extends TestUtils {
     private String baseUri;
     private Conference conference;
 
+
+
     @Before
     public void setUp() {
         universalSetUp();
