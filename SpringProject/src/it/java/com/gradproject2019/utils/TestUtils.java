@@ -2,6 +2,7 @@ package com.gradproject2019.utils;
 
 import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.auth.repository.AuthRepository;
+import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
@@ -20,6 +21,9 @@ public class TestUtils {
     public AuthRepository authRepository;
 
     @Autowired
+    public AuthService authService;
+
+    @Autowired
     public UserRepository userRepository;
 
     @Autowired
@@ -32,6 +36,7 @@ public class TestUtils {
     public TestRestTemplate restTemplate;
 
     private User user;
+    private User user2;
     private Conference conference;
     public User savedUser;
     public User userWithManager;
@@ -40,6 +45,7 @@ public class TestUtils {
     private String hashedPassword;
     public Token testToken;
     public HttpHeaders passingHeaders;
+    public HttpHeaders managerPassingHeaders;
     public HttpHeaders failingHeaders;
     public User savedUserWithManager;
     public User savedManager;
@@ -58,26 +64,31 @@ public class TestUtils {
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         hashedPassword = AuthUtils.hash("P455w0rd!");
         user = new User(1L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist", null);
-        userWithManager = new User(2L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist", 3L);
-        manager = new User(3L, "KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", hashedPassword, "Botanist", null);
+        manager = new User(3L, "Manager", "Manager", "Manager", "manager@gmail.com", hashedPassword, "Manager", null);
         conference = new Conference(1L, "GraceCon", Instant.now(), "Manchester", "COol", "Sophia");
         savedUser = userRepository.saveAndFlush(user);
-        savedUserWithManager = userRepository.saveAndFlush(userWithManager);
         savedManager = userRepository.saveAndFlush(manager);
+        userWithManager = new User(2L, "userWithManager", "userWithManager", "userWithManager", "userWithManager@gmail.com", hashedPassword, "userWithManager", savedManager.getId());
+        savedUserWithManager = userRepository.saveAndFlush(userWithManager);
         savedConference = conferenceRepository.saveAndFlush(conference);
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
         managerToken = new Token(savedManager.getId(), UUID.randomUUID());
         userWithManagerToken = new Token(savedUserWithManager.getId(), UUID.randomUUID());
         authRepository.saveAndFlush(testToken);
         authRepository.saveAndFlush(managerToken);
-        //constructPassingHeader(testToken.getToken());
-        constructPassingHeader(managerToken.getToken());
+        constructPassingHeader(testToken.getToken());
+        constructManagerPassingHeader(managerToken.getToken());
         constructFailingHeader();
     }
 
     private void constructPassingHeader(UUID token) {
         passingHeaders = new HttpHeaders();
         passingHeaders.add(HttpHeaders.AUTHORIZATION, token.toString());
+    }
+
+    private void constructManagerPassingHeader(UUID token) {
+        managerPassingHeaders = new HttpHeaders();
+        managerPassingHeaders.add(HttpHeaders.AUTHORIZATION, token.toString());
     }
 
     private void constructFailingHeader() {

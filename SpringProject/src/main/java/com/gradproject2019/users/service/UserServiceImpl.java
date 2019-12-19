@@ -1,6 +1,6 @@
 package com.gradproject2019.users.service;
 
-import com.gradproject2019.auth.service.AuthServiceImpl;
+import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
@@ -21,15 +21,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final AuthServiceImpl authServiceImpl;
+    private final AuthService authService;
 
     public static final String PASSWORD_VALIDATION_PATTERN = "((?=.*[a-z])(?=.*[0-9])(?=.*[!?\\#@^&£$*+;:~])(?=.*[A-Z]).{8,16})";
     public static final String EMAIL_VALIDATION_PATTERN = "^[a-zA-Z0-9\\.\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\_\\`]+@[a-zA-Z0-9]+\\.[\\.A-Za-z]{1,10}";
     public static final String USERNAME_VALIDATION_PATTERN = "^[a-zA-Z0-9]*$";
 
-    public UserServiceImpl(UserRepository userRepository, AuthServiceImpl authServiceImpl) {
+    public UserServiceImpl(UserRepository userRepository, AuthService authService) {
         this.userRepository = userRepository;
-        this.authServiceImpl = authServiceImpl;
+        this.authService = authService;
     }
 
     @Override
@@ -65,10 +65,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List <UserResponseDto> findUserByManagerId(UUID token, Long managerId) {
+    public List<UserResponseDto> findUserByManagerId(UUID token, Long managerId) {
         checkTokenMatchesUser(token, managerId);
         return userRepository.findByManagerId(managerId).stream()
-                .map(user->new UserResponseDto().from(user))
+                .map(user -> new UserResponseDto().from(user))
                 .collect(Collectors.toList());
     }
 
@@ -122,13 +122,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkTokenMatchesUser(UUID token, Long userId) {
-        if (!authServiceImpl.getTokenById(token).getUserId().equals(userId)) {
+        if (!authService.getTokenById(token).getUserId().equals(userId)) {
             throw new UserForbiddenException();
         }
     }
 
     private void checkUserRequestingIsAuthorized(Long requestedUserId, UUID token) {
-        User requestingUser = getUserById(authServiceImpl.getTokenById(token).getUserId());
+        User requestingUser = getUserById(authService.getTokenById(token).getUserId());
         getUserById(requestedUserId);
         if (userRepository.hasManagerEmployeeRelationship(requestedUserId, requestingUser.getId(), requestingUser.getManagerId()) < 1) {
             checkTokenMatchesUser(token, requestedUserId);

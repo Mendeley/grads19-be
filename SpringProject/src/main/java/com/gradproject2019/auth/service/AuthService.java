@@ -12,4 +12,6 @@ public interface AuthService {
     void logout(UUID token);
 
     void checkTokenExists(UUID token);
+
+    Token getTokenById(UUID token);
 }

@@ -60,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
     public Token getTokenById(UUID token) {
         return authRepository
                 .findById(token)

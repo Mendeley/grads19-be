@@ -34,24 +34,24 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value =
             "SELECT * " +
-            "FROM users " +
-            "WHERE username = :username",
+                    "FROM users " +
+                    "WHERE username = :username",
             nativeQuery = true)
     Optional<User> findByUsername(@Param("username") String username);
 
     @Query(value =
             "SELECT * " +
-            "FROM users " +
-            "WHERE email = :email",
+                    "FROM users " +
+                    "WHERE email = :email",
             nativeQuery = true)
     Optional<User> findByEmail(@Param("email") String email);
 
     @Query(value =
             "SELECT * " +
-            "FROM users " +
-            "WHERE CONCAT(first_name, ' ', last_name) " +
-            "LIKE CONCAT('%', :query, '%') " +
-            "ORDER BY last_name ASC",
+                    "FROM users " +
+                    "WHERE CONCAT(first_name, ' ', last_name) " +
+                    "LIKE CONCAT('%', :query, '%') " +
+                    "ORDER BY last_name ASC",
             nativeQuery = true)
     List<User> searchByName(@Param("query") String query);
 
@@ -72,6 +72,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                        @Param("requestingUserId") Long requestingUserId,
                                        @Param("requestingUserManagerId") Long requestingUserManagerId);
 
-    @Query(value="SELECT * FROM users WHERE manager_id=:managerId", nativeQuery=true)
-    List<User>findByManagerId(@Param("managerId")Long managerId);
+    @Query(value = "SELECT * FROM users WHERE manager_id=:managerId", nativeQuery = true)
+    List<User> findByManagerId(@Param("managerId") Long managerId);
 }
