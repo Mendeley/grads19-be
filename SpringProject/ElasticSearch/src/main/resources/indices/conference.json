@@ -1,0 +1,16 @@
+{
+  "properties": {
+    "name": {
+      "type": "text"
+    },
+    "city": {
+      "type": "keyword"
+    },
+    "topic": {
+      "type": "keyword"
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}
