@@ -250,7 +250,6 @@ public class UserControllerIT extends TestUtils {
         Assert.assertEquals(true, response.getBody().isEmpty());
     }
 
-    //NOTE KZP FIX THIS BELOW
     @Test
     public void shouldReturn200AndUsersMatchingFirstNameCharSequence() throws URISyntaxException {
         URI uri = new URI(baseUri + "/search?query=karam");
