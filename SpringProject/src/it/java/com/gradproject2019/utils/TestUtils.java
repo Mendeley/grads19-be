@@ -2,9 +2,12 @@ package com.gradproject2019.utils;
 
 import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.auth.repository.AuthRepository;
+import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
+import com.gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
+import com.gradproject2019.userConference.service.UserConferenceService;
 import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,9 @@ public class TestUtils {
     public AuthRepository authRepository;
 
     @Autowired
+    public AuthService authService;
+
+    @Autowired
     public UserRepository userRepository;
 
     @Autowired
@@ -29,12 +35,16 @@ public class TestUtils {
     public UserConferenceRepository userConferenceRepository;
 
     @Autowired
+    public UserConferenceService userConferenceService;
+
+    @Autowired
     public TestRestTemplate restTemplate;
 
     private User user;
     private Conference conference;
     public User savedUser;
     public Conference savedConference;
+    public UserConference savedUserConference;
     private String hashedPassword;
     public Token testToken;
     public HttpHeaders passingHeaders;
@@ -57,6 +67,8 @@ public class TestUtils {
         savedConference = conferenceRepository.saveAndFlush(conference);
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
         authRepository.saveAndFlush(testToken);
+        savedUserConference = new UserConference(savedUser.getId(),savedConference.getId());
+        userConferenceRepository.saveAndFlush(savedUserConference);
         constructPassingHeader(testToken.getToken());
         constructFailingHeader();
     }

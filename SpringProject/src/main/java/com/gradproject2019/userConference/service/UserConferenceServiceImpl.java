@@ -3,6 +3,8 @@ package com.gradproject2019.userConference.service;
 import com.gradproject2019.auth.exception.TokenNotFoundException;
 import com.gradproject2019.auth.exception.UserUnauthorisedException;
 import com.gradproject2019.auth.service.AuthService;
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
+import com.gradproject2019.conferences.service.ConferenceService;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.exception.UserAlreadyInterestedException;
@@ -11,6 +13,8 @@ import com.gradproject2019.userConference.repository.UserConferenceRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -18,10 +22,12 @@ public class UserConferenceServiceImpl implements UserConferenceService {
 
     private UserConferenceRepository userConferenceRepository;
     private AuthService authService;
+    private ConferenceService conferenceService;
 
-    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthService authService) {
+    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthService authService, ConferenceService conferenceService) {
         this.userConferenceRepository = userConferenceRepository;
         this.authService = authService;
+        this.conferenceService = conferenceService;
     }
 
     @Override
@@ -32,10 +38,24 @@ public class UserConferenceServiceImpl implements UserConferenceService {
 
         try {
             UserConference savedUserConference = userConferenceRepository.saveAndFlush(userConference);
-            return new UserConferenceResponseDto().from(savedUserConference);
+            new UserConferenceResponseDto();
+            return UserConferenceResponseDto.from(savedUserConference);
         } catch (DuplicateKeyException e) {
             throw new UserAlreadyInterestedException();
         }
+    }
+
+    @Override
+    public List<ConferenceResponseDto> getConferenceByUserId(UUID token, Long userId) {
+        checkUserAuthorised(token);
+        List<ConferenceResponseDto> conferenceResponseDtos = new ArrayList<>();
+        List<UserConference> userConferences = userConferenceRepository.findByUserId(userId);
+
+        for (UserConference userConference : userConferences) {
+            conferenceResponseDtos.add(conferenceService.getConferenceById(userConference.getConferenceId()));
+        }
+
+        return conferenceResponseDtos;
     }
 
     private void checkUserAuthorised(UUID token) {

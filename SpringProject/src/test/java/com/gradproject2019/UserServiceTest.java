@@ -36,8 +36,8 @@ public class UserServiceTest {
     @Mock
     private AuthServiceImpl authServiceImpl;
 
-    private final User qwerty = new User( 1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty", null);
-    private final User qwerty2 = new User( 2L, "qwerty2", "qwerty2", "qwerty2", "qwerty2@qwerty.com", "Qwerty!1", "qwerty2", 3L);
+    private final User qwerty = new User(1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty", null);
+    private final User qwerty2 = new User(2L, "qwerty2", "qwerty2", "qwerty2", "qwerty2@qwerty.com", "Qwerty!1", "qwerty2", 3L);
     private final Token token = new Token(1L, UUID.randomUUID());
     private final Long userId = 1L;
     private final Long userId2 = 2L;
@@ -132,8 +132,8 @@ public class UserServiceTest {
 
         UserResponseDto response = userService.findUserById(userId, token.getToken());
 
-        Assert.assertEquals(qwerty.getId(),response.getId());
-        Assert.assertEquals(qwerty.getFirstName(),response.getFirstName());
+        Assert.assertEquals(qwerty.getId(), response.getId());
+        Assert.assertEquals(qwerty.getFirstName(), response.getFirstName());
     }
 
     private UserRequestDto createUserRequestDto(String email, String username) {
