@@ -1,11 +1,7 @@
 package com.gradproject2019.userConference.data;
 
-import com.gradproject2019.userConference.persistence.UserConference;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import static com.gradproject2019.userConference.persistence.UserConference.UserConferenceBuilder.anUserConference;
 
 @Valid
 public class UserConferenceRequestDto {
@@ -30,13 +26,6 @@ public class UserConferenceRequestDto {
 
     public Long getConferenceId() {
         return conferenceId;
-    }
-
-    public UserConference from(UserConferenceRequestDto userConferenceRequestDto) {
-        return anUserConference()
-                .withUserId(userConferenceRequestDto.getUserId())
-                .withConferenceId(userConferenceRequestDto.getConferenceId())
-                .build();
     }
 
     public static final class UserConferenceRequestDtoBuilder {

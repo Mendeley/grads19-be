@@ -1,5 +1,6 @@
 package com.gradproject2019.userConference.controller;
 
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.service.UserConferenceService;
@@ -8,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -23,6 +24,12 @@ public class UserConferenceController {
                                                                   @RequestBody UserConferenceRequestDto userConferenceRequestDto) {
         UserConferenceResponseDto newInterest = userConferenceService.saveInterest(token, userConferenceRequestDto);
         return ResponseEntity.ok(newInterest);
+    }
+
+    @GetMapping(path = "/user-conferences/{userId}")
+    public ResponseEntity<List<ConferenceResponseDto>> getConferenceByUserId(@RequestHeader("Authorization") UUID token, @PathVariable("userId") Long userId) {
+        List<ConferenceResponseDto> conferences = userConferenceService.getConferenceByUserId(token, userId);
+        return ResponseEntity.ok(conferences);
     }
 
     @DeleteMapping(path = "/user-conferences/{userId}/{conferenceId}")

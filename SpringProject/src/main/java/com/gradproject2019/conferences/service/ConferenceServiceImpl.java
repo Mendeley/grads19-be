@@ -9,6 +9,7 @@ import com.gradproject2019.conferences.exception.InvalidConferenceFieldException
 import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
 import com.gradproject2019.userConference.service.UserConferenceServiceImpl;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -27,7 +28,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     private UserConferenceServiceImpl userConferenceServiceImpl;
 
-    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl, UserConferenceServiceImpl userConferenceServiceImpl) {
+    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl, @Lazy UserConferenceServiceImpl userConferenceServiceImpl) {
         this.conferenceRepository = conferenceRepository;
         this.authServiceImpl = authServiceImpl;
         this.userConferenceServiceImpl = userConferenceServiceImpl;
@@ -55,7 +56,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     public void deleteConference(UUID token, Long conferenceId) {
         authServiceImpl.getTokenById(token);
         checkConferenceExists(conferenceId);
-        wipeFromUserConferencesDatabase(conferenceId);
+        userConferenceServiceImpl.deleteByConferenceId(conferenceId);
         conferenceRepository.deleteById(conferenceId);
     }
 
@@ -87,12 +88,6 @@ public class ConferenceServiceImpl implements ConferenceService {
     private void checkConferenceExists(Long conferenceId) {
         if (!conferenceRepository.existsById(conferenceId)) {
             throw new ConferenceNotFoundException();
-        }
-    }
-
-    public void wipeFromUserConferencesDatabase(Long conferenceId) {
-        if (userConferenceServiceImpl.existsByConferenceId(conferenceId)) {
-            userConferenceServiceImpl.deleteByConferenceId(conferenceId);
         }
     }
 }
