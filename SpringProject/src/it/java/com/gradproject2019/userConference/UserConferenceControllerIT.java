@@ -1,8 +1,10 @@
 package com.gradproject2019.userConference;
 
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.persistence.UserConference;
+import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -18,8 +20,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import static com.gradproject2019.userConference.data.UserConferenceRequestDto.UserConferenceRequestDtoBuilder.anUserConferenceRequestDto;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @RunWith(SpringRunner.class)
@@ -43,7 +47,7 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200AndSaveInterestInConference() {
-        UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
+        UserConferenceRequestDto userConferenceRequestDto = userConferenceCreateRequestDto(savedUser.getId(), savedConference.getId());
 
         ResponseEntity<UserConferenceResponseDto> response = saveInterest(baseUri, userConferenceRequestDto);
         UserConference retrievedUserConference = userConferenceRepository.findAll().get(0);
@@ -54,10 +58,46 @@ public class UserConferenceControllerIT extends TestUtils {
     }
 
     @Test
-    public void shouldReturn401WhenUserNotLoggedIn() {
-        UserConferenceRequestDto userConferenceRequestDto = createRequestDto(savedUser.getId(), savedConference.getId());
+    public void shouldReturn401AndNotSaveWhenUserNotLoggedIn() {
+        UserConferenceRequestDto userConferenceRequestDto = userConferenceCreateRequestDto(savedUser.getId(), savedConference.getId());
 
         ResponseEntity<UserConferenceResponseDto> response = saveInterestExpectingAuthError(baseUri, userConferenceRequestDto);
+
+        Assert.assertEquals(401, response.getStatusCodeValue());
+
+    }
+
+    @Test
+    public void shouldReturn200AndListOfConferencesUserIsInterestedIn() throws URISyntaxException {
+
+        URI uri = new URI(baseUri + "/" + savedUser.getId());
+
+        ResponseEntity<List<ConferenceResponseDto>> response = getConferenceByUserId(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(savedConference.getName(), response.getBody().get(0).getName());
+        Assert.assertEquals(savedConference.getId(), response.getBody().get(0).getId());
+
+    }
+
+    @Test
+    public void shouldReturn200AndEmptyListWhenUserNotInterestedInConference() throws URISyntaxException {
+
+        URI uri = new URI(baseUri + "/" + 2L);
+
+        ResponseEntity<List<ConferenceResponseDto>> response = getConferenceByUserId(uri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(response.getBody().size(), 0);
+
+    }
+
+    @Test
+    public void shouldReturn401WhenUserNotLoggedIn() throws URISyntaxException {
+
+        URI uri = new URI(baseUri + "/" + savedUser.getId());
+
+        ResponseEntity<ErrorEntity> response = getConferenceByUserIdExpectingAuthError(uri);
 
         Assert.assertEquals(401, response.getStatusCodeValue());
 
@@ -73,7 +113,18 @@ public class UserConferenceControllerIT extends TestUtils {
         });
     }
 
-    private UserConferenceRequestDto createRequestDto(Long userId, Long conferenceId) {
+    private ResponseEntity<List<ConferenceResponseDto>> getConferenceByUserId(URI uri) {
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(passingHeaders), new ParameterizedTypeReference<List<ConferenceResponseDto>>() {
+        });
+    }
+
+    private ResponseEntity<ErrorEntity> getConferenceByUserIdExpectingAuthError(URI uri) {
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(failingHeaders), new ParameterizedTypeReference<ErrorEntity>() {
+        });
+    }
+
+
+    private UserConferenceRequestDto userConferenceCreateRequestDto(Long userId, Long conferenceId) {
         return anUserConferenceRequestDto()
                 .withConferenceId(conferenceId)
                 .withUserId(userId)

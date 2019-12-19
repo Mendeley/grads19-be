@@ -2,6 +2,7 @@ package com.gradproject2019.conferences.service;
 
 import com.gradproject2019.auth.exception.TokenNotFoundException;
 import com.gradproject2019.auth.exception.UserUnauthorisedException;
+import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.conferences.data.ConferencePatchRequestDto;
 import com.gradproject2019.conferences.data.ConferenceRequestDto;
@@ -10,6 +11,7 @@ import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
+import com.gradproject2019.userConference.service.UserConferenceService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -24,11 +26,12 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     private ConferenceRepository conferenceRepository;
 
-    private AuthServiceImpl authServiceImpl;
+    private AuthService authService;
 
-    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl) {
+
+    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthService authService) {
         this.conferenceRepository = conferenceRepository;
-        this.authServiceImpl = authServiceImpl;
+        this.authService = authService;
     }
 
     @Override
@@ -90,7 +93,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     private void checkUserAuthorised(UUID token) {
         try {
-            authServiceImpl.checkTokenExists(token);
+            authService.checkTokenExists(token);
         } catch (TokenNotFoundException e) {
             throw new UserUnauthorisedException();
         }
