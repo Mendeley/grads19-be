@@ -43,7 +43,6 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
             final var createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
 
             return createIndexResponse.isAcknowledged();
-
         } catch (Exception e) {
             LOG.error("failed to create indices", e);
             return false;
