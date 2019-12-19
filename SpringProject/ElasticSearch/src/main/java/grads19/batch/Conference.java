@@ -24,6 +24,7 @@ public class Conference {
         this.city = city;
     }
 
+
     public void setDescription(String description) {
         this.description = description;
     }
