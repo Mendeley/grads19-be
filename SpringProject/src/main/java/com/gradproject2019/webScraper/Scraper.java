@@ -9,15 +9,11 @@ import java.util.regex.Pattern;
 
 public class Scraper extends WebCrawler {
 
-    private String url;
-
-    Scraper() {
-        this.url = "https://www.baeldung.com/crawler4j";
-    }
-
-    private ScraperOutput scraperOutput;
     private final static Pattern Exclusions = Pattern.compile(".*(\\.(css|js|xml|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
+    private ScraperOutput scraperOutput;
+    Scraper() {
 
+    }
 
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
@@ -45,9 +41,5 @@ public class Scraper extends WebCrawler {
 
     public ScraperOutput getScraperOutput() {
         return scraperOutput;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 }
