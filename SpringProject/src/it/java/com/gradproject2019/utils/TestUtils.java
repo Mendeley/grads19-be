@@ -66,7 +66,7 @@ public class TestUtils {
         savedUser = userRepository.saveAndFlush(user);
         savedConference = conferenceRepository.saveAndFlush(conference);
         userConference = new UserConference(savedUser.getId(), savedConference.getId());
-        UserConference dummy = userConferenceRepository.saveAndFlush(userConference);
+        userConferenceRepository.saveAndFlush(userConference);
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
         authRepository.saveAndFlush(testToken);
         constructPassingHeader(testToken.getToken());
