@@ -54,6 +54,6 @@ public class ConferenceServiceTest {
 
     @Test(expected = ConferenceNotFoundException.class)
     public void shouldThrowErrorWhenIdNotRecognised() {
-        conferenceServiceImpl.getConferenceById(1000000000L);
+        conferenceServiceImpl.getConferenceById(Long.MAX_VALUE);
     }
 }

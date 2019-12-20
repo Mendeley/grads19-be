@@ -138,7 +138,7 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn404WhenUserConferenceNotFound() throws URISyntaxException {
-        URI uri = new URI(baseUri.toString() + "/2");
+        URI uri = new URI(baseUri.toString() + "/" + Integer.MAX_VALUE);
 
         ResponseEntity<ErrorEntity> response = deleteUserConferencesExpectingError(uri);
 
