@@ -44,9 +44,8 @@ public class UserConferenceServiceImpl implements UserConferenceService {
     }
 
     @Override
-    public void deleteInterest(UUID token, Long userId, Long conferenceId) {
-        Long retrievedId = authServiceImpl.getTokenById(token).getUserId();
-        checkUserMatchesUserConference(retrievedId, userId);
+    public void deleteInterest(UUID token, Long conferenceId) {
+        Long userId = authServiceImpl.getTokenById(token).getUserId();
         if (!userConferenceExists(userId, conferenceId)) {
             throw new UserConferenceNotFoundException();
         }
@@ -54,8 +53,8 @@ public class UserConferenceServiceImpl implements UserConferenceService {
     }
 
     @Override
-    public List<ConferenceResponseDto> getConferenceByUserId(UUID token, Long userId) {
-        checkUserMatchesUserConference(authServiceImpl.getTokenById(token).getUserId(), userId);
+    public List<ConferenceResponseDto> getConferenceByUserId(UUID token) {
+        Long userId = authServiceImpl.getTokenById(token).getUserId();
         return userConferenceRepository.findByUserId(userId).stream()
                 .map(userConference -> conferenceServiceImpl.getConferenceById(userConference.getConferenceId()))
                 .collect(Collectors.toList());

@@ -1,7 +1,5 @@
 package com.gradproject2019;
 
-import com.gradproject2019.auth.persistence.Token;
-import com.gradproject2019.auth.service.AuthServiceImpl;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.exception.ConferenceNotFoundException;
 import com.gradproject2019.conferences.persistence.Conference;
@@ -16,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;

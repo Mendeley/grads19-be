@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.given;
 public class UserConferenceServiceTest {
 
     @InjectMocks
-    private UserConferenceServiceImpl userConferenceService;
+    private UserConferenceServiceImpl userConferenceServiceImpl;
 
     @Mock
     private UserConferenceRepository userConferenceRepository;
@@ -52,7 +52,7 @@ public class UserConferenceServiceTest {
         given(conferenceServiceImpl.getConferenceById(userConference.getConferenceId())).willReturn(conferenceResponseDto);
         given(userConferenceRepository.saveAndFlush(any(UserConference.class))).willReturn(userConference);
 
-        UserConferenceResponseDto userConferenceResponseDto = userConferenceService.saveInterest(token.getToken(), userConferenceRequestDto);
+        UserConferenceResponseDto userConferenceResponseDto = userConferenceServiceImpl.saveInterest(token.getToken(), userConferenceRequestDto);
 
         assertThat(userConference.getConferenceId()).isEqualTo(userConferenceResponseDto.getConferenceId());
         assertThat(userConference.getUserId()).isEqualTo(userConferenceResponseDto.getUserId());
@@ -64,7 +64,7 @@ public class UserConferenceServiceTest {
         given(userConferenceRepository.findByUserId(userConference.getUserId())).willReturn(List.of(userConference));
         given(conferenceServiceImpl.getConferenceById(userConference.getConferenceId())).willReturn(conferenceResponseDto);
 
-        List<ConferenceResponseDto> conferenceResponseDtoList = userConferenceService.getConferenceByUserId(token.getToken(), userConference.getUserId());
+        List<ConferenceResponseDto> conferenceResponseDtoList = userConferenceServiceImpl.getConferenceByUserId(token.getToken());
 
         Assert.assertEquals(conferenceResponseDtoList.size(), 1);
         assertThat(conferenceResponseDtoList.get(0).getId()).isEqualTo(userConference.getConferenceId());

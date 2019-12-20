@@ -40,7 +40,7 @@ public class TestUtils {
     @Autowired
     public TestRestTemplate restTemplate;
 
-    private User user;
+    public User user;
     private Conference conference;
     public User savedUser;
     public Conference savedConference;
