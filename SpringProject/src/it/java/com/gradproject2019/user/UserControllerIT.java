@@ -46,8 +46,8 @@ public class UserControllerIT extends TestUtils {
         baseUri = "http://localhost:" + testServerPort + "/users";
         uri = new URI(baseUri);
         uri2 = new URI(baseUri + "/" + savedUser.getId());
-        uri3 = new URI(baseUri + "/employee/" + savedManager.getId());
-        uri4 = new URI(baseUri + "/employee/" + savedUser.getId());
+        uri3 = new URI(baseUri  +"?manager_id=" + savedManager.getId());
+        uri4 = new URI(baseUri + "?manager_id=" + savedUser.getId());
 
     }
 
