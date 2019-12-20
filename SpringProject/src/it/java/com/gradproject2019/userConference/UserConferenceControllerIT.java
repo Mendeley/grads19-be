@@ -1,11 +1,9 @@
 package com.gradproject2019.userConference;
 
-import com.gradproject2019.auth.persistence.Token;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.persistence.UserConference;
-import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
 import org.junit.After;
@@ -17,14 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.UUID;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -129,7 +125,7 @@ public class UserConferenceControllerIT extends TestUtils {
         ResponseEntity response = deleteUserConferences();
 
         Assert.assertEquals(204, response.getStatusCodeValue());
-        Assert.assertEquals(0, userConferenceRepository.existsByConferenceId(savedConference.getId()));
+        Assert.assertTrue(userConferenceRepository.findAll().isEmpty());
     }
 
     @Test

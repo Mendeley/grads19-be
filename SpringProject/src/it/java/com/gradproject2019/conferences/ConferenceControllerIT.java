@@ -137,7 +137,7 @@ public class ConferenceControllerIT extends TestUtils {
 
         Assert.assertEquals(204, response.getStatusCodeValue());
         Assert.assertFalse(conferenceRepository.existsById(savedConference.getId()));
-        Assert.assertEquals(0, userConferenceRepository.existsByConferenceId(savedConference.getId()));
+        Assert.assertTrue(userConferenceRepository.findAll().isEmpty());
     }
 
     @Test
