@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private User getUserById(Long userId) {
+    public User getUserById(Long userId) {
         return userRepository
                 .findById(userId)
                 .orElseThrow(UserNotFoundException::new);

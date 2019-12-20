@@ -40,11 +40,11 @@ public class TestUtils {
     @Autowired
     public TestRestTemplate restTemplate;
 
-    private User user;
+    public User user;
     private Conference conference;
     public User savedUser;
     public Conference savedConference;
-    public UserConference savedUserConference;
+    public UserConference userConference;
     private String hashedPassword;
     public Token testToken;
     public HttpHeaders passingHeaders;
@@ -65,10 +65,10 @@ public class TestUtils {
         conference = new Conference(1L, "GraceCon", Instant.now(), "Manchester", "COol", "Sophia");
         savedUser = userRepository.saveAndFlush(user);
         savedConference = conferenceRepository.saveAndFlush(conference);
+        userConference = new UserConference(savedUser.getId(), savedConference.getId());
+        userConferenceRepository.saveAndFlush(userConference);
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
         authRepository.saveAndFlush(testToken);
-        savedUserConference = new UserConference(savedUser.getId(),savedConference.getId());
-        userConferenceRepository.saveAndFlush(savedUserConference);
         constructPassingHeader(testToken.getToken());
         constructFailingHeader();
     }

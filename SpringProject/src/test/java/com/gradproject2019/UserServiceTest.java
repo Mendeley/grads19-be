@@ -28,7 +28,7 @@ import static org.mockito.BDDMockito.given;
 public class UserServiceTest {
 
     @InjectMocks
-    private UserServiceImpl userService;
+    private UserServiceImpl userServiceImpl;
 
     @Mock
     private UserRepository userRepository;
@@ -53,7 +53,7 @@ public class UserServiceTest {
         given(userRepository.findByUsername("qwerty")).willReturn(Optional.of(qwerty));
         UserRequestDto copycat = createUserRequestDto("notqwerty@qwerty.com", "qwerty");
 
-        userService.saveUser(copycat);
+        userServiceImpl.saveUser(copycat);
     }
 
     @Test(expected = UserInfoExistsException.class)
@@ -61,7 +61,7 @@ public class UserServiceTest {
         given(userRepository.findByEmail("qwerty@qwerty.com")).willReturn(Optional.of(qwerty));
         UserRequestDto copycat = createUserRequestDto("qwerty@qwerty.com", "notqwerty");
 
-        userService.saveUser(copycat);
+        userServiceImpl.saveUser(copycat);
     }
 
     @Test(expected = UserForbiddenException.class)
@@ -69,7 +69,7 @@ public class UserServiceTest {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
 
-        userService.editUser(token.getToken(), 2L, update);
+        userServiceImpl.editUser(token.getToken(), 2L, update);
     }
 
     @Test(expected = InvalidCredentialsException.class)
@@ -77,7 +77,7 @@ public class UserServiceTest {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "wrong format");
 
-        userService.editUser(token.getToken(), userId, update);
+        userServiceImpl.editUser(token.getToken(), userId, update);
     }
 
     @Test(expected = InvalidCredentialsException.class)
@@ -85,7 +85,7 @@ public class UserServiceTest {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         UserPatchRequestDto update = createUserPatchRequestDto("not an email", "newusername");
 
-        userService.editUser(token.getToken(), userId, update);
+        userServiceImpl.editUser(token.getToken(), userId, update);
     }
 
     @Test(expected = UserNotFoundException.class)
@@ -94,7 +94,7 @@ public class UserServiceTest {
         given(userRepository.findById(userId)).willReturn(Optional.empty());
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
 
-        userService.editUser(token.getToken(), userId, update);
+        userServiceImpl.editUser(token.getToken(), userId, update);
     }
 
     @Test(expected = UserInfoExistsException.class)
@@ -103,7 +103,7 @@ public class UserServiceTest {
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
         given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.of(createUser("notqwerty@qwerty.com", "newqwerty")));
 
-        userService.editUser(token.getToken(), userId, update);
+        userServiceImpl.editUser(token.getToken(), userId, update);
     }
 
     @Test(expected = UserInfoExistsException.class)
@@ -113,7 +113,7 @@ public class UserServiceTest {
         given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.empty());
         given(userRepository.findByEmail(update.getEmail())).willReturn(Optional.of(createUser("newqwerty@newqwerty.com", "notqwerty")));
 
-        userService.editUser(token.getToken(), userId, update);
+        userServiceImpl.editUser(token.getToken(), userId, update);
     }
 
     @Test(expected = UserForbiddenException.class)
@@ -122,7 +122,7 @@ public class UserServiceTest {
         given(userRepository.findById(userId2)).willReturn(Optional.of(qwerty2));
         given(userRepository.hasManagerEmployeeRelationship(userId2, userId, qwerty.getManagerId())).willReturn(0);
 
-        userService.findUserById(userId2, token.getToken());
+        userServiceImpl.findUserById(userId2, token.getToken());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class UserServiceTest {
         setUpUserAndToken(qwerty, token);
         given(userRepository.hasManagerEmployeeRelationship(userId, userId, qwerty.getManagerId())).willReturn(0);
 
-        UserResponseDto response = userService.findUserById(userId, token.getToken());
+        UserResponseDto response = userServiceImpl.findUserById(userId, token.getToken());
 
         Assert.assertEquals(qwerty.getId(), response.getId());
         Assert.assertEquals(qwerty.getFirstName(), response.getFirstName());
