@@ -10,6 +10,7 @@ import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,11 +66,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDto> findUserByManagerId(UUID token, Long managerId) {
+    public List<UserResponseDto> getUsers(UUID token, Long managerId) {
         checkTokenMatchesUser(token, managerId);
-        return userRepository.findByManagerId(managerId).stream()
-                .map(user -> new UserResponseDto().from(user))
-                .collect(Collectors.toList());
+        if (managerId != null && managerId>0) {
+            return userRepository.findByManagerId(managerId).stream()
+                    .map(user -> new UserResponseDto().from(user))
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     private void checkValidSave(UserRequestDto userRequestDto) {

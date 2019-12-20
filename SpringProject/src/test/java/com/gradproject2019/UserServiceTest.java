@@ -40,16 +40,12 @@ public class UserServiceTest {
 
     private final User user = new User(1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty", null);
     private final User user2 = new User(2L, "qwerty2", "qwerty2", "qwerty2", "qwerty2@qwerty.com", "Qwerty!1", "qwerty2", 3L);
-    private final User manager = new User(3L, "qwerty3", "qwerty3", "qwerty3", "qwerty3@qwerty.com", "Qwerty!3", "qwerty3", null);
-    private final User user4 = new User(4L, "qwerty4", "qwerty4", "qwerty4", "qwerty4@qwerty.com", "Qwerty!4", "qwerty4", 3L);
-    private final User user5 = new User(5L, "qwerty5", "qwerty5", "qwerty5", "qwerty5@qwerty.com", "Qwerty!5", "qwerty5", 3L);
 
     private final Token token = new Token(1L, UUID.randomUUID());
     private final Token managerToken = new Token(3L, UUID.randomUUID());
 
     private final Long userId = 1L;
     private final Long userId2 = 2L;
-    private final Long managerId = 3L;
 
     private void setUpUserAndToken(User user, Token token) {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
@@ -147,12 +143,13 @@ public class UserServiceTest {
     @Test
     public void shouldReturnListOfUsersWhenManagerExists() {
         given(authServiceImpl.getTokenById(managerToken.getToken())).willReturn(managerToken);
-        given(userRepository.findByManagerId(managerId)).willReturn((List.of(user2, user4, user5)));
+        Long managerId = 3L;
+        given(userRepository.findByManagerId(managerId)).willReturn((List.of(user2)));
 
-        List<UserResponseDto> users = userService.findUserByManagerId(managerToken.getToken(), managerId);
+        List<UserResponseDto> users = userService.getUsers(managerToken.getToken(), managerId);
 
-        Assert.assertEquals(users.size(), 3);
-        assertThat(users).extracting(UserResponseDto::getId).containsExactlyInAnyOrder(2L, 4L, 5L);
+        Assert.assertEquals(users.size(), 1);
+        assertThat(users).extracting(UserResponseDto::getId).containsExactlyInAnyOrder(2L);
     }
 
     @Test
@@ -160,7 +157,7 @@ public class UserServiceTest {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
         given(userRepository.findByManagerId(userId)).willReturn(List.of());
 
-        List<UserResponseDto> users = userService.findUserByManagerId(token.getToken(), userId);
+        List<UserResponseDto> users = userService.getUsers(token.getToken(), userId);
 
         Assert.assertEquals(users.size(), 0);
     }
@@ -169,7 +166,7 @@ public class UserServiceTest {
     public void shouldThrowErrorWhenManagerTokenDoesNotMatch() {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
 
-        userService.findUserByManagerId(token.getToken(), userId2);
+        userService.getUsers(token.getToken(), userId2);
     }
 
     private UserRequestDto createUserRequestDto(String email, String username) {
