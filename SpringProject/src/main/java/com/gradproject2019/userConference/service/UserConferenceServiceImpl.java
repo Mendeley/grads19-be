@@ -1,48 +1,76 @@
 package com.gradproject2019.userConference.service;
 
-import com.gradproject2019.auth.exception.TokenNotFoundException;
-import com.gradproject2019.auth.exception.UserUnauthorisedException;
-import com.gradproject2019.auth.service.AuthService;
+import com.gradproject2019.auth.service.AuthServiceImpl;
+import com.gradproject2019.conferences.data.ConferenceResponseDto;
+import com.gradproject2019.conferences.service.ConferenceServiceImpl;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.exception.UserAlreadyInterestedException;
+import com.gradproject2019.userConference.exception.UserConferenceNotFoundException;
 import com.gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
+import com.gradproject2019.users.exception.UserForbiddenException;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserConferenceServiceImpl implements UserConferenceService {
 
     private UserConferenceRepository userConferenceRepository;
-    private AuthService authService;
+    private AuthServiceImpl authServiceImpl;
+    private ConferenceServiceImpl conferenceServiceImpl;
 
-    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthService authService) {
+    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthServiceImpl authServiceImpl, @Lazy ConferenceServiceImpl conferenceServiceImpl) {
         this.userConferenceRepository = userConferenceRepository;
-        this.authService = authService;
+        this.authServiceImpl = authServiceImpl;
+        this.conferenceServiceImpl = conferenceServiceImpl;
     }
 
     @Override
     public UserConferenceResponseDto saveInterest(UUID token, UserConferenceRequestDto userConferenceRequestDto) {
-        UserConference userConference = new UserConferenceRequestDto().from(userConferenceRequestDto);
+        UserConference userConference = new UserConference().from(userConferenceRequestDto);
 
-        checkUserAuthorised(token);
-
-        try {
-            UserConference savedUserConference = userConferenceRepository.saveAndFlush(userConference);
-            return new UserConferenceResponseDto().from(savedUserConference);
-        } catch (DuplicateKeyException e) {
+        checkUserMatchesUserConference(authServiceImpl.getTokenById(token).getUserId(), userConference.getUserId());
+        conferenceServiceImpl.getConferenceById(userConference.getConferenceId());
+        if (userConferenceExists(userConference.getUserId(), userConference.getConferenceId())) {
             throw new UserAlreadyInterestedException();
+        }
+        return new UserConferenceResponseDto().from(userConferenceRepository.saveAndFlush(userConference));
+    }
+
+    @Override
+    public void deleteInterest(UUID token, Long conferenceId) {
+        Long userId = authServiceImpl.getTokenById(token).getUserId();
+        if (!userConferenceExists(userId, conferenceId)) {
+            throw new UserConferenceNotFoundException();
+        }
+        userConferenceRepository.deleteById(userId, conferenceId);
+    }
+
+    @Override
+    public List<ConferenceResponseDto> getConferenceByUserId(UUID token) {
+        Long userId = authServiceImpl.getTokenById(token).getUserId();
+        return userConferenceRepository.findByUserId(userId).stream()
+                .map(userConference -> conferenceServiceImpl.getConferenceById(userConference.getConferenceId()))
+                .collect(Collectors.toList());
+    }
+
+    private boolean userConferenceExists(Long userId, Long conferenceId) {
+        return userConferenceRepository.exists(userId, conferenceId) > 0;
+    }
+
+    private void checkUserMatchesUserConference(Long retrievedId, Long userId) {
+        if (!retrievedId.equals(userId)) {
+            throw new UserForbiddenException();
         }
     }
 
-    private void checkUserAuthorised(UUID token) {
-        try {
-            authService.checkTokenExists(token);
-        } catch (TokenNotFoundException e) {
-            throw new UserUnauthorisedException();
-        }
+    public void deleteByConferenceId(Long conferenceId) {
+        userConferenceRepository.deleteByConferenceId(conferenceId);
     }
 }

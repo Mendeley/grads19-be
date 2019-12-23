@@ -5,7 +5,9 @@ import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.conferences.persistence.Conference;
 import com.gradproject2019.conferences.repository.ConferenceRepository;
+import com.gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
+import com.gradproject2019.userConference.service.UserConferenceService;
 import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class TestUtils {
     public UserConferenceRepository userConferenceRepository;
 
     @Autowired
+    public UserConferenceService userConferenceService;
+
+    @Autowired
     public TestRestTemplate restTemplate;
 
     private User user;
@@ -42,6 +47,7 @@ public class TestUtils {
     public User userWithManager;
     public User manager;
     public Conference savedConference;
+    public UserConference userConference;
     private String hashedPassword;
     public Token testToken;
     public HttpHeaders passingHeaders;
@@ -71,6 +77,8 @@ public class TestUtils {
         userWithManager = new User(2L, "userWithManager", "userWithManager", "userWithManager", "userWithManager@gmail.com", hashedPassword, "userWithManager", savedManager.getId());
         savedUserWithManager = userRepository.saveAndFlush(userWithManager);
         savedConference = conferenceRepository.saveAndFlush(conference);
+        userConference = new UserConference(savedUser.getId(), savedConference.getId());
+        userConferenceRepository.saveAndFlush(userConference);
         testToken = new Token(savedUser.getId(), UUID.randomUUID());
         managerToken = new Token(savedManager.getId(), UUID.randomUUID());
         userWithManagerToken = new Token(savedUserWithManager.getId(), UUID.randomUUID());
