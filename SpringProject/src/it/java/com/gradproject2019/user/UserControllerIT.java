@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Headers;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -36,15 +35,20 @@ public class UserControllerIT extends TestUtils {
     int testServerPort;
 
     private String baseUri;
-    private URI uri;
-    private URI uri2;
+    private URI userUri;
+    private URI savedUserUri;
+    private URI savedManagerUri;
+    private URI savedUserWithoutManagerUri;
 
     @Before
     public void setUp() throws URISyntaxException {
         universalSetUp();
         baseUri = "http://localhost:" + testServerPort + "/users";
-        uri = new URI(baseUri);
-        uri2 = new URI(baseUri + "/" + savedUser.getId());
+        userUri = new URI(baseUri);
+        savedUserUri = new URI(baseUri + "/" + savedUser.getId());
+        savedManagerUri = new URI(baseUri  +"?manager_id=" + savedManager.getId());
+        savedUserWithoutManagerUri = new URI(baseUri + "?manager_id=" + savedUser.getId());
+
     }
 
     @After
@@ -58,7 +62,7 @@ public class UserControllerIT extends TestUtils {
         HttpEntity<UserRequestDto> request = new HttpEntity<>(userRequestDto);
 
         ResponseEntity<String> response = postUser(request);
-        User retrievedUser = userRepository.findAll().get(1);
+        User retrievedUser = userRepository.findAll().get(3);
 
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(userRequestDto.getUsername(), retrievedUser.getUsername());
@@ -121,7 +125,7 @@ public class UserControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn404WhenUpdatedManagerDoesNotExist() {
-        UserPatchRequestDto request = createPatchRequestDto(null, null, null, null, null, savedUser.getId() + 1);
+        UserPatchRequestDto request = createPatchRequestDto(null, null, null, null, null, savedUser.getId() + 1000);
 
         ResponseEntity<ErrorEntity> response = editUserExpectingError(request);
 
@@ -131,7 +135,7 @@ public class UserControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn200WhenGettingUserByOwnId() {
-        ResponseEntity<User> response = getUserById(uri2, passingHeaders);
+        ResponseEntity<User> response = getUserById(savedUserUri, passingHeaders);
 
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(savedUser.getId(), response.getBody().getId());
@@ -149,7 +153,7 @@ public class UserControllerIT extends TestUtils {
         HttpHeaders employeeHeaders = new HttpHeaders();
         employeeHeaders.add(HttpHeaders.AUTHORIZATION, employeeToken.getToken().toString());
 
-        ResponseEntity<User> response = getUserById(uri2, employeeHeaders);
+        ResponseEntity<User> response = getUserById(savedUserUri, employeeHeaders);
 
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(savedUser.getId(), response.getBody().getId());
@@ -169,15 +173,35 @@ public class UserControllerIT extends TestUtils {
 
         Assert.assertEquals(200, response.getStatusCodeValue());
         Assert.assertEquals(employee.getId(), response.getBody().getId());
-        Assert.assertEquals(employee.getFirstName(), response.getBody().getFirstName());
-        Assert.assertEquals(employee.getUsername(), response.getBody().getUsername());
-        Assert.assertEquals(employee.getLastName(), response.getBody().getLastName());
-        Assert.assertEquals(employee.getEmail(), response.getBody().getEmail());
-        Assert.assertEquals(employee.getOccupation(), response.getBody().getOccupation());
     }
 
     @Test
-    public void shouldReturn401WhenGettingUserByIdUnauthorisedDueToToken() {
+    public void shouldReturn200WhenGettingEmployeesByManagerId() {
+        ResponseEntity<List<UserResponseDto>> response = getUserByManagerId(savedManagerUri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(response.getBody().size(), 1);
+        Assert.assertEquals(savedUserWithManager.getId(), response.getBody().get(0).getId());
+    }
+
+    @Test
+    public void shouldReturn401WhenUserUnauthorisedToGetEmployees() {
+        ResponseEntity<ErrorEntity> response = getUserByManagerIdAuthError(savedManagerUri);
+
+        Assert.assertEquals(401, response.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenUserHasNoEmployees() {
+
+        ResponseEntity<List<UserResponseDto>> response = getUserByManagerIdWhenUserNotManager(savedUserWithoutManagerUri);
+
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(0, response.getBody().size());
+    }
+
+    @Test
+    public void shouldReturn401WhenGettingUserByIdUnauthorised() {
         ResponseEntity<ErrorEntity> response = getUserByIdExpectingAuthError();
 
         Assert.assertEquals(401, response.getStatusCodeValue());
@@ -194,7 +218,6 @@ public class UserControllerIT extends TestUtils {
         Assert.assertEquals(403, response.getStatusCodeValue());
         Assert.assertEquals("User forbidden to perform action.", response.getBody().getMessage());
     }
-
 
     @Test
     public void shouldReturn401WhenUnauthorisedEdit() {
@@ -273,23 +296,27 @@ public class UserControllerIT extends TestUtils {
     }
 
     private ResponseEntity<String> postUser(HttpEntity<UserRequestDto> request) {
-        return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<String>() {});
+        return restTemplate.exchange(userUri, POST, request, new ParameterizedTypeReference<String>() {
+        });
     }
 
     private ResponseEntity<ErrorEntity> postUserExpectingError(HttpEntity<UserRequestDto> request) {
-        return restTemplate.exchange(uri, POST, request, new ParameterizedTypeReference<ErrorEntity>() {});
+        return restTemplate.exchange(userUri, POST, request, new ParameterizedTypeReference<ErrorEntity>() {
+        });
     }
 
     private ResponseEntity<UserResponseDto> editUser(UserPatchRequestDto request) {
-        return restTemplate.exchange(uri2, PATCH, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserResponseDto>() {});
+        return restTemplate.exchange(savedUserUri, PATCH, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserResponseDto>() {
+        });
     }
 
     private ResponseEntity<ErrorEntity> editUserExpectingError(UserPatchRequestDto request) {
-        return restTemplate.exchange(uri2, PATCH, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<ErrorEntity>() {});
+        return restTemplate.exchange(savedUserUri, PATCH, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<ErrorEntity>() {
+        });
     }
 
     private ResponseEntity<ErrorEntity> editUserExpectingAuthError(UserPatchRequestDto request) {
-        return restTemplate.exchange(uri2, PATCH, new HttpEntity<>(request, failingHeaders), ErrorEntity.class);
+        return restTemplate.exchange(savedUserUri, PATCH, new HttpEntity<>(request, failingHeaders), ErrorEntity.class);
     }
 
     private ResponseEntity<User> getUserById(URI uri, HttpHeaders headers) {
@@ -301,11 +328,27 @@ public class UserControllerIT extends TestUtils {
     }
 
     private ResponseEntity<ErrorEntity> getUserByIdExpectingAuthError() {
-        return restTemplate.exchange(uri2, GET, new HttpEntity<>(failingHeaders), ErrorEntity.class);
+        return restTemplate.exchange(savedUserUri, GET, new HttpEntity<>(failingHeaders), ErrorEntity.class);
     }
 
     private ResponseEntity<List<UserResponseDto>> searchByName(URI uri) {
-        return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<List<UserResponseDto>>() {});
+        return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<List<UserResponseDto>>() {
+        });
+    }
+
+    private ResponseEntity<List<UserResponseDto>> getUserByManagerId(URI uri) {
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(managerPassingHeaders), new ParameterizedTypeReference<List<UserResponseDto>>() {
+        });
+    }
+
+    private ResponseEntity<List<UserResponseDto>> getUserByManagerIdWhenUserNotManager(URI uri) {
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(passingHeaders), new ParameterizedTypeReference<List<UserResponseDto>>() {
+        });
+    }
+
+    private ResponseEntity<ErrorEntity> getUserByManagerIdAuthError(URI uri) {
+        return restTemplate.exchange(uri, GET, new HttpEntity<>(failingHeaders), new ParameterizedTypeReference<ErrorEntity>() {
+        });
     }
 
     private UserRequestDto createRequestDto(String username, String firstName, String lastName, String email, String password, String occupation, Long managerId) {
