@@ -1,6 +1,8 @@
 package com.gradproject2019.conferences.persistance;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 
@@ -9,25 +11,17 @@ import java.time.Instant;
 
 import static org.springframework.data.elasticsearch.annotations.FieldType.*;
 
-@Document(indexName = "conferences_index", type = "conference")
+@Document(indexName = "conferences", type = "conference")
 public class EsConference {
-
     @Id
     private Long id;
-
-    @Field(type = Text)
     private String name;
 
-    @Field(type = Date )
-    private Instant dateTime;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern ="yyyy-MM-dd'T'HH:mm:ss.SSSZZ", timezone = "UTC")
+    //private Instant dateTime;
 
-    @Field(type = Keyword)
     private String city;
-
-    @Field(type = Text)
     private String description;
-
-    @Field(type = Keyword)
     private String topic;
 
     public EsConference() {
@@ -36,7 +30,7 @@ public class EsConference {
     public EsConference(Long id, String name, Instant dateTime, String city, String description, String topic) {
         this.id = id;
         this.name = name;
-        this.dateTime = dateTime;
+        //this.dateTime = dateTime;
         this.city = city;
         this.description = description;
         this.topic = topic;
@@ -50,9 +44,9 @@ public class EsConference {
         return name;
     }
 
-    public Instant getDateTime() {
-        return dateTime;
-    }
+    //public Instant getDateTime() {
+        //return dateTime;
+    //}
 
     public String getCity() {
         return city;
@@ -74,9 +68,9 @@ public class EsConference {
         this.name = name;
     }
 
-    public void setDateTime(Instant dateTime) {
-        this.dateTime = dateTime;
-    }
+//    public void setDateTime(Instant dateTime) {
+//        this.dateTime = dateTime;
+//    }
 
     public void setCity(String city) {
         this.city = city;
