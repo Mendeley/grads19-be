@@ -20,8 +20,8 @@ public class ConferenceController {
 @Autowired
 private ConferenceService conferenceService;
 
-@GetMapping(path = "/conferences")
-public ResponseEntity<List<ConferenceResponseDto>> getAllConferences() {
+    @GetMapping("/conferences")
+    public ResponseEntity<List<ConferenceResponseDto>> getAllConferences() {
         List<ConferenceResponseDto> conferences = conferenceService.getAllConferences();
         return ResponseEntity.ok(conferences);
         }
@@ -49,5 +49,4 @@ public ResponseEntity<ConferenceResponseDto> editConference(@RequestHeader("Auth
         ConferenceResponseDto conferenceResponseDto = conferenceService.editConference(token, conferenceId, conferencePatchRequestDto);
         return ResponseEntity.ok(conferenceResponseDto);
         }
-
 }

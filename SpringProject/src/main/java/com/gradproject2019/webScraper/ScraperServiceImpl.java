@@ -14,7 +14,7 @@ public class ScraperServiceImpl implements ScraperService {
     @Override
     public void startScraper(String url) throws Exception {
         CrawlConfig config = new CrawlConfig();
-        System.out.println(url);
+
         config.setCrawlStorageFolder("/tmp/crawler4j");
 
         config.setPolitenessDelay(1000);
@@ -32,7 +32,7 @@ public class ScraperServiceImpl implements ScraperService {
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig,pageFetcher);
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
-        controller.addSeed("https://www.edureka.co/blog/object-oriented-programming/");
+        controller.addSeed(url);
 
         int numberOfCrawlers = 1;
 
