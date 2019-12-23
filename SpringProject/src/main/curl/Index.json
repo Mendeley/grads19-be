@@ -1,4 +1,3 @@
-
 {
     "settings": {
         "index" : {
@@ -13,22 +12,25 @@
                     "filter": "lowercase"
                 }
             }
-        },
-        "mappings" : {
-            "properties" : {
-                "name" : {
-                    "type" : "text",
-                    "analyzer": "analyzer-name"
-                },
-                "city" : {
-                    "type" : "keyword"
-                },
-                "description" : {
-                    "type" : "text"
-                },
-                "topic" : {
-                    "type" : "keyword"
-                }
+        }
+    },
+    "mappings" : {
+        "properties" : {
+            "name" : {
+                "type" : "text",
+                "analyzer": "analyzer-name"
+            },
+            "city" : {
+                "type" : "keyword"
+            },
+            "description" : {
+                "type" : "text"
+            },
+            "topic" : {
+                "type" : "keyword"
+            },
+            "dateTime": {
+                "type": "date"
             }
         }
     }

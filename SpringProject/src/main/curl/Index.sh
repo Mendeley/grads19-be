@@ -1,3 +1,1 @@
-curl -XPUT "http://localhost:9200/conferences/conference/1" -d''
-
-GET /Index/_search?q=user:tpoint&ignore_throttled=false
+curl -XPUT "http://localhost:9200/conferences" -H "Content-Type: application/json" --data-binary @index.json
