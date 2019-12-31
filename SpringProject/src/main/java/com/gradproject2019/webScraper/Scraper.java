@@ -25,8 +25,8 @@ public class Scraper extends WebCrawler {
 
     @Override
     public void visit(Page page) {
-        //String url = page.getWebURL().getURL();
-        //logger.info("URL: {}", url);
+        String url = page.getWebURL().getURL();
+        logger.info("URL: {}", url);
 
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
@@ -35,20 +35,20 @@ public class Scraper extends WebCrawler {
 
             //logger.info("Text: {}", text);
 
-            Pattern titlePattern = Pattern.compile("|<h1[^>]+>(.*)</h1[^>]+>|iU", Pattern.DOTALL);
+            Pattern titlePattern = Pattern.compile("<h1>(\\S+)</h>");
 
             Matcher titleMatcher = titlePattern.matcher(html);
-            titleMatcher.find();
 
-            String codeGroup = titleMatcher.group(1);
-            logger.info("Title: {}", codeGroup);
+                if (text != null && html != null && titleMatcher.find()) {
+                    String codeGroup = titleMatcher.group(1);
+                    logger.info("Title: {}", codeGroup);
+                    scraperOutput = new ScraperOutput(codeGroup);
+                }
+            };
 
-            if (text != null && html != null) scraperOutput = new ScraperOutput(codeGroup);
             //TODO: Ensure that the scraper output is not created if values are null or there's an exception
 
         }
-
-    }
 
     public ScraperOutput getScraperOutput() {
         return scraperOutput;

@@ -9,4 +9,5 @@ public class ScraperOutput {
 
     public String getUrlTitle() { return urlTitle; }
 
+
 }
