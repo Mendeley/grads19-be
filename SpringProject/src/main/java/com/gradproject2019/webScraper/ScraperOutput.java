@@ -1,19 +1,12 @@
 package com.gradproject2019.webScraper;
 
 public class ScraperOutput {
-    private String text;
-    private String html;
+    private String urlTitle;
 
-    public ScraperOutput(String text, String html) {
-        this.text = text;
-        this.html = html;
+    public ScraperOutput(String urlTitle) {
+        this.urlTitle = urlTitle;
     }
 
-    public String getText() {
-        return text;
-    }
+    public String getUrlTitle() { return urlTitle; }
 
-    public String getHtml() {
-        return html;
-    }
 }

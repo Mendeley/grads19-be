@@ -5,6 +5,8 @@ import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
+import javax.swing.text.Document;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Scraper extends WebCrawler {
@@ -23,20 +25,29 @@ public class Scraper extends WebCrawler {
 
     @Override
     public void visit(Page page) {
-        String url = page.getWebURL().getURL();
-        logger.info("URL: {}", url);
+        //String url = page.getWebURL().getURL();
+        //logger.info("URL: {}", url);
 
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             String text = htmlParseData.getText();
             String html = htmlParseData.getHtml();
 
-            logger.info("Text: {}", text);
-            logger.info("Html: {}", html);
+            //logger.info("Text: {}", text);
 
+            Pattern titlePattern = Pattern.compile("|<h1[^>]+>(.*)</h1[^>]+>|iU", Pattern.DOTALL);
+
+            Matcher titleMatcher = titlePattern.matcher(html);
+            titleMatcher.find();
+
+            String codeGroup = titleMatcher.group(1);
+            logger.info("Title: {}", codeGroup);
+
+            if (text != null && html != null) scraperOutput = new ScraperOutput(codeGroup);
             //TODO: Ensure that the scraper output is not created if values are null or there's an exception
-            if (text != null && html != null) scraperOutput = new ScraperOutput(text, html);
+
         }
+
     }
 
     public ScraperOutput getScraperOutput() {

@@ -20,7 +20,6 @@ public class ScraperController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<ConferenceResponseDto> getConferenceURL(@RequestHeader("Authorization") UUID token, @RequestBody String conferenceURL) throws Exception {
-        validateToken();
         scraperService.startScraper(conferenceURL);
         ConferenceResponseDto responseDto = ConferenceResponseDto.ConferenceResponseDtoBuilder.aConferenceResponseDto().build();
 
@@ -28,7 +27,4 @@ public class ScraperController {
     }
 
     //TODO: ensure user is verified before the crawler starts
-    private boolean validateToken() {
-        return false;
-    }
 }
