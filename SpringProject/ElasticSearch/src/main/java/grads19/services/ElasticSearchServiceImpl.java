@@ -43,6 +43,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
             final var createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
 
             return createIndexResponse.isAcknowledged();
+
         } catch (Exception e) {
             LOG.error("failed to create indices", e);
             return false;
@@ -50,7 +51,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     }
 
     @Override
-    public void insertData(List<Conference> conferences) {
+    public boolean insertData(List<Conference> conferences) {
         BulkRequest bulkRequest = new BulkRequest();
 
         for (Conference conference : conferences) {
@@ -59,8 +60,10 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         }
         try {
             client.bulk(bulkRequest, RequestOptions.DEFAULT);
+            return true;
         } catch (Exception e) {
             LOG.error("failed to insert data", e);
+            return false;
         }
     }
 
