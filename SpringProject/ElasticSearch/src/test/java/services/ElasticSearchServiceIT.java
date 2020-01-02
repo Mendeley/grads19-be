@@ -41,7 +41,16 @@ class ElasticSearchServiceIT {
 
         List<Conference> conferences = List.of(conf1, conf2);
 
-        elasticSearchService.insertData(conferences);
+        final var result = elasticSearchService.insertData(conferences);
+
+        assertThat(result).isEqualTo(true);
+    }
+
+    @Test
+    void shouldDeleteIndices() {
+        final var result = elasticSearchService.deleteIndices();
+
+        assertThat(result).isEqualTo(true);
     }
 
 }

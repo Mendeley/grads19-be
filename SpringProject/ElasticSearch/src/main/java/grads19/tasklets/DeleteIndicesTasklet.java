@@ -25,7 +25,7 @@ public class DeleteIndicesTasklet implements Tasklet {
         final var result = elasticSearchService.deleteIndices();
 
         if (result) {
-            LOG.info("index sucessfully deleted");
+            LOG.info("index successfully deleted");
         } else {
             LOG.error("Index failed to delete");
         }

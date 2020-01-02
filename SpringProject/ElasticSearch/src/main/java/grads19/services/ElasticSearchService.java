@@ -7,7 +7,7 @@ import java.util.List;
 public interface ElasticSearchService {
     boolean createIndices();
 
-    void insertData(List<Conference> conferences);
+    boolean insertData(List<Conference> conferences);
 
     boolean deleteIndices();
 }

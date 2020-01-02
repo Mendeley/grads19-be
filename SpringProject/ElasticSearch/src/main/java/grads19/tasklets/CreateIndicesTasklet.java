@@ -24,7 +24,7 @@ public class CreateIndicesTasklet implements Tasklet {
         final var result = elasticSearchService.createIndices();
 
         if (result) {
-            LOG.info("index sucessfully completed");
+            LOG.info("index successfully completed");
         } else {
             LOG.error("Index failed");
         }
