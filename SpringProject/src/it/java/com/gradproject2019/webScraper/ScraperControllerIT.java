@@ -42,7 +42,7 @@ public class ScraperControllerIT extends TestUtils {
     @Test
     public void shouldReturn200WhenURLIsSubmitted() throws URISyntaxException {
         clearRepositories();;
-        URI uri = new URI(baseUri + "/" + savedUser.getId());
+        URI uri = new URI(baseUri);
 
         ResponseEntity<ConferenceResponseDto> response = getConferenceURL(uri, "https://www.eventbrite.co.uk/e/ucl-ai-in-medicine-conference-2020-tickets-85348905875?aff=ebdssbdestsearch");
 
