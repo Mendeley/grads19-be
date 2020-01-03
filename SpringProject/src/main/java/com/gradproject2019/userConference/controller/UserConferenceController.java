@@ -33,7 +33,7 @@ public class UserConferenceController {
     }
 
     @DeleteMapping(path = "/user-conferences/{conferenceId}")
-    public ResponseEntity<Void> logout(@RequestHeader("Authorization") UUID token, @PathVariable("conferenceId") Long conferenceId) {
+    public ResponseEntity<Void> deleteInterest(@RequestHeader("Authorization") UUID token, @PathVariable("conferenceId") Long conferenceId) {
         userConferenceService.deleteInterest(token, conferenceId);
         return ResponseEntity.noContent().build();
     }
