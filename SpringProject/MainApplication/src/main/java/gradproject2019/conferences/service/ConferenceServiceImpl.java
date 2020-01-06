@@ -1,6 +1,5 @@
 package gradproject2019.conferences.service;
 
-
 import gradproject2019.auth.service.AuthServiceImpl;
 import gradproject2019.conferences.data.ConferencePatchRequestDto;
 import gradproject2019.conferences.data.ConferenceRequestDto;
@@ -10,9 +9,8 @@ import gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import gradproject2019.conferences.persistence.Conference;
 import gradproject2019.conferences.repository.ConferenceRepository;
 import gradproject2019.userConference.service.UserConferenceServiceImpl;
-
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Lazy;
 
 import java.time.Instant;
 import java.util.List;
