@@ -26,9 +26,15 @@ public class UserConferenceController {
         return ResponseEntity.ok(newInterest);
     }
 
-    @GetMapping(path = "/user-conferences/{id}")
-    public ResponseEntity<List<ConferenceResponseDto>> getConferenceByUserId(@RequestHeader("Authorization") UUID token, @PathVariable("id") Long userId) {
-        List<ConferenceResponseDto> conferences = userConferenceService.getConferenceByUserId(token, userId);
+    @GetMapping(path = "/user-conferences")
+    public ResponseEntity<List<ConferenceResponseDto>> getConferenceByUserId(@RequestHeader("Authorization") UUID token) {
+        List<ConferenceResponseDto> conferences = userConferenceService.getConferenceByUserId(token);
         return ResponseEntity.ok(conferences);
+    }
+
+    @DeleteMapping(path = "/user-conferences/{conferenceId}")
+    public ResponseEntity<Void> deleteInterest(@RequestHeader("Authorization") UUID token, @PathVariable("conferenceId") Long conferenceId) {
+        userConferenceService.deleteInterest(token, conferenceId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -25,8 +25,9 @@ public class UserConferenceResponseDto {
         return conferenceId;
     }
 
-    public static UserConferenceResponseDto from(UserConference userConference) {
-        return UserConferenceResponseDtoBuilder.anUserConferenceResponseDto()
+    public UserConferenceResponseDto from(UserConference userConference) {
+        return UserConferenceResponseDtoBuilder
+                .anUserConferenceResponseDto()
                 .withUserId(userConference.getUserId())
                 .withConferenceId(userConference.getConferenceId())
                 .build();

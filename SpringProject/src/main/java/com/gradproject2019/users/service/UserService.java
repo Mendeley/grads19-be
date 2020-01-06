@@ -16,4 +16,6 @@ public interface UserService {
     UserResponseDto editUser(UUID token, Long userId, UserPatchRequestDto userPatchRequestDto);
 
     UserResponseDto findUserById(Long userId, UUID token);
+
+    List<UserResponseDto> getUsers(UUID token, Long managerId);
 }

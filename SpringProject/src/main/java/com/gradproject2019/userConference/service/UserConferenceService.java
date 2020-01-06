@@ -13,5 +13,7 @@ public interface UserConferenceService {
 
     UserConferenceResponseDto saveInterest(UUID token, UserConferenceRequestDto userConferenceRequestDto);
 
-    List<ConferenceResponseDto> getConferenceByUserId(UUID token, Long userId);
+    List<ConferenceResponseDto> getConferenceByUserId(UUID token);
+
+    void deleteInterest(UUID token, Long conferenceId);
 }

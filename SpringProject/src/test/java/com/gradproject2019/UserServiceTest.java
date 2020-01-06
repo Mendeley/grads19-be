@@ -11,7 +11,7 @@ import com.gradproject2019.users.exception.UserInfoExistsException;
 import com.gradproject2019.users.exception.UserNotFoundException;
 import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
-import com.gradproject2019.users.service.UserServiceImpl;
+import com.gradproject2019.users.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,16 +19,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
     @InjectMocks
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Mock
     private UserRepository userRepository;
@@ -36,12 +38,15 @@ public class UserServiceTest {
     @Mock
     private AuthServiceImpl authServiceImpl;
 
-    private final User qwerty = new User(1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty", null);
-    private final User qwerty2 = new User(2L, "qwerty2", "qwerty2", "qwerty2", "qwerty2@qwerty.com", "Qwerty!1", "qwerty2", 3L);
+
+    private final User user = new User(1L, "qwerty", "qwerty", "qwerty", "qwerty@qwerty.com", "Qwerty!1", "qwerty", null);
+    private final User user2 = new User(2L, "qwerty2", "qwerty2", "qwerty2", "qwerty2@qwerty.com", "Qwerty!1", "qwerty2", 3L);
+
     private final Token token = new Token(1L, UUID.randomUUID());
+    private final Token managerToken = new Token(3L, UUID.randomUUID());
+
     private final Long userId = 1L;
     private final Long userId2 = 2L;
-
 
     private void setUpUserAndToken(User user, Token token) {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
@@ -50,7 +55,7 @@ public class UserServiceTest {
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenRegistrationUsernameExists() {
-        given(userRepository.findByUsername("qwerty")).willReturn(Optional.of(qwerty));
+        given(userRepository.findByUsername("qwerty")).willReturn(Optional.of(user));
         UserRequestDto copycat = createUserRequestDto("notqwerty@qwerty.com", "qwerty");
 
         userService.saveUser(copycat);
@@ -58,7 +63,7 @@ public class UserServiceTest {
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenRegistrationEmailExists() {
-        given(userRepository.findByEmail("qwerty@qwerty.com")).willReturn(Optional.of(qwerty));
+        given(userRepository.findByEmail("qwerty@qwerty.com")).willReturn(Optional.of(user));
         UserRequestDto copycat = createUserRequestDto("qwerty@qwerty.com", "notqwerty");
 
         userService.saveUser(copycat);
@@ -99,7 +104,7 @@ public class UserServiceTest {
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenNewUsernameExist() {
-        setUpUserAndToken(qwerty, token);
+        setUpUserAndToken(user, token);
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
         given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.of(createUser("notqwerty@qwerty.com", "newqwerty")));
 
@@ -108,7 +113,7 @@ public class UserServiceTest {
 
     @Test(expected = UserInfoExistsException.class)
     public void shouldThrowErrorWhenNewEmailExists() {
-        setUpUserAndToken(qwerty, token);
+        setUpUserAndToken(user, token);
         UserPatchRequestDto update = createUserPatchRequestDto("newqwerty@newqwerty.com", "newqwerty");
         given(userRepository.findByUsername(update.getUsername())).willReturn(Optional.empty());
         given(userRepository.findByEmail(update.getEmail())).willReturn(Optional.of(createUser("newqwerty@newqwerty.com", "notqwerty")));
@@ -118,22 +123,55 @@ public class UserServiceTest {
 
     @Test(expected = UserForbiddenException.class)
     public void shouldThrowErrorWhenRequestingManagerDoesNotMatchRequestedUser() {
-        setUpUserAndToken(qwerty, token);
-        given(userRepository.findById(userId2)).willReturn(Optional.of(qwerty2));
-        given(userRepository.hasManagerEmployeeRelationship(userId2, userId, qwerty.getManagerId())).willReturn(0);
+        setUpUserAndToken(user, token);
+        given(userRepository.findById(userId2)).willReturn(Optional.of(user2));
+        given(userRepository.hasManagerEmployeeRelationship(userId2, userId, user.getManagerId())).willReturn(0);
 
         userService.findUserById(userId2, token.getToken());
     }
 
     @Test
     public void shouldPassWhenRequestingUserDoesMatchRequestedUser() {
-        setUpUserAndToken(qwerty, token);
-        given(userRepository.hasManagerEmployeeRelationship(userId, userId, qwerty.getManagerId())).willReturn(0);
+        setUpUserAndToken(user, token);
+        given(userRepository.hasManagerEmployeeRelationship(userId, userId, user.getManagerId())).willReturn(0);
 
         UserResponseDto response = userService.findUserById(userId, token.getToken());
 
-        Assert.assertEquals(qwerty.getId(), response.getId());
-        Assert.assertEquals(qwerty.getFirstName(), response.getFirstName());
+        Assert.assertEquals(user.getId(), response.getId());
+        Assert.assertEquals(user.getFirstName(), response.getFirstName());
+    }
+
+    @Test
+    public void shouldReturnListOfUsersWhenManagerExists() {
+        given(authServiceImpl.getTokenById(managerToken.getToken())).willReturn(managerToken);
+        Long managerId = 3L;
+        given(userRepository.findByManagerId(managerId)).willReturn((List.of(user2)));
+
+        List<UserResponseDto> users = userService.getUsers(managerToken.getToken(), managerId);
+
+        Assert.assertEquals(users.size(), 1);
+        assertThat(users).extracting(UserResponseDto::getId).containsExactlyInAnyOrder(2L);
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenUserIsNotAManager() {
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
+        given(userRepository.findByManagerId(userId)).willReturn(List.of());
+
+        List<UserResponseDto> users = userService.getUsers(token.getToken(), userId);
+
+        Assert.assertEquals(users.size(), 0);
+    }
+
+    @Test(expected = UserForbiddenException.class)
+    public void shouldThrowErrorWhenManagerTokenDoesNotMatch() {
+        given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
+
+        userService.getUsers(token.getToken(), userId2);
+
+        //Assert.assertEquals(qwerty.getId(), response.getId());
+        //Assert.assertEquals(qwerty.getFirstName(), response.getFirstName());
+
     }
 
     private UserRequestDto createUserRequestDto(String email, String username) {
