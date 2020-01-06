@@ -41,7 +41,6 @@ public class TestUtils {
     public TestRestTemplate restTemplate;
 
     private User user;
-    private User user2;
     private Conference conference;
     public User savedUser;
     public User userWithManager;
