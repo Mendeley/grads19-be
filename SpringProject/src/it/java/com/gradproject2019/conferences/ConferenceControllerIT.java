@@ -71,9 +71,10 @@ public class ConferenceControllerIT extends TestUtils {
     public void shouldReturn404WhenIdDoesNotExist() throws URISyntaxException {
         URI uri = new URI(baseUri + "/1000000000");
 
-        ResponseEntity<ConferenceResponseDto> response = getSingleConference(uri);
+        ResponseEntity<ErrorEntity> response = getSingleConferenceExpectingError(uri);
 
         Assert.assertEquals(404, response.getStatusCodeValue());
+        Assert.assertEquals("Conference not found.", response.getBody().getMessage());
     }
 
     @Test
@@ -105,9 +106,10 @@ public class ConferenceControllerIT extends TestUtils {
         URI uri = new URI(baseUri);
         ConferenceRequestDto request = createRequestDto(null, null, null, null, null, null);
 
-        ResponseEntity<String> response = postConference(uri, request);
+        ResponseEntity<ErrorEntity> response = postConferenceExpectingError(uri, request);
 
         Assert.assertEquals(400, response.getStatusCodeValue());
+        Assert.assertEquals("Validation failed for object='conferenceRequestDto'. Error count: 5", response.getBody().getMessage());
     }
 
     @Test
@@ -115,18 +117,20 @@ public class ConferenceControllerIT extends TestUtils {
         URI uri = new URI(baseUri);
         ConferenceRequestDto request = createRequestDto(savedConference.getId(), "Grace's conference", Instant.parse("2018-12-30T19:34:50.63Z"), "Leicester", "All about Grace's fabulous and extra house", "grace");
 
-        ResponseEntity<String> response = postConference(uri, request);
+        ResponseEntity<ErrorEntity> response = postConferenceExpectingError(uri, request);
 
         Assert.assertEquals(400, response.getStatusCodeValue());
+        Assert.assertEquals("Invalid entry in conference field.", response.getBody().getMessage());
     }
 
     @Test
     public void shouldReturn404WhenConferenceToBeDeletedNotFound() throws URISyntaxException {
         URI uri = new URI(baseUri + "/1000000000");
 
-        ResponseEntity<String> response = deleteConference(uri);
+        ResponseEntity<ErrorEntity> response = deleteConferenceExpectingError(uri);
 
         Assert.assertEquals(404, response.getStatusCodeValue());
+        Assert.assertEquals("Conference not found.", response.getBody().getMessage());
     }
 
     @Test
@@ -156,9 +160,10 @@ public class ConferenceControllerIT extends TestUtils {
         URI uri = new URI(baseUri + "/1000000000");
         ConferencePatchRequestDto request = createPatchRequestDto(null, null, null, null, null);
 
-        ResponseEntity<ConferenceResponseDto> response = editConference(uri, request);
+        ResponseEntity<ErrorEntity> response = editConferenceExpectingError(uri, request);
 
         Assert.assertEquals(404, response.getStatusCodeValue());
+        Assert.assertEquals("Conference not found.", response.getBody().getMessage());
     }
 
     @Test
@@ -188,9 +193,17 @@ public class ConferenceControllerIT extends TestUtils {
         });
     }
 
+    private ResponseEntity<ErrorEntity> getSingleConferenceExpectingError(URI uri) {
+        return restTemplate.exchange(uri, GET, null, ErrorEntity.class);
+    }
+
     private ResponseEntity<String> postConference(URI uri, ConferenceRequestDto request) {
         return restTemplate.exchange(uri, POST, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<String>() {
         });
+    }
+
+    private ResponseEntity<ErrorEntity> postConferenceExpectingError(URI uri, ConferenceRequestDto request) {
+        return restTemplate.exchange(uri, POST, new HttpEntity<>(request, passingHeaders), ErrorEntity.class);
     }
 
     private ResponseEntity<String> deleteConference(URI uri) {
@@ -198,13 +211,21 @@ public class ConferenceControllerIT extends TestUtils {
         });
     }
 
+    private ResponseEntity<ErrorEntity> deleteConferenceExpectingError(URI uri) {
+        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(passingHeaders), ErrorEntity.class);
+    }
+
+    private ResponseEntity<ErrorEntity> deleteConferenceExpectingAuthError(URI uri) {
+        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(failingHeaders), ErrorEntity.class);
+    }
+
     private ResponseEntity<ConferenceResponseDto> editConference(URI uri, ConferencePatchRequestDto request) {
         return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<ConferenceResponseDto>() {
         });
     }
 
-    private ResponseEntity<ErrorEntity> deleteConferenceExpectingAuthError(URI uri) {
-        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(failingHeaders), ErrorEntity.class);
+    private ResponseEntity<ErrorEntity> editConferenceExpectingError(URI uri, ConferencePatchRequestDto request) {
+        return restTemplate.exchange(uri, PATCH, new HttpEntity<>(request, passingHeaders), ErrorEntity.class);
     }
 
     private ConferenceRequestDto createRequestDto(Long id, String name, Instant dateTime, String city, String description, String topic) {

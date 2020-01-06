@@ -72,27 +72,30 @@ public class UserControllerIT extends TestUtils {
     public void shouldReturn400WhenAnyRegistrationFieldNull() {
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto(null, null, null, null, null, null, null));
 
-        ResponseEntity<String> response = postUser(request);
+        ResponseEntity<ErrorEntity> response = postUserExpectingError(request);
 
         Assert.assertEquals(400, response.getStatusCodeValue());
+        Assert.assertEquals("Validation failed for object='userRequestDto'. Error count: 6", response.getBody().getMessage());
     }
 
     @Test
     public void shouldReturn400WhenRegistrationPasswordWrongFormat() {
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto("KaramsCoolUsername", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist", savedUser.getId()));
 
-        ResponseEntity<String> response = postUser(request);
+        ResponseEntity<ErrorEntity> response = postUserExpectingError(request);
 
         Assert.assertEquals(400, response.getStatusCodeValue());
+        Assert.assertEquals("Invalid user credentials.", response.getBody().getMessage());
     }
 
     @Test
     public void shouldReturn400WhenRegistrationUsernameWrongFormat() {
         HttpEntity<UserRequestDto> request = new HttpEntity<>(createRequestDto("Karams Cool Username", "Karam", "Kapoor", "KSinghK@gmail.com", "wrong", "Botanist", savedUser.getId()));
 
-        ResponseEntity<String> response = postUser(request);
+        ResponseEntity<ErrorEntity> response = postUserExpectingError(request);
 
         Assert.assertEquals(400, response.getStatusCodeValue());
+        Assert.assertEquals("Invalid user credentials.", response.getBody().getMessage());
     }
 
     @Test
@@ -189,6 +192,7 @@ public class UserControllerIT extends TestUtils {
         ResponseEntity<ErrorEntity> response = getUserByManagerIdAuthError(savedManagerUri);
 
         Assert.assertEquals(401, response.getStatusCodeValue());
+        Assert.assertEquals("User unauthorized to perform action.", response.getBody().getMessage());
     }
 
     @Test
