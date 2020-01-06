@@ -1,13 +1,37 @@
 package com.gradproject2019.webScraper;
 
-public class ScraperOutput {
-    private String urlTitle;
+import java.time.Instant;
 
-    public ScraperOutput(String urlTitle) {
-        this.urlTitle = urlTitle;
+public class ScraperOutput {
+    private String scrapedConferenceTitle;
+    private Instant scrapedDateTime;
+    private String scrapedCity;
+    private String scrapedDescription;
+    private String scrapedTopic;
+
+    public ScraperOutput(String scrapedConferenceTitle, Instant scrapedDateTime, String scrapedCity, String scrapedDescription, String scrapedTopic) {
+        this.scrapedConferenceTitle = scrapedConferenceTitle;
+        this.scrapedDateTime = scrapedDateTime;
+        this.scrapedCity = scrapedCity;
+        this.scrapedDescription = scrapedDescription;
+        this.scrapedTopic = scrapedTopic;
     }
 
-    public String getUrlTitle() { return urlTitle; }
+    public String getScrapedConferenceTitle() { return scrapedConferenceTitle; }
 
+    public Instant getScrapedDateTime() {
+        return scrapedDateTime;
+    }
 
+    public String getScrapedCity() {
+        return scrapedCity;
+    }
+
+    public String getScrapedDescription() {
+        return scrapedDescription;
+    }
+
+    public String getScrapedTopic() {
+        return scrapedTopic;
+    }
 }

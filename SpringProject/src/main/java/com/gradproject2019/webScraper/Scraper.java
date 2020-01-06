@@ -5,7 +5,7 @@ import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
-import javax.swing.text.Document;
+import java.time.Instant;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +13,7 @@ public class Scraper extends WebCrawler {
 
     private final static Pattern Exclusions = Pattern.compile(".*(\\.(css|js|xml|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
     private ScraperOutput scraperOutput;
+
     Scraper() {
 
     }
@@ -39,16 +40,23 @@ public class Scraper extends WebCrawler {
 
             Matcher titleMatcher = titlePattern.matcher(html);
 
-                if (text != null && html != null && titleMatcher.find()) {
-                    String codeGroup = titleMatcher.group(1);
-                    logger.info("Title: {}", codeGroup);
-                    scraperOutput = new ScraperOutput(codeGroup);
-                }
-            };
+            if (text != null && html != null && titleMatcher.find()) {
+                String codeGroup = titleMatcher.group(1);
+                logger.info("Title: {}", codeGroup);
 
-            //TODO: Ensure that the scraper output is not created if values are null or there's an exception
+                String scrapedConferenceTitle = "example title";
+                Instant scrapedDateTime = Instant.now();
+                String scrapedCity = "example city";
+                String scrapedDescription = "example description";
+                String scrapedTopic = "example topic";
 
+                scraperOutput = new ScraperOutput(scrapedConferenceTitle, scrapedDateTime, scrapedCity, scrapedDescription, scrapedTopic);
+            }
         }
+
+        //TODO: Ensure that the scraper output is not created if values are null or there's an exception
+
+    }
 
     public ScraperOutput getScraperOutput() {
         return scraperOutput;
