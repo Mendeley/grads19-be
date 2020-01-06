@@ -1,4 +1,9 @@
 package gradproject2019.userConference.persistence;
+<<<<<<< HEAD:SpringProject/MainApplication/src/main/java/gradproject2019/userConference/persistence/UserConference.java
+=======
+
+import com.gradproject2019.userConference.data.UserConferenceRequestDto;
+>>>>>>> GP19: ES and main app modules working:SpringProject/src/main/java/com/gradproject2019/userConference/persistence/UserConference.java
 
 import gradproject2019.userConference.data.UserConferenceRequestDto;
 import javax.persistence.*;

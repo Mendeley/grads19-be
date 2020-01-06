@@ -7,7 +7,7 @@ import grads19.batch.Conference;
 import grads19.configs.AppConfig;
 import grads19.services.ElasticSearchService;
 import grads19.services.ElasticSearchServiceImpl;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;

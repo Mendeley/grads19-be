@@ -3,6 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
+<<<<<<< HEAD
+=======
+
+>>>>>>> GP19: ES and main app modules working
     <groupId>com.gradproject2019</groupId>
     <artifactId>SpringProject</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -18,7 +22,16 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.9.RELEASE</version>
+<<<<<<< HEAD
         <relativePath/>
     </parent>
 
 </project>
+=======
+        <relativePath/> <!-- lookup parent from repository -->
+
+    </parent>
+
+</project>
+
+>>>>>>> GP19: ES and main app modules working
