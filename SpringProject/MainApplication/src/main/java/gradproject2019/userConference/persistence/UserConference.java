@@ -1,10 +1,10 @@
 package gradproject2019.userConference.persistence;
 
-import com.gradproject2019.userConference.data.UserConferenceRequestDto;
+import gradproject2019.userConference.data.UserConferenceRequestDto;
 
 import javax.persistence.*;
 
-import static com.gradproject2019.userConference.persistence.UserConference.UserConferenceBuilder.anUserConference;
+import static gradproject2019.userConference.persistence.UserConference.UserConferenceBuilder.anUserConference;
 
 @Entity
 @Table(name = "user_conferences")
