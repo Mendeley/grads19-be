@@ -168,10 +168,6 @@ public class UserServiceTest {
         given(authServiceImpl.getTokenById(token.getToken())).willReturn(token);
 
         userServiceImpl.getUsers(token.getToken(), userId2);
-
-        //Assert.assertEquals(qwerty.getId(), response.getId());
-        //Assert.assertEquals(qwerty.getFirstName(), response.getFirstName());
-
     }
 
     private UserRequestDto createUserRequestDto(String email, String username) {

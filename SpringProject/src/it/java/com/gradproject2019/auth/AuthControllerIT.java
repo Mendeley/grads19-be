@@ -88,9 +88,10 @@ public class AuthControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn404WhenTokenDoesNotExist() {
-        ResponseEntity response = logoutExpectingAuthError();
+        ResponseEntity<ErrorEntity> response = logoutExpectingAuthError();
 
         Assert.assertEquals(404, response.getStatusCodeValue());
+        Assert.assertEquals("Token not found.", response.getBody().getMessage());
     }
 
     private ResponseEntity<Token> login() {
@@ -105,8 +106,8 @@ public class AuthControllerIT extends TestUtils {
         return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(passingHeaders), Void.class);
     }
 
-    private ResponseEntity logoutExpectingAuthError() {
-        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(failingHeaders), Void.class);
+    private ResponseEntity<ErrorEntity>  logoutExpectingAuthError() {
+        return restTemplate.exchange(logoutUri, DELETE, new HttpEntity<>(failingHeaders), ErrorEntity.class);
     }
 
     private LoginDto createLoginDto(String username, String password) {
