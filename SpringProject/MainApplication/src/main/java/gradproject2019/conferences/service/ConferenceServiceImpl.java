@@ -1,6 +1,12 @@
 package gradproject2019.conferences.service;
 
+<<<<<<< HEAD:SpringProject/MainApplication/src/main/java/gradproject2019/conferences/service/ConferenceServiceImpl.java
 import gradproject2019.auth.service.AuthServiceImpl;
+=======
+import gradproject2019.auth.exception.TokenNotFoundException;
+import gradproject2019.auth.exception.UserUnauthorisedException;
+import gradproject2019.auth.service.AuthService;
+>>>>>>> GP19: ES and main app modules working:SpringProject/src/main/java/com/gradproject2019/conferences/service/ConferenceServiceImpl.java
 import gradproject2019.conferences.data.ConferencePatchRequestDto;
 import gradproject2019.conferences.data.ConferenceRequestDto;
 import gradproject2019.conferences.data.ConferenceResponseDto;
@@ -8,12 +14,15 @@ import gradproject2019.conferences.exception.ConferenceNotFoundException;
 import gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import gradproject2019.conferences.persistence.Conference;
 import gradproject2019.conferences.repository.ConferenceRepository;
+<<<<<<< HEAD:SpringProject/MainApplication/src/main/java/gradproject2019/conferences/service/ConferenceServiceImpl.java
 import gradproject2019.userConference.service.UserConferenceServiceImpl;
 <<<<<<< HEAD:SpringProject/MainApplication/src/main/java/gradproject2019/conferences/service/ConferenceServiceImpl.java
 
 =======
 >>>>>>> GP19: ES and main app modules working:SpringProject/src/main/java/com/gradproject2019/conferences/service/ConferenceServiceImpl.java
 import org.springframework.context.annotation.Lazy;
+=======
+>>>>>>> GP19: ES and main app modules working:SpringProject/src/main/java/com/gradproject2019/conferences/service/ConferenceServiceImpl.java
 import org.springframework.stereotype.Service;
 import org.springframework.context.annotation.Lazy;
 
@@ -80,6 +89,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         checkNotInPast(conference.getDateTime());
         return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
+
 
     private void checkNotInPast(Instant dateTime) {
         if (dateTime == null) {

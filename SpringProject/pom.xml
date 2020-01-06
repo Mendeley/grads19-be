@@ -3,6 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
+<<<<<<< HEAD
     <groupId>com.gradproject2019</groupId>
     <artifactId>SpringProject</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -22,6 +23,28 @@
         <relativePath/>
     </parent>
 
+=======
+
+    <groupId>com.gradproject2019</groupId>
+    <artifactId>SpringProject</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>SpringProject</name>
+    <description>Project for Spring Boot</description>
+
+    <modules>
+        <module>ElasticSearch</module>
+        <module>MainApplication</module>
+    </modules>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.9.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+
+    </parent>
+
+>>>>>>> GP19: ES and main app modules working
 </project>
 
 
