@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -61,7 +62,7 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn401AndNotSaveWhenUserNotLoggedIn() {
-        ResponseEntity<ErrorEntity> response = saveInterestExpectingAuthError(userConferenceRequestDto);
+        ResponseEntity<ErrorEntity> response = saveInterestExpectingError(userConferenceRequestDto, failingHeaders);
 
         Assert.assertEquals(401, response.getStatusCodeValue());
         Assert.assertEquals("User unauthorized to perform action.", response.getBody().getMessage());
@@ -71,7 +72,7 @@ public class UserConferenceControllerIT extends TestUtils {
     public void shouldReturn404AndNotSaveWhenConferenceDoesNotExist() {
         userConferenceRepository.deleteAll();
         conferenceRepository.deleteAll();
-        ResponseEntity<ErrorEntity> response = saveInterestExpectingError(userConferenceRequestDto);
+        ResponseEntity<ErrorEntity> response = saveInterestExpectingError(userConferenceRequestDto, passingHeaders);
 
         Assert.assertEquals(404, response.getStatusCodeValue());
         Assert.assertEquals("Conference not found.", response.getBody().getMessage());
@@ -79,7 +80,7 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn403AndNotSaveWhenUserForbidden() {
-        ResponseEntity<ErrorEntity> response = saveInterestExpectingError(new UserConferenceRequestDto(2L, savedConference.getId()));
+        ResponseEntity<ErrorEntity> response = saveInterestExpectingError(new UserConferenceRequestDto(2L, savedConference.getId()), passingHeaders);
 
         Assert.assertEquals(403, response.getStatusCodeValue());
         Assert.assertEquals("User forbidden to perform action.", response.getBody().getMessage());
@@ -87,7 +88,7 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn409AndNotSaveWhenConferenceAlreadyFavourited() {
-        ResponseEntity<ErrorEntity> response = saveInterestExpectingError(userConferenceRequestDto);
+        ResponseEntity<ErrorEntity> response = saveInterestExpectingError(userConferenceRequestDto, passingHeaders);
 
         Assert.assertEquals(409, response.getStatusCodeValue());
         Assert.assertEquals("Conference already favourited.", response.getBody().getMessage());
@@ -114,7 +115,7 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn401WhenUserRequestingConferenceNotLoggedIn() {
-        ResponseEntity<ErrorEntity> response = getConferencesByUserIdExpectingAuthError();
+        ResponseEntity<ErrorEntity> response = getConferencesByUserIdExpectingError(failingHeaders);
 
         Assert.assertEquals(401, response.getStatusCodeValue());
         Assert.assertEquals("User unauthorized to perform action.", response.getBody().getMessage());
@@ -130,7 +131,7 @@ public class UserConferenceControllerIT extends TestUtils {
 
     @Test
     public void shouldReturn401WhenUserRequestingDeleteNotLoggedIn() {
-        ResponseEntity<ErrorEntity> response = deleteUserConferencesExpectingAuthError();
+        ResponseEntity<ErrorEntity> response = deleteUserConferencesExpectingError(baseDeleteUri, failingHeaders);
 
         Assert.assertEquals(401, response.getStatusCodeValue());
         Assert.assertEquals("User unauthorized to perform action.", response.getBody().getMessage());
@@ -140,7 +141,7 @@ public class UserConferenceControllerIT extends TestUtils {
     public void shouldReturn404WhenUserConferenceNotFound() throws URISyntaxException {
         URI uri = new URI(baseUri.toString() + "/" + Integer.MAX_VALUE);
 
-        ResponseEntity<ErrorEntity> response = deleteUserConferencesExpectingError(uri);
+        ResponseEntity<ErrorEntity> response = deleteUserConferencesExpectingError(uri, passingHeaders);
 
         Assert.assertEquals(404, response.getStatusCodeValue());
         Assert.assertEquals("Conference has not been favourited yet.", response.getBody().getMessage());
@@ -150,31 +151,23 @@ public class UserConferenceControllerIT extends TestUtils {
         return restTemplate.exchange(baseUri, POST, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<UserConferenceResponseDto>() {});
     }
 
-    private ResponseEntity<ErrorEntity> saveInterestExpectingAuthError(UserConferenceRequestDto request) {
-        return restTemplate.exchange(baseUri, POST, new HttpEntity<>(request, failingHeaders), new ParameterizedTypeReference<ErrorEntity>() {});
-    }
-
-    private ResponseEntity<ErrorEntity> saveInterestExpectingError(UserConferenceRequestDto request) {
-        return restTemplate.exchange(baseUri, POST, new HttpEntity<>(request, passingHeaders), new ParameterizedTypeReference<ErrorEntity>() {});
+    private ResponseEntity<ErrorEntity> saveInterestExpectingError(UserConferenceRequestDto request, HttpHeaders headers) {
+        return restTemplate.exchange(baseUri, POST, new HttpEntity<>(request, headers), new ParameterizedTypeReference<ErrorEntity>() {});
     }
 
     private ResponseEntity<List<ConferenceResponseDto>> getConferencesByUserId() {
         return restTemplate.exchange(baseUri, GET, new HttpEntity<>(passingHeaders), new ParameterizedTypeReference<List<ConferenceResponseDto>>() {});
     }
 
-    private ResponseEntity<ErrorEntity> getConferencesByUserIdExpectingAuthError() {
-        return restTemplate.exchange(baseUri, GET, new HttpEntity<>(failingHeaders), new ParameterizedTypeReference<ErrorEntity>() {});
+    private ResponseEntity<ErrorEntity> getConferencesByUserIdExpectingError(HttpHeaders headers) {
+        return restTemplate.exchange(baseUri, GET, new HttpEntity<>(headers), new ParameterizedTypeReference<ErrorEntity>() {});
     }
 
     private ResponseEntity deleteUserConferences() {
         return restTemplate.exchange(baseDeleteUri, DELETE, new HttpEntity<>(passingHeaders), Void.class);
     }
 
-    private ResponseEntity<ErrorEntity> deleteUserConferencesExpectingAuthError() {
-        return restTemplate.exchange(baseDeleteUri, DELETE, new HttpEntity<>(failingHeaders), new ParameterizedTypeReference<ErrorEntity>() {});
-    }
-
-    private ResponseEntity<ErrorEntity> deleteUserConferencesExpectingError(URI uri) {
-        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(passingHeaders), new ParameterizedTypeReference<ErrorEntity>() {});
+    private ResponseEntity<ErrorEntity> deleteUserConferencesExpectingError(URI uri, HttpHeaders headers) {
+        return restTemplate.exchange(uri, DELETE, new HttpEntity<>(headers), new ParameterizedTypeReference<ErrorEntity>() {});
     }
 }
