@@ -14,25 +14,26 @@ import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
+@RequestMapping("/user-conferences")
 public class UserConferenceController {
 
     @Autowired
     private UserConferenceService userConferenceService;
 
-    @PostMapping(path = "/user-conferences")
+    @PostMapping
     public ResponseEntity<UserConferenceResponseDto> saveInterest(@RequestHeader("Authorization") UUID token,
                                                                   @RequestBody UserConferenceRequestDto userConferenceRequestDto) {
         UserConferenceResponseDto newInterest = userConferenceService.saveInterest(token, userConferenceRequestDto);
         return ResponseEntity.ok(newInterest);
     }
 
-    @GetMapping(path = "/user-conferences")
+    @GetMapping
     public ResponseEntity<List<ConferenceResponseDto>> getConferenceByUserId(@RequestHeader("Authorization") UUID token) {
         List<ConferenceResponseDto> conferences = userConferenceService.getConferenceByUserId(token);
         return ResponseEntity.ok(conferences);
     }
 
-    @DeleteMapping(path = "/user-conferences/{conferenceId}")
+    @DeleteMapping(path = "/{conferenceId}")
     public ResponseEntity<Void> deleteInterest(@RequestHeader("Authorization") UUID token, @PathVariable("conferenceId") Long conferenceId) {
         userConferenceService.deleteInterest(token, conferenceId);
         return ResponseEntity.noContent().build();

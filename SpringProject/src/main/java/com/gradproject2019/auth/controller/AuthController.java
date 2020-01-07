@@ -13,18 +13,19 @@ import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
-    @PostMapping(path = "/auth/login")
+    @PostMapping(path = "/login")
     public ResponseEntity<Token> login(@Valid @RequestBody LoginDto loginDto) {
         Token token = authService.login(loginDto);
         return ResponseEntity.ok(token);
     }
 
-    @DeleteMapping(path = "/auth/logout")
+    @DeleteMapping(path = "/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") UUID token) {
         authService.logout(token);
         return ResponseEntity.noContent().build();
