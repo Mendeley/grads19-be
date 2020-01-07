@@ -1,7 +1,6 @@
 package gradproject2019.userConference.persistence;
 
 import gradproject2019.userConference.data.UserConferenceRequestDto;
-
 import javax.persistence.*;
 
 import static gradproject2019.userConference.persistence.UserConference.UserConferenceBuilder.anUserConference;
