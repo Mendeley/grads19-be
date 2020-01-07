@@ -1,14 +1,7 @@
 package gradproject2019.users.service;
 
-<<<<<<< HEAD:SpringProject/MainApplication/src/main/java/gradproject2019/users/service/UserServiceImpl.java
 import gradproject2019.auth.service.AuthService;
-<<<<<<< HEAD:SpringProject/MainApplication/src/main/java/gradproject2019/users/service/UserServiceImpl.java
 
-=======
->>>>>>> GP19: ES and main app modules working:SpringProject/src/main/java/com/gradproject2019/users/service/UserServiceImpl.java
-=======
-import gradproject2019.auth.service.AuthServiceImpl;
->>>>>>> GP19: ES and main app modules working:SpringProject/src/main/java/com/gradproject2019/users/service/UserServiceImpl.java
 import gradproject2019.users.data.UserPatchRequestDto;
 import gradproject2019.users.data.UserRequestDto;
 import gradproject2019.users.data.UserResponseDto;
