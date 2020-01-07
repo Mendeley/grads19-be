@@ -58,6 +58,7 @@ public class UserConferenceServiceImpl implements UserConferenceService {
         return conferenceResponseDtos;
     }
 
+
     private void checkUserAuthorised(UUID token) {
         try {
             authService.checkTokenExists(token);
