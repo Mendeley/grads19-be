@@ -11,7 +11,7 @@ import java.time.Instant;
 
 import static org.springframework.data.elasticsearch.annotations.FieldType.*;
 
-@Document(indexName = "conferences", type = "conference")
+@Document(indexName = "conferences", type = "_doc")
 public class EsConference {
     @Id
     private Long id;
@@ -27,7 +27,7 @@ public class EsConference {
     public EsConference() {
     }
 
-    public EsConference(Long id, String name, Instant dateTime, String city, String description, String topic) {
+    public EsConference(Long id, String name, String city, String description, String topic) {
         this.id = id;
         this.name = name;
         //this.dateTime = dateTime;

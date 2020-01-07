@@ -5,16 +5,21 @@ import com.gradproject2019.conferences.persistance.EsConference;
 import com.gradproject2019.conferences.repository.ConferenceSearchRepository;
 import com.gradproject2019.conferences.service.ConferenceService;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.Instant;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +27,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ElasticsearchIT {
+
+    @LocalServerPort
+    int testServerPort;
+    private String baseUri;
+
+    @Before
+    public void setUp() {
+        baseUri = "http://localhost:" + testServerPort + "/conferences";
+    }
+
+    @Autowired
+    public TestRestTemplate restTemplate;
+
     @Autowired
     private ConferenceService conferenceService;
 
@@ -82,7 +100,7 @@ public class ElasticsearchIT {
 //    }
 
     @Test
-    public void testFindByTopic() {
+    public void testFindByTopic() throws URISyntaxException {
         EsConference esConference = new EsConference();
         esConference.setId(1L);
         esConference.setName("SophiaCon");
@@ -94,38 +112,38 @@ public class ElasticsearchIT {
         EsConference esConference2 = new EsConference();
         esConference2.setId(2L);
         esConference2.setName("SophiaCon2");
-        //esConference2.setDateTime(Instant.now());
+        //esConference.setDateTime(Instant.now());
         esConference2.setCity("London2");
         esConference2.setDescription("A conference2");
         esConference2.setTopic("Sophia2");
 
-        repository.save(esConference);
-        repository.save(esConference2);
 
-        List<ConferenceResponseDto> conferences = conferenceService.findByConferenceTopic("Sophia", 1, 1);
+        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
-        Assert.assertNotNull(conferences);
-        Assert.assertEquals(2, conferences.size());
+        EsConference savedConference = repository.save(esConference);
+        //EsConference savedConference2 = repository.save(esConference2);
+        URI uri = new URI(baseUri + "/?topic=Sophia&page?from=0&size=1");
+        //URI uri2 = new URI(baseUri );
+
+
+        //List<ConferenceResponseDto> conferences = conferenceService.findByConferenceTopic("Sophia", 1, 1);
+
+        ResponseEntity<ConferenceResponseDto> response = getEsConferenceList(uri);
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(200, response.getStatusCodeValue());
+        //Assert.assertEquals(1, response.size());
+        //Assert.assertEquals(esConference.getName(), response.getBody().get(0).getName());
     }
-
-
-    private EsConference createConference(Long id, String name, String city, String description, String topic) {
-        EsConference conference = new EsConference();
-        conference.setId(id);
-        conference.setName(name);
-        conference.setCity(city);
-        conference.setDescription(description);
-        conference.setTopic(topic);
-        return conference;
-    }
-
-//    private void recreateIndex() {
-//        if (template.indexExists(EsConference.class)) {
-//            template.deleteIndex(EsConference.class);
-//            template.createIndex(EsConference.class);
-//        }
+//
+//    private ResponseEntity<List<ConferenceResponseDto>> getEsConferenceList(URI uri) {
+//        return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<List<ConferenceResponseDto>>() {});
+//
 //    }
 
-
+    private ResponseEntity<ConferenceResponseDto> getEsConferenceList(URI uri) {
+        return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ConferenceResponseDto>() {});
+    }
 
 }
+
