@@ -17,7 +17,7 @@ public class ScraperServiceImpl implements ScraperService {
 
         config.setCrawlStorageFolder("/tmp/crawler4j");
 
-        config.setPolitenessDelay(1000);
+        config.setPolitenessDelay(100);
 
         config.setMaxDepthOfCrawling(0);
 
