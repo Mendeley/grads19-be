@@ -1,8 +1,8 @@
 package com.gradproject2019.userConference.service;
 
-import com.gradproject2019.auth.service.AuthServiceImpl;
+import com.gradproject2019.auth.service.AuthService;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
-import com.gradproject2019.conferences.service.ConferenceServiceImpl;
+import com.gradproject2019.conferences.service.ConferenceService;
 import com.gradproject2019.userConference.data.UserConferenceRequestDto;
 import com.gradproject2019.userConference.data.UserConferenceResponseDto;
 import com.gradproject2019.userConference.exception.UserAlreadyInterestedException;
@@ -11,7 +11,6 @@ import com.gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.userConference.repository.UserConferenceRepository;
 import com.gradproject2019.users.exception.UserForbiddenException;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,21 +21,21 @@ import java.util.stream.Collectors;
 public class UserConferenceServiceImpl implements UserConferenceService {
 
     private UserConferenceRepository userConferenceRepository;
-    private AuthServiceImpl authServiceImpl;
-    private ConferenceServiceImpl conferenceServiceImpl;
+    private AuthService authService;
+    private ConferenceService conferenceService;
 
-    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthServiceImpl authServiceImpl, @Lazy ConferenceServiceImpl conferenceServiceImpl) {
+    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthService authService, @Lazy ConferenceService conferenceService) {
         this.userConferenceRepository = userConferenceRepository;
-        this.authServiceImpl = authServiceImpl;
-        this.conferenceServiceImpl = conferenceServiceImpl;
+        this.authService = authService;
+        this.conferenceService = conferenceService;
     }
 
     @Override
     public UserConferenceResponseDto saveInterest(UUID token, UserConferenceRequestDto userConferenceRequestDto) {
         UserConference userConference = new UserConference().from(userConferenceRequestDto);
 
-        checkUserMatchesUserConference(authServiceImpl.getTokenById(token).getUserId(), userConference.getUserId());
-        conferenceServiceImpl.getConferenceById(userConference.getConferenceId());
+        checkUserMatchesUserConference(authService.getTokenById(token).getUserId(), userConference.getUserId());
+        conferenceService.getConferenceById(userConference.getConferenceId());
         if (userConferenceExists(userConference.getUserId(), userConference.getConferenceId())) {
             throw new UserAlreadyInterestedException();
         }
@@ -45,7 +44,7 @@ public class UserConferenceServiceImpl implements UserConferenceService {
 
     @Override
     public void deleteInterest(UUID token, Long conferenceId) {
-        Long userId = authServiceImpl.getTokenById(token).getUserId();
+        Long userId = authService.getTokenById(token).getUserId();
         if (!userConferenceExists(userId, conferenceId)) {
             throw new UserConferenceNotFoundException();
         }
@@ -54,9 +53,9 @@ public class UserConferenceServiceImpl implements UserConferenceService {
 
     @Override
     public List<ConferenceResponseDto> getConferenceByUserId(UUID token) {
-        Long userId = authServiceImpl.getTokenById(token).getUserId();
+        Long userId = authService.getTokenById(token).getUserId();
         return userConferenceRepository.findByUserId(userId).stream()
-                .map(userConference -> conferenceServiceImpl.getConferenceById(userConference.getConferenceId()))
+                .map(userConference -> conferenceService.getConferenceById(userConference.getConferenceId()))
                 .collect(Collectors.toList());
     }
 
@@ -70,6 +69,7 @@ public class UserConferenceServiceImpl implements UserConferenceService {
         }
     }
 
+    @Override
     public void deleteByConferenceId(Long conferenceId) {
         userConferenceRepository.deleteByConferenceId(conferenceId);
     }

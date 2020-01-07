@@ -20,13 +20,11 @@ import static com.gradproject2019.users.data.UserRequestDto.from;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-
-    private final AuthService authService;
-
     public static final String PASSWORD_VALIDATION_PATTERN = "((?=.*[a-z])(?=.*[0-9])(?=.*[!?\\#@^&£$*+;:~])(?=.*[A-Z]).{8,16})";
     public static final String EMAIL_VALIDATION_PATTERN = "^[a-zA-Z0-9\\.\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\_\\`]+@[a-zA-Z0-9]+\\.[\\.A-Za-z]{1,10}";
     public static final String USERNAME_VALIDATION_PATTERN = "^[a-zA-Z0-9]*$";
+    private final UserRepository userRepository;
+    private final AuthService authService;
 
     public UserServiceImpl(UserRepository userRepository, AuthService authService) {
         this.userRepository = userRepository;
@@ -68,13 +66,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDto> getUsers(UUID token, Long managerId) {
         checkTokenMatchesUser(token, managerId);
-        if (managerId != null && managerId>0) {
+        if (managerId != null && managerId > 0) {
             return userRepository.findByManagerId(managerId).stream()
                     .map(user -> new UserResponseDto().from(user))
                     .collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            return userRepository.findByUsername(username).get();
+        }
+        throw new com.gradproject2019.auth.exception.InvalidCredentialsException();
     }
 
     private void checkValidSave(UserRequestDto userRequestDto) {

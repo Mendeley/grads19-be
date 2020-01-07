@@ -3,6 +3,7 @@ package com.gradproject2019.users.service;
 import com.gradproject2019.users.data.UserPatchRequestDto;
 import com.gradproject2019.users.data.UserRequestDto;
 import com.gradproject2019.users.data.UserResponseDto;
+import com.gradproject2019.users.persistence.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,4 +19,6 @@ public interface UserService {
     UserResponseDto findUserById(Long userId, UUID token);
 
     List<UserResponseDto> getUsers(UUID token, Long managerId);
+
+    User findByUsername(String username);
 }
