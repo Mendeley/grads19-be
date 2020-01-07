@@ -67,7 +67,7 @@ public class UserConferenceServiceTest {
         given(userConferenceRepository.findByUserId(1L)).willReturn(conferencesByUserId);
         given(conferenceService.getConferenceById(1L)).willReturn(conference);
 
-        List<ConferenceResponseDto> conferences = userConferenceService.getConferenceByUserId(token.getToken(), userConference.getUserId());
+        List<ConferenceResponseDto> conferences = userConferenceService.getConferenceByUserId(token.getToken());
 
         assertThat(conferences).hasSize(1);
         assertThat(conferences.get(0).getId()).isEqualTo(userConference.getConferenceId());

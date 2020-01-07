@@ -8,14 +8,17 @@ import gradproject2019.conferences.service.ConferenceService;
 import gradproject2019.userConference.data.UserConferenceRequestDto;
 import gradproject2019.userConference.data.UserConferenceResponseDto;
 import gradproject2019.userConference.exception.UserAlreadyInterestedException;
+import gradproject2019.userConference.exception.UserConferenceNotFoundException;
 import gradproject2019.userConference.persistence.UserConference;
 import gradproject2019.userConference.repository.UserConferenceRepository;
+import gradproject2019.users.exception.UserForbiddenException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserConferenceServiceImpl implements UserConferenceService {
@@ -46,17 +49,22 @@ public class UserConferenceServiceImpl implements UserConferenceService {
     }
 
     @Override
-    public List<ConferenceResponseDto> getConferenceByUserId(UUID token, Long userId) {
-        checkUserAuthorised(token);
-        List<ConferenceResponseDto> conferenceResponseDtos = new ArrayList<>();
-        List<UserConference> userConferences = userConferenceRepository.findByUserId(userId);
-
-        for (UserConference userConference : userConferences) {
-            conferenceResponseDtos.add(conferenceService.getConferenceById(userConference.getConferenceId()));
+    public void deleteInterest(UUID token, Long conferenceId) {
+        Long userId = authService.getTokenById(token).getUserId();
+        if (!userConferenceExists(userId, conferenceId)) {
+            throw new UserConferenceNotFoundException();
         }
-
-        return conferenceResponseDtos;
+        userConferenceRepository.deleteById(userId, conferenceId);
     }
+
+    @Override
+    public List<ConferenceResponseDto> getConferenceByUserId(UUID token) {
+        Long userId = authService.getTokenById(token).getUserId();
+        return userConferenceRepository.findByUserId(userId).stream()
+                .map(userConference -> conferenceService.getConferenceById(userConference.getConferenceId()))
+                .collect(Collectors.toList());
+    }
+
 
 
     private void checkUserAuthorised(UUID token) {
@@ -65,5 +73,17 @@ public class UserConferenceServiceImpl implements UserConferenceService {
         } catch (TokenNotFoundException e) {
             throw new UserUnauthorisedException();
         }
+    }
+
+    private boolean userConferenceExists(Long userId, Long conferenceId) {
+        return userConferenceRepository.exists(userId, conferenceId) > 0;
+    }
+    private void checkUserMatchesUserConference(Long retrievedId, Long userId) {
+        if (!retrievedId.equals(userId)) {
+            throw new UserForbiddenException();
+        }
+    }
+    public void deleteByConferenceId(Long conferenceId) {
+        userConferenceRepository.deleteByConferenceId(conferenceId);
     }
 }
