@@ -49,5 +49,5 @@ public class UserController {
     public ResponseEntity<List<UserResponseDto>> getUsers(@RequestHeader("Authorization") UUID token, @RequestParam("manager_id") Long managerId) {
         List<UserResponseDto> userResponseDto = userService.getUsers(token, managerId);
         return ResponseEntity.ok(userResponseDto);
-    };
+    }
 }
