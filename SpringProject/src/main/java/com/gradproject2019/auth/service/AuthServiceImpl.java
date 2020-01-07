@@ -9,6 +9,7 @@ import com.gradproject2019.auth.repository.AuthRepository;
 import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.service.UserService;
 import com.gradproject2019.utils.AuthUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -20,7 +21,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
 
-    public AuthServiceImpl(AuthRepository authRepository, UserService userService) {
+    public AuthServiceImpl(AuthRepository authRepository, @Lazy UserService userService) {
         this.authRepository = authRepository;
         this.userService = userService;
     }

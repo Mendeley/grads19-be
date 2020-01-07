@@ -8,6 +8,7 @@ import com.gradproject2019.users.exception.*;
 import com.gradproject2019.users.persistence.User;
 import com.gradproject2019.users.repository.UserRepository;
 import com.gradproject2019.utils.AuthUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AuthService authService;
 
-    public UserServiceImpl(UserRepository userRepository, AuthService authService) {
+    public UserServiceImpl(UserRepository userRepository, @Lazy AuthService authService) {
         this.userRepository = userRepository;
         this.authService = authService;
     }
