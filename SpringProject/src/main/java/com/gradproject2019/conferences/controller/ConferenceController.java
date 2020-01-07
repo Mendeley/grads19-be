@@ -29,9 +29,9 @@ public class ConferenceController {
             //@RequestParam String name,
             //@RequestParam String city,
             //@RequestParam String description,
-            @RequestParam String topic,
-            @RequestParam Integer page,
-            @RequestParam Integer size) {
+            @RequestParam(required = false) String topic,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
 
         List<ConferenceResponseDto> conferences;
 
