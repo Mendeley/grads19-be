@@ -59,15 +59,6 @@ public class UserConferenceServiceImpl implements UserConferenceService {
                 .collect(Collectors.toList());
     }
 
-
-    private void checkUserAuthorised(UUID token) {
-        try {
-            authService.checkTokenExists(token);
-        } catch (TokenNotFoundException e) {
-            throw new UserUnauthorisedException();
-        }
-    }
-
     private boolean userConferenceExists(Long userId, Long conferenceId) {
         return userConferenceRepository.exists(userId, conferenceId) > 0;
     }
@@ -78,7 +69,6 @@ public class UserConferenceServiceImpl implements UserConferenceService {
         }
     }
 
-    @Override
     public void deleteByConferenceId(Long conferenceId) {
         userConferenceRepository.deleteByConferenceId(conferenceId);
     }

@@ -1,8 +1,6 @@
 package gradproject2019.conferences.service;
 
-
 import gradproject2019.auth.service.AuthService;
-import gradproject2019.auth.service.AuthServiceImpl;
 import gradproject2019.conferences.data.ConferencePatchRequestDto;
 import gradproject2019.conferences.data.ConferenceRequestDto;
 import gradproject2019.conferences.data.ConferenceResponseDto;
@@ -30,7 +28,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     private UserConferenceService userConferenceService;
 
-    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl, @Lazy UserConferenceService userConferenceService) {
+    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthService authService, @Lazy UserConferenceService userConferenceService) {
         this.conferenceRepository = conferenceRepository;
         this.authService = authService;
         this.userConferenceService = userConferenceService;

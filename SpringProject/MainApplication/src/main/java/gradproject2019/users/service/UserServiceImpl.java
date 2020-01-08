@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         if (user.isPresent()) {
             return user.get();
         }
-        throw new InvalidCredentialsException();
+        throw new gradproject2019.auth.exception.InvalidCredentialsException();
     }
 
     private void checkValidSave(UserRequestDto userRequestDto) {
