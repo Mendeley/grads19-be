@@ -2,7 +2,11 @@ version: '2.0'
 
 services:
   mysql:
+<<<<<<< HEAD
     image: mysql:8.0
+=======
+    image: mysql:5.7
+>>>>>>> e91eff9a6641017b5b7b0b0d88e0dcee4005479f
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=conference_finder
