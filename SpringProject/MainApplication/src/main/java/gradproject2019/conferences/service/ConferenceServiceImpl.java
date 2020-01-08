@@ -78,6 +78,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         return new ConferenceResponseDto().from(conferenceRepository.saveAndFlush(conference));
     }
 
+
     private void checkNotInPast(Instant dateTime) {
         if (dateTime == null) {
             return;
@@ -86,6 +87,7 @@ public class ConferenceServiceImpl implements ConferenceService {
             throw new InvalidConferenceFieldException();
         }
     }
+
 
     private void checkConferenceExists(Long conferenceId) {
         if (!conferenceRepository.existsById(conferenceId)) {

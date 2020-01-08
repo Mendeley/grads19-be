@@ -1,7 +1,6 @@
 package gradproject2019.users.service;
 
 import gradproject2019.auth.service.AuthService;
-
 import gradproject2019.users.data.UserPatchRequestDto;
 import gradproject2019.users.data.UserRequestDto;
 import gradproject2019.users.data.UserResponseDto;
