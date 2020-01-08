@@ -9,7 +9,7 @@ COPY pom.xml .
 RUN ./mvnw dependency:go-offline -B
 COPY . .
 # compile  the code and package
-RUN ./mvnw package \
+RUN ./mvnw package -Dmaven.test.skip=true\
     && unzip target/*.jar  -d target/dependency
 FROM openjdk:11-jdk
 VOLUME /tmp
