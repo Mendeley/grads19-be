@@ -1,6 +1,6 @@
 spring:
   application:
-    name: SpringProject
+    name: MainApplication
   datasource:
     platform: mysql
     driverClassName: com.mysql.cj.jdbc.Driver

@@ -1,4 +1,4 @@
-package com.gradproject2019.utils;
+package gradproject2019.utils;
 
 import gradproject2019.auth.persistence.Token;
 import gradproject2019.auth.repository.AuthRepository;
@@ -10,7 +10,6 @@ import gradproject2019.userConference.repository.UserConferenceRepository;
 import gradproject2019.userConference.service.UserConferenceService;
 import gradproject2019.users.persistence.User;
 import gradproject2019.users.repository.UserRepository;
-import gradproject2019.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;

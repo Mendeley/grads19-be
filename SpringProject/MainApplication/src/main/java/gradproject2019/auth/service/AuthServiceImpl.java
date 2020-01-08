@@ -5,7 +5,7 @@ import gradproject2019.auth.exception.TokenNotFoundException;
 import gradproject2019.auth.exception.UserUnauthorisedException;
 import gradproject2019.auth.persistence.Token;
 import gradproject2019.auth.repository.AuthRepository;
-import gradproject2019.users.exception.InvalidCredentialsException;
+import gradproject2019.auth.exception.InvalidCredentialsException;
 import gradproject2019.users.persistence.User;
 import gradproject2019.users.service.UserService;
 import gradproject2019.utils.AuthUtils;

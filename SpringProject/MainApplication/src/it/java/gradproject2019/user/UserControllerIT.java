@@ -1,12 +1,12 @@
-package com.gradproject2019.user;
+package gradproject2019.user;
 
 import gradproject2019.auth.persistence.Token;
 import gradproject2019.users.data.UserPatchRequestDto;
 import gradproject2019.users.data.UserRequestDto;
 import gradproject2019.users.data.UserResponseDto;
 import gradproject2019.users.persistence.User;
-import com.gradproject2019.utils.ErrorEntity;
-import com.gradproject2019.utils.TestUtils;
+import gradproject2019.utils.ErrorEntity;
+import gradproject2019.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

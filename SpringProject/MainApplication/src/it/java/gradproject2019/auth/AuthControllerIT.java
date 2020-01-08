@@ -1,4 +1,4 @@
-package gradproject2019;
+package gradproject2019.auth;
 
 import gradproject2019.auth.data.LoginDto;
 import gradproject2019.auth.persistence.Token;

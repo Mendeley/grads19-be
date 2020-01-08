@@ -1,4 +1,4 @@
-USE conference_finder2;
+USE conference_finder;
 
 DROP TABLE IF EXISTS conferences;
 

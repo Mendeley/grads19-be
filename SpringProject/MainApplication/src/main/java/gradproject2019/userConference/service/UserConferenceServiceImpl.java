@@ -1,7 +1,5 @@
 package gradproject2019.userConference.service;
 
-import gradproject2019.auth.exception.TokenNotFoundException;
-import gradproject2019.auth.exception.UserUnauthorisedException;
 import gradproject2019.auth.service.AuthService;
 import gradproject2019.conferences.data.ConferenceResponseDto;
 import gradproject2019.conferences.service.ConferenceService;
@@ -12,7 +10,7 @@ import gradproject2019.userConference.exception.UserConferenceNotFoundException;
 import gradproject2019.userConference.persistence.UserConference;
 import gradproject2019.userConference.repository.UserConferenceRepository;
 import gradproject2019.users.exception.UserForbiddenException;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +24,7 @@ public class UserConferenceServiceImpl implements UserConferenceService {
     private AuthService authService;
     private ConferenceService conferenceService;
 
-    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthService authService, ConferenceService conferenceService) {
+    public UserConferenceServiceImpl(UserConferenceRepository userConferenceRepository, AuthService authService, @Lazy ConferenceService conferenceService) {
         this.userConferenceRepository = userConferenceRepository;
         this.authService = authService;
         this.conferenceService = conferenceService;
@@ -34,17 +32,14 @@ public class UserConferenceServiceImpl implements UserConferenceService {
 
     @Override
     public UserConferenceResponseDto saveInterest(UUID token, UserConferenceRequestDto userConferenceRequestDto) {
-        UserConference userConference = new UserConferenceRequestDto().from(userConferenceRequestDto);
+        UserConference userConference = new UserConference().from(userConferenceRequestDto);
 
-        checkUserAuthorised(token);
-
-        try {
-            UserConference savedUserConference = userConferenceRepository.saveAndFlush(userConference);
-            new UserConferenceResponseDto();
-            return UserConferenceResponseDto.from(savedUserConference);
-        } catch (DuplicateKeyException e) {
+        checkUserMatchesUserConference(authService.getTokenById(token).getUserId(), userConference.getUserId());
+        conferenceService.getConferenceById(userConference.getConferenceId());
+        if (userConferenceExists(userConference.getUserId(), userConference.getConferenceId())) {
             throw new UserAlreadyInterestedException();
         }
+        return new UserConferenceResponseDto().from(userConferenceRepository.saveAndFlush(userConference));
     }
 
     @Override

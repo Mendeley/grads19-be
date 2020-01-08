@@ -1,4 +1,4 @@
-package gradproject2019;
+package gradproject2019.conferences;
 
 import gradproject2019.conferences.data.ConferencePatchRequestDto;
 import gradproject2019.conferences.data.ConferenceRequestDto;

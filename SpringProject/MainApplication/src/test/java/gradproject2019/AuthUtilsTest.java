@@ -1,4 +1,4 @@
-package java.com.gradproject2019;
+package gradproject2019;
 
 import gradproject2019.users.service.UserServiceImpl;
 import gradproject2019.utils.AuthUtils;
