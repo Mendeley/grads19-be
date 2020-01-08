@@ -1,6 +1,5 @@
 package grads19.mappers;
 
-
 import grads19.batch.ConferenceDTO;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -9,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static grads19.batch.ConferenceDTO.ConferenceDTOBuilder.aConferenceDTO;
-
 
 @Component
 public class ConferenceMapper implements RowMapper<ConferenceDTO> {
@@ -28,7 +26,4 @@ public class ConferenceMapper implements RowMapper<ConferenceDTO> {
                 .withTopic(topic)
                 .build();
     }
-
-
-
 }
