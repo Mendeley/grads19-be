@@ -46,7 +46,7 @@ public class UserConference {
     }
 
     public UserConference from(UserConferenceRequestDto userConferenceRequestDto) {
-        return anUserConference()
+        return UserConferenceBuilder.anUserConference()
                 .withUserId(userConferenceRequestDto.getUserId())
                 .withConferenceId(userConferenceRequestDto.getConferenceId())
                 .build();
