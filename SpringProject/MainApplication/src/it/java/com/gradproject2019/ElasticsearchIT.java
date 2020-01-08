@@ -3,7 +3,6 @@ package com.gradproject2019.conferences;
 import com.gradproject2019.conferences.data.ConferenceResponseDto;
 import com.gradproject2019.conferences.persistance.EsConference;
 import com.gradproject2019.conferences.repository.ConferenceSearchRepository;
-import com.gradproject2019.conferences.service.ConferenceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

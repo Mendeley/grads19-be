@@ -1,6 +1,6 @@
-package com.gradproject2019.conferences.repository;
+package gradproject2019.elasticsearch.repository;
 
-import com.gradproject2019.conferences.persistance.EsConference;
+import gradproject2019.elasticsearch.persistence.EsConference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;

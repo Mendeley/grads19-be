@@ -1,6 +1,7 @@
 package gradproject2019.conferences.data;
 
 import gradproject2019.conferences.persistence.Conference;
+import gradproject2019.elasticsearch.persistence.EsConference;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;

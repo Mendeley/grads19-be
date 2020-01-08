@@ -1,15 +1,7 @@
-package com.gradproject2019.conferences.persistance;
+package gradproject2019.elasticsearch.persistence;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import java.time.Instant;
-
-import static org.springframework.data.elasticsearch.annotations.FieldType.*;
 
 @Document(indexName = "conferences", type = "_doc")
 public class EsConference {

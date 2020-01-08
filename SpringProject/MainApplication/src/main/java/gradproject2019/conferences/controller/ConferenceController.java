@@ -3,6 +3,7 @@ package gradproject2019.conferences.controller;
 import gradproject2019.conferences.data.ConferencePatchRequestDto;
 import gradproject2019.conferences.data.ConferenceRequestDto;
 import gradproject2019.conferences.data.ConferenceResponseDto;
+
 import gradproject2019.conferences.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.hibernate.annotations.common.util.StringHelper.isNotEmpty;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
@@ -23,7 +23,6 @@ public class ConferenceController {
 
     @Autowired
     private ConferenceService conferenceService;
-
 
     @GetMapping(path = "/conferences")
     public ResponseEntity<List<ConferenceResponseDto>> getAllConferences(

@@ -10,7 +10,9 @@ import gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import gradproject2019.conferences.persistence.Conference;
 import gradproject2019.conferences.repository.ConferenceRepository;
 import gradproject2019.userConference.service.UserConferenceServiceImpl;
+import gradproject2019.elasticsearch.repository.ConferenceSearchRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.context.annotation.Lazy;
