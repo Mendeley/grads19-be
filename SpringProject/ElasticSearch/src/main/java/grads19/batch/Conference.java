@@ -1,6 +1,8 @@
 package grads19.batch;
 
-public class Conference {
+import java.io.Serializable;
+
+public class Conference implements Serializable {
     private String name;
     private String city;
     private String description;
@@ -16,16 +18,32 @@ public class Conference {
         this.topic = topic;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     public void setCity(String city) {
         this.city = city;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTopic() {
+        return topic;
     }
 
     public void setTopic(String topic) {
