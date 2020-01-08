@@ -15,7 +15,6 @@ import gradproject2019.users.exception.UserForbiddenException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -66,7 +65,6 @@ public class UserConferenceServiceImpl implements UserConferenceService {
     }
 
 
-
     private void checkUserAuthorised(UUID token) {
         try {
             authService.checkTokenExists(token);
@@ -78,11 +76,14 @@ public class UserConferenceServiceImpl implements UserConferenceService {
     private boolean userConferenceExists(Long userId, Long conferenceId) {
         return userConferenceRepository.exists(userId, conferenceId) > 0;
     }
+
     private void checkUserMatchesUserConference(Long retrievedId, Long userId) {
         if (!retrievedId.equals(userId)) {
             throw new UserForbiddenException();
         }
     }
+
+    @Override
     public void deleteByConferenceId(Long conferenceId) {
         userConferenceRepository.deleteByConferenceId(conferenceId);
     }

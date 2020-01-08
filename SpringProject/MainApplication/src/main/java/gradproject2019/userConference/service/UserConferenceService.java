@@ -16,4 +16,6 @@ public interface UserConferenceService {
     List<ConferenceResponseDto> getConferenceByUserId(UUID token);
 
     void deleteInterest(UUID token, Long conferenceId);
+
+    void deleteByConferenceId(Long conferenceId);
 }

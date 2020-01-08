@@ -18,4 +18,5 @@ public interface ConferenceService {
     void deleteConference(UUID token, Long conferenceId);
 
     ConferenceResponseDto editConference(UUID token, Long conferenceId, ConferencePatchRequestDto conferencePatchRequestDto);
+
 }
