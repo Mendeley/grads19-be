@@ -4,6 +4,7 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
+import org.jsoup.Jsoup;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,40 +29,29 @@ public class Scraper extends WebCrawler {
         String url = page.getWebURL().getURL();
         logger.info("URL: {}", url);
 
-        if (page.getParseData() instanceof HtmlParseData) {
-
-            Pattern p = Pattern.compile("<h1>(\\S+)</h1>");
-            Matcher m = p.matcher("<h1>StringBuffer</h1>");
-
-            if (m.find()) {
-
-                String codeGroup = m.group(1);
-                logger.info(codeGroup);
-            }
-        }
+            //***Pattern Matcher Version***
 
         if (page.getParseData() instanceof HtmlParseData) {
-            String text = "<h1>#Be More Digital Conference 2020</h1>";
-            String noSpaces = text.replaceAll("\\s+","");
 
-            Pattern titlePattern = Pattern.compile("<h1>(\\S+)</h1>");
-            Matcher titleMatcher = titlePattern.matcher(noSpaces);
+            HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
+
+            //String text = htmlParseData.getText();
+            String html = htmlParseData.getHtml();
+
+            //String text = "<h1 class=\"listing-hero-title\" data-automation=\"listing-title\">#BeMoreDigital Conference 2020</h1>";
+
+            Pattern titlePattern = Pattern.compile("<h1([^>]*)>(.*)</h1>");
+            Matcher titleMatcher = titlePattern.matcher(html);
 
             if (titleMatcher.find()) {
                 logger.info("Match");
-                String tester = titleMatcher.group(1);
+                String tester = titleMatcher.group(2);
                 logger.info("Tester: {}", tester);
+
             } else {
-                logger.info("No match");
+                logger.info("No match #2");
             }
 
-//                HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
-//
-//                String text = htmlParseData.getText();
-//                String html = htmlParseData.getHtml();
-
-            //logger.info("Text: {}", text);
-            //logger.info("Html: {}", html);
 //
 //            if (text != null && html != null && titleMatcher.find()) {
 //                String codeGroup = titleMatcher.group(1);
