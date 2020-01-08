@@ -1,6 +1,7 @@
 package gradproject2019.conferences.service;
 
 
+import gradproject2019.auth.service.AuthService;
 import gradproject2019.auth.service.AuthServiceImpl;
 import gradproject2019.conferences.data.ConferencePatchRequestDto;
 import gradproject2019.conferences.data.ConferenceRequestDto;
@@ -9,8 +10,7 @@ import gradproject2019.conferences.exception.ConferenceNotFoundException;
 import gradproject2019.conferences.exception.InvalidConferenceFieldException;
 import gradproject2019.conferences.persistence.Conference;
 import gradproject2019.conferences.repository.ConferenceRepository;
-import gradproject2019.userConference.service.UserConferenceServiceImpl;
-
+import gradproject2019.userConference.service.UserConferenceService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +26,19 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     private ConferenceRepository conferenceRepository;
 
-    private AuthServiceImpl authServiceImpl;
+    private AuthService authService;
 
-    private UserConferenceServiceImpl userConferenceServiceImpl;
+    private UserConferenceService userConferenceService;
 
-    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl, @Lazy UserConferenceServiceImpl userConferenceServiceImpl) {
+    public ConferenceServiceImpl(ConferenceRepository conferenceRepository, AuthServiceImpl authServiceImpl, @Lazy UserConferenceService userConferenceService) {
         this.conferenceRepository = conferenceRepository;
-        this.authServiceImpl = authServiceImpl;
-        this.userConferenceServiceImpl = userConferenceServiceImpl;
+        this.authService = authService;
+        this.userConferenceService = userConferenceService;
     }
 
     @Override
     public ConferenceResponseDto editConference(UUID token, Long conferenceId, ConferencePatchRequestDto conferencePatch) {
-        authServiceImpl.getTokenById(token);
+        authService.getTokenById(token);
         checkConferenceExists(conferenceId);
         checkNotInPast(conferencePatch.getDateTime());
 
@@ -56,9 +56,9 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     @Override
     public void deleteConference(UUID token, Long conferenceId) {
-        authServiceImpl.getTokenById(token);
+        authService.getTokenById(token);
         checkConferenceExists(conferenceId);
-        userConferenceServiceImpl.deleteByConferenceId(conferenceId);
+        userConferenceService.deleteByConferenceId(conferenceId);
         conferenceRepository.deleteById(conferenceId);
     }
 
@@ -71,7 +71,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     @Override
     public ConferenceResponseDto saveConference(UUID token, ConferenceRequestDto conferenceRequestDto) {
-        authServiceImpl.getTokenById(token);
+        authService.getTokenById(token);
         Conference conference = from(conferenceRequestDto);
 
         checkNotInPast(conference.getDateTime());
