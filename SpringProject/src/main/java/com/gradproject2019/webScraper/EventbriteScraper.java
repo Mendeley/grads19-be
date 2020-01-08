@@ -4,17 +4,16 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
-import org.jsoup.Jsoup;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Scraper extends WebCrawler {
+public class EventbriteScraper extends WebCrawler {
 
     private final static Pattern Exclusions = Pattern.compile(".*(\\.(css|js|xml|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
     private ScraperOutput scraperOutput;
 
-    Scraper() {
+    EventbriteScraper() {
 
     }
 
@@ -35,22 +34,57 @@ public class Scraper extends WebCrawler {
 
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
 
-            //String text = htmlParseData.getText();
             String html = htmlParseData.getHtml();
 
-            //String text = "<h1 class=\"listing-hero-title\" data-automation=\"listing-title\">#BeMoreDigital Conference 2020</h1>";
-
-            Pattern titlePattern = Pattern.compile("<h1([^>]*)>(.*)</h1>");
+            Pattern titlePattern = Pattern.compile("<h1([^>]*)title(.*)>(.*)</h1>");
             Matcher titleMatcher = titlePattern.matcher(html);
 
             if (titleMatcher.find()) {
                 logger.info("Match");
-                String tester = titleMatcher.group(2);
-                logger.info("Tester: {}", tester);
+                String tester = titleMatcher.group(3);
+                logger.info("Title: {}", tester);
 
             } else {
-                logger.info("No match #2");
+                logger.info("No title match");
             }
+
+            Pattern timePattern = Pattern.compile("<time([^>]*)>(.*)</time>");
+            Matcher timeMatcher = timePattern.matcher(html);
+
+            if (timeMatcher.find()) {
+                logger.info("Match");
+                String tester = timeMatcher.group(2);
+                logger.info("Time: {}", tester);
+
+            } else {
+                logger.info("No time match");
+            }
+
+            Pattern cityPattern = Pattern.compile("<div([^>]*)event-details__data(.*)>(.*)</div>");
+            Matcher cityMatcher = cityPattern.matcher(html);
+
+            if (cityMatcher.find()) {
+                logger.info("Match");
+                String tester = cityMatcher.group(3);
+                logger.info("City: {}", tester);
+
+            } else {
+                logger.info("No city match");
+            }
+
+            Pattern descriptionPattern = Pattern.compile("<div([^>]*)content(.*)>(.*)</div>");
+            Matcher descriptionMatcher = descriptionPattern.matcher(html);
+
+            if (descriptionMatcher.find()) {
+                logger.info("Match");
+                String tester = descriptionMatcher.group(3);
+                logger.info("Description: {}", tester);
+
+            } else {
+                logger.info("No description match");
+            }
+
+
 
 //
 //            if (text != null && html != null && titleMatcher.find()) {

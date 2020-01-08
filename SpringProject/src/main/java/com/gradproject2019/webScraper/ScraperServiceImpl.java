@@ -36,7 +36,7 @@ public class ScraperServiceImpl implements ScraperService {
 
         int numberOfCrawlers = 1;
 
-        CrawlController.WebCrawlerFactory<Scraper> factory = Scraper::new;
+        CrawlController.WebCrawlerFactory<EventbriteScraper> factory = EventbriteScraper::new;
 
         controller.start(factory, numberOfCrawlers);
     }

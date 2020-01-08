@@ -1,7 +1,6 @@
 package com.gradproject2019;
 
-import com.gradproject2019.webScraper.Scraper;
-import com.gradproject2019.webScraper.ScraperOutput;
+import com.gradproject2019.webScraper.EventbriteScraper;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
@@ -10,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.Instant;
-
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
@@ -19,7 +16,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class ScraperTest {
 
     @InjectMocks
-    private Scraper scraper;
+    private EventbriteScraper scraper;
 
     private Page constructTestPage(String conferenceURL) {
         WebURL url = new WebURL();
