@@ -7,8 +7,9 @@ import gradproject2019.auth.persistence.Token;
 import gradproject2019.auth.repository.AuthRepository;
 import gradproject2019.users.exception.InvalidCredentialsException;
 import gradproject2019.users.persistence.User;
-import gradproject2019.users.repository.UserRepository;
+import gradproject2019.users.service.UserService;
 import gradproject2019.utils.AuthUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -18,18 +19,16 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public AuthServiceImpl(AuthRepository authRepository, UserRepository userRepository) {
+    public AuthServiceImpl(AuthRepository authRepository, @Lazy UserService userService) {
         this.authRepository = authRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
     public Token login(LoginDto loginDto) {
-        User user = userRepository
-                .findByUsername(loginDto.getUsername())
-                .orElseThrow(InvalidCredentialsException::new);
+        User user = userService.findByUsername(loginDto.getUsername());
         checkPasswordHashMatch(loginDto.getPassword(), user.getPassword());
         return authRepository.saveAndFlush(createToken(user.getId()));
     }
