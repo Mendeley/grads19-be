@@ -122,7 +122,7 @@ public class ElasticsearchIT {
 
         EsConference savedConference = repository.save(esConference);
         //EsConference savedConference2 = repository.save(esConference2);
-        URI uri = new URI(baseUri + "/?topic=Sophia&page?from=0&size=1");
+        URI uri = new URI(baseUri + "?topic=Sophia&page=1&size=10");
         //URI uri2 = new URI(baseUri );
 
 
