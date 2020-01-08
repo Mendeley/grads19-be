@@ -1,17 +1,9 @@
 package gradproject2019.userConference.persistence;
-<<<<<<< HEAD:SpringProject/MainApplication/src/main/java/gradproject2019/userConference/persistence/UserConference.java
+
 
 import gradproject2019.userConference.data.UserConferenceRequestDto;
 import javax.persistence.*;
 
-import static gradproject2019.userConference.persistence.UserConference.UserConferenceBuilder.anUserConference;
-=======
-
-
-import gradproject2019.userConference.data.UserConferenceRequestDto;
-
-import javax.persistence.*;
->>>>>>> e91eff9a6641017b5b7b0b0d88e0dcee4005479f:SpringProject/src/main/java/com/gradproject2019/userConference/persistence/UserConference.java
 
 @Entity
 @Table(name = "user_conferences")
