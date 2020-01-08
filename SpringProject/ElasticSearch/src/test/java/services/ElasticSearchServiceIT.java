@@ -51,5 +51,4 @@ class ElasticSearchServiceIT {
 
         assertThat(result).isEqualTo(true);
     }
-
 }

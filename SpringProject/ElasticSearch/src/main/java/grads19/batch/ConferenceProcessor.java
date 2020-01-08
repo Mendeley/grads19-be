@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import static grads19.batch.Conference.ConferenceBuilder.aConference;
 
-
 @Component
 public class ConferenceProcessor implements ItemProcessor<ConferenceDTO, Conference> {
 
