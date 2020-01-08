@@ -1,9 +1,9 @@
 package com.gradproject2019.userConference;
 
-import com.gradproject2019.conferences.data.ConferenceResponseDto;
-import com.gradproject2019.userConference.data.UserConferenceRequestDto;
-import com.gradproject2019.userConference.data.UserConferenceResponseDto;
-import com.gradproject2019.userConference.persistence.UserConference;
+import gradproject2019.conferences.data.ConferenceResponseDto;
+import gradproject2019.userConference.data.UserConferenceRequestDto;
+import gradproject2019.userConference.data.UserConferenceResponseDto;
+import gradproject2019.userConference.persistence.UserConference;
 import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
 import org.junit.After;
@@ -22,7 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import static com.gradproject2019.userConference.data.UserConferenceRequestDto.UserConferenceRequestDtoBuilder.anUserConferenceRequestDto;
+import static gradproject2019.userConference.data.UserConferenceRequestDto.UserConferenceRequestDtoBuilder.anUserConferenceRequestDto;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 

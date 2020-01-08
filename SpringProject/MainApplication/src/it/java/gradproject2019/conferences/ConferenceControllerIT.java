@@ -1,11 +1,11 @@
-package com.gradproject2019.conferences;
+package gradproject2019;
 
-import com.gradproject2019.conferences.data.ConferencePatchRequestDto;
-import com.gradproject2019.conferences.data.ConferenceRequestDto;
-import com.gradproject2019.conferences.data.ConferenceResponseDto;
-import com.gradproject2019.conferences.persistence.Conference;
-import com.gradproject2019.utils.ErrorEntity;
-import com.gradproject2019.utils.TestUtils;
+import gradproject2019.conferences.data.ConferencePatchRequestDto;
+import gradproject2019.conferences.data.ConferenceRequestDto;
+import gradproject2019.conferences.data.ConferenceResponseDto;
+import gradproject2019.conferences.persistence.Conference;
+import gradproject2019.utils.ErrorEntity;
+import gradproject2019.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
