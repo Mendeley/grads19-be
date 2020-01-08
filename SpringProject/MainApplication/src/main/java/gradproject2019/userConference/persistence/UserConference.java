@@ -1,9 +1,7 @@
 package gradproject2019.userConference.persistence;
 
-
 import gradproject2019.userConference.data.UserConferenceRequestDto;
 import javax.persistence.*;
-
 
 @Entity
 @Table(name = "user_conferences")
