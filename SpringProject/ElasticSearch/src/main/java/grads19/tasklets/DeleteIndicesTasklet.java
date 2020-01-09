@@ -1,6 +1,5 @@
 package grads19.tasklets;
 
-
 import grads19.services.ElasticSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

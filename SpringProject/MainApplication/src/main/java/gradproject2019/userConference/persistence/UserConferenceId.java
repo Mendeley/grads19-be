@@ -1,8 +1,6 @@
 package gradproject2019.userConference.persistence;
 
-
 import java.io.Serializable;
-
 
 public class UserConferenceId implements Serializable {
 
