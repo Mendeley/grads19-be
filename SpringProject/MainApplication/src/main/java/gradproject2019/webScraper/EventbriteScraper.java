@@ -33,6 +33,9 @@ public class EventbriteScraper extends WebCrawler {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
 
             String html = htmlParseData.getHtml();
+            String text = htmlParseData.getText();
+
+            String htmlNoPTag = html.replace("<p>","").replace("</p>", "");
 
             if (html != null ) {
 
@@ -48,8 +51,8 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("No title match");
                 }
 
-                Pattern dateTimePattern = Pattern.compile("<time([^>]*)>(.*)</time>");
-                Matcher dateTimeMatcher = dateTimePattern.matcher(html);
+                Pattern dateTimePattern = Pattern.compile("<time class=\"clrfix\" data-automation=\"event-details-time\"> <p>(.*)</p> </time>");
+                Matcher dateTimeMatcher = dateTimePattern.matcher(htmlNoPTag);
 
                 if (dateTimeMatcher.find()) {
                     logger.info("Match");
@@ -60,22 +63,20 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("No dateTime match");
                 }
 
-                Pattern timePattern = Pattern.compile(".*(([01]?[0-9]|2[0-3]):[0-5][0-9] - ([01]?[0-9]|2[0-3]):[0-5][0-9])");
-                Matcher timeMatcher = timePattern.matcher("<p class=\"listing-panel-info__details-datetime is-truncated\">Thu, 5 March 2020, 09:00 - 18.30  GMT</p>");
+                Pattern timePattern = Pattern.compile(".*(([01]?[0-9]|2[0-3]):[0-5][0-9])");
+                Matcher timeMatcher = timePattern.matcher(text);
 
                 if (timeMatcher.find()) {
                     logger.info("Match");
-                    String scrapedStartTime = timeMatcher.group(1);
-                    String scrapedEndTime = timeMatcher.group(1);
-                    logger.info("Start Time: {}", scrapedStartTime);
-                    logger.info("End time: {}", scrapedEndTime);
+                    String scrapedTime = timeMatcher.group(1);
+                    logger.info("Start Time: {}", scrapedTime);
 
                 } else {
                     logger.info("No time match");
                 }
 
-                Pattern cityPattern = Pattern.compile("<div([^>]*)event-details__data(.*)>(.*)</div>");
-                Matcher cityMatcher = cityPattern.matcher(html);
+                Pattern cityPattern = Pattern.compile("<div([^>]*)event-details(.*)>(.*)</div>");
+                Matcher cityMatcher = cityPattern.matcher(htmlNoPTag);
 
                 if (cityMatcher.find()) {
                     logger.info("Match");
