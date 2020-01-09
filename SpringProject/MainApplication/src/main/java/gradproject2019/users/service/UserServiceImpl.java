@@ -1,5 +1,6 @@
 package gradproject2019.users.service;
 
+import gradproject2019.auth.exception.InvalidCredentialsAuthException;
 import gradproject2019.auth.service.AuthService;
 import gradproject2019.users.data.UserPatchRequestDto;
 import gradproject2019.users.data.UserRequestDto;
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
         if (user.isPresent()) {
             return user.get();
         }
-        throw new gradproject2019.auth.exception.InvalidCredentialsException();
+        throw new InvalidCredentialsAuthException();
     }
 
     private void checkValidSave(UserRequestDto userRequestDto) {
