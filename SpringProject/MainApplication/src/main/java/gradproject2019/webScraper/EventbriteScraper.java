@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class EventbriteScraper extends WebCrawler {
 
     private final static Pattern Exclusions = Pattern.compile(".*(\\.(css|js|xml|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
-    private ScraperOutput scraperOutput;
+    private ScraperOutput scraperOutput = new ScraperOutput();
 
     EventbriteScraper() {
 
@@ -46,21 +46,23 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("Match");
                     String scrapedConferenceTitle = titleMatcher.group(3);
                     logger.info("Title: {}", scrapedConferenceTitle);
+                    scraperOutput.setScrapedConferenceTitle(scrapedConferenceTitle);
 
                 } else {
                     logger.info("No title match");
                 }
 
-                Pattern dateTimePattern = Pattern.compile("<time class=\"clrfix\" data-automation=\"event-details-time\"> <p>(.*)</p> </time>");
-                Matcher dateTimeMatcher = dateTimePattern.matcher(htmlNoPTag);
+                Pattern datePattern = Pattern.compile("<time class=\"clrfix\" data-automation=\"event-details-time\"> <p>(.*)</p> </time>");
+                Matcher dateMatcher = datePattern.matcher(htmlNoPTag);
 
-                if (dateTimeMatcher.find()) {
+                if (dateMatcher.find()) {
                     logger.info("Match");
-                    String scrapedDateTime = dateTimeMatcher.group(2);
-                    logger.info("dateTime: {}", scrapedDateTime);
+                    String scrapedDate = dateMatcher.group(2);
+                    logger.info("Date: {}", scrapedDate);
+                    scraperOutput.setScrapedDate(scrapedDate);
 
                 } else {
-                    logger.info("No dateTime match");
+                    logger.info("No date match");
                 }
 
                 Pattern timePattern = Pattern.compile(".*(([01]?[0-9]|2[0-3]):[0-5][0-9])");
@@ -70,6 +72,7 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("Match");
                     String scrapedTime = timeMatcher.group(1);
                     logger.info("Start Time: {}", scrapedTime);
+                    scraperOutput.setScrapedTime(scrapedTime);
 
                 } else {
                     logger.info("No time match");
@@ -82,6 +85,7 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("Match");
                     String scrapedCity = cityMatcher.group(3);
                     logger.info("City: {}", scrapedCity);
+                    scraperOutput.setScrapedCity(scrapedCity);
 
                 } else {
                     logger.info("No city match");
@@ -94,6 +98,7 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("Match");
                     String scrapedDescription = descriptionMatcher.group(3);
                     logger.info("Description: {}", scrapedDescription);
+                    scraperOutput.setScrapedDescription(scrapedDescription);
 
                 } else {
                     logger.info("No description match");
@@ -103,7 +108,4 @@ public class EventbriteScraper extends WebCrawler {
         //TODO: Ensure that the scraper output is not created if values are null or there's an exception
     }
 
-    public ScraperOutput getScraperOutput() {
-        return scraperOutput;
-    }
 }

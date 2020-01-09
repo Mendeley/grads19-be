@@ -4,6 +4,7 @@ import gradproject2019.webScraper.EventbriteScraper;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
+import gradproject2019.webScraper.ScraperOutput;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ public class ScraperTest {
 
     @InjectMocks
     private EventbriteScraper scraper;
+    private ScraperOutput scraperOutput;
 
     private Page constructTestPage(String conferenceURL) {
         WebURL url = new WebURL();
@@ -30,27 +32,27 @@ public class ScraperTest {
 
     private HtmlParseData createHtmlParseData() {
         HtmlParseData testData = new HtmlParseData();
-        testData.setHtml("<h1>set some html here TOMORROW</h1>");
-        testData.setText("test text");
+        testData.setHtml("<h1>test html/h1>");
+        testData.setText("#BeMoreDigital Conference 2020 Thu, 5 March 2020, 09:00 – 18:30 GMT");
 
         return testData;
     }
 
-//    @Test
-//    public void shouldScrapeValidURL() throws Exception {
-//        String validConferenceURL = "https://www.eventbrite.co.uk/e/bemoredigital-conference-2020-tickets-75866405461?aff=ebdssbdestsearch";
-//
-//        Page testPage = constructTestPage(validConferenceURL);
-//
-//        scraper.visit(testPage);
-//        ScraperOutput actualOutput = scraper.getScraperOutput();
-//
-//        assertThat(actualOutput.getScrapedConferenceTitle()).isEqualTo("example title");
-//        assertThat(actualOutput.getScrapedDateTime()).isEqualTo(Instant.now());
-//        assertThat(actualOutput.getScrapedCity()).isEqualTo("example city");
-//        assertThat(actualOutput.getScrapedDescription()).isEqualTo("example description");
-//        assertThat(actualOutput.getScrapedTopic()).isEqualTo("example topic");
-//    }
+    @Test
+    public void shouldScrapeValidURL() throws Exception {
+        String validConferenceURL = "https://www.eventbrite.co.uk/e/bemoredigital-conference-2020-tickets-75866405461?aff=ebdssbdestsearch";
+
+        Page testPage = constructTestPage(validConferenceURL);
+
+        scraper.visit(testPage);
+        ScraperOutput actualOutput = scraperOutput;
+
+        assertThat(actualOutput.getScrapedConferenceTitle()).isEqualTo("example title");
+        assertThat(actualOutput.getScrapedDate()).isEqualTo("example date");
+        assertThat(actualOutput.getScrapedTime()).isEqualTo("example time");
+        assertThat(actualOutput.getScrapedCity()).isEqualTo("example city");
+        assertThat(actualOutput.getScrapedDescription()).isEqualTo("example description");
+    }
 
     @Test
     public void shouldVisitReturnsFalse() throws Exception {
