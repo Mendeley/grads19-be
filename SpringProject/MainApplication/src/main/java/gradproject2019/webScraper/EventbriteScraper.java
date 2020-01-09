@@ -60,13 +60,15 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("No dateTime match");
                 }
 
-                Pattern timePattern = Pattern.compile("^[0-2][0-9]:[0-5][0-9]$");
-                Matcher timeMatcher = timePattern.matcher(html);
+                Pattern timePattern = Pattern.compile(".*(([01]?[0-9]|2[0-3]):[0-5][0-9] - ([01]?[0-9]|2[0-3]):[0-5][0-9])");
+                Matcher timeMatcher = timePattern.matcher("<p class=\"listing-panel-info__details-datetime is-truncated\">Thu, 5 March 2020, 09:00 - 18.30  GMT</p>");
 
                 if (timeMatcher.find()) {
                     logger.info("Match");
-                    String scrapedTime = timeMatcher.group(2);
-                    logger.info("Time: {}", scrapedTime);
+                    String scrapedStartTime = timeMatcher.group(1);
+                    String scrapedEndTime = timeMatcher.group(1);
+                    logger.info("Start Time: {}", scrapedStartTime);
+                    logger.info("End time: {}", scrapedEndTime);
 
                 } else {
                     logger.info("No time match");
