@@ -8,7 +8,7 @@ COPY pom.xml .
 # resolves all project dependencies locally
 RUN ./mvnw dependency:go-offline -B
 COPY . .
-# compile  the code and package
+# compile the code and package
 RUN ./mvnw package \
     && unzip target/*.jar  -d target/dependency
 FROM openjdk:11-jdk
@@ -18,3 +18,4 @@ COPY --from=Build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=Build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=Build ${DEPENDENCY}/BOOT-INF/classes /app
 EXPOSE 8080
+ENTRYPOINT ["java","-cp","app:app/lib/*","com.gradproject2019.Application"]
