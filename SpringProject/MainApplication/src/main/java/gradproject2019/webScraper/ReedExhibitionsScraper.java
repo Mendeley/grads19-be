@@ -8,12 +8,11 @@ import edu.uci.ics.crawler4j.url.WebURL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EventbriteScraper extends WebCrawler {
-
+public class ReedExhibitionsScraper extends WebCrawler {
     private final static Pattern Exclusions = Pattern.compile(".*(\\.(css|js|xml|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
     private ScraperOutput scraperOutput = new ScraperOutput();
 
-    EventbriteScraper() {
+    ReedExhibitionsScraper() {
 
     }
 

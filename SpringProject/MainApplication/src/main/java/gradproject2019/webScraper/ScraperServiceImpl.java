@@ -36,9 +36,26 @@ public class ScraperServiceImpl implements ScraperService {
 
         int numberOfCrawlers = 1;
 
-        CrawlController.WebCrawlerFactory<EventbriteScraper> factory = EventbriteScraper::new;
+        if (url.contains("eventbrite")) {
 
-        controller.start(factory, numberOfCrawlers);
+            CrawlController.WebCrawlerFactory<EventbriteScraper> factory = EventbriteScraper::new;
+            controller.start(factory, numberOfCrawlers);
+
+        }
+
+        if (url.contains("reedexhibitions")) {
+
+            CrawlController.WebCrawlerFactory<ReedExhibitionsScraper> factory = ReedExhibitionsScraper::new;
+            controller.start(factory, numberOfCrawlers);
+        }
+
+        else {
+
+            CrawlController.WebCrawlerFactory<GenericScraper> factory = GenericScraper::new;
+            controller.start(factory, numberOfCrawlers);
+        }
+
+
     }
 
 }
