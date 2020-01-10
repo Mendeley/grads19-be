@@ -2,6 +2,6 @@ package gradproject2019.webScraper;
 
 public interface ScraperService{
 
-    void startScraper(String url) throws Exception;
+    ScraperResponseDto startScraper(String url) throws Exception;
 
 }

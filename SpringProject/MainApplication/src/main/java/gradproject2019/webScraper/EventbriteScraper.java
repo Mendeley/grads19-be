@@ -108,4 +108,8 @@ public class EventbriteScraper extends WebCrawler {
         //TODO: Ensure that the scraper output is not created if values are null or there's an exception
     }
 
+    public ScraperOutput getScraperOutput() {
+        return scraperOutput;
+    }
+
 }

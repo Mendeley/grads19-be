@@ -39,7 +39,7 @@ public class ScraperTest {
     }
 
     @Test
-    public void shouldScrapeValidURL() throws Exception {
+    public void shouldScrapeValidURL() {
         String validConferenceURL = "https://www.eventbrite.co.uk/e/bemoredigital-conference-2020-tickets-75866405461?aff=ebdssbdestsearch";
 
         Page testPage = constructTestPage(validConferenceURL);

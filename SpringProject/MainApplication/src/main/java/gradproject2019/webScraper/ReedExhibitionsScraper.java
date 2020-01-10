@@ -38,7 +38,7 @@ public class ReedExhibitionsScraper extends WebCrawler {
 
             if (html != null ) {
 
-                Pattern titlePattern = Pattern.compile("<h1([^>]*)title(.*)>(.*)</h1>");
+                Pattern titlePattern = Pattern.compile("<div([^>]*)data-quickedit-field-id(.*)>(.*)</div>");
                 Matcher titleMatcher = titlePattern.matcher(html);
 
                 if (titleMatcher.find()) {
@@ -51,12 +51,12 @@ public class ReedExhibitionsScraper extends WebCrawler {
                     logger.info("No title match");
                 }
 
-                Pattern datePattern = Pattern.compile("<div([^>]*)listing-hero-header(.*)>(.*)</div>");
+                Pattern datePattern = Pattern.compile("<div([^>]*)field--name-event-formatted-date(.*)>(.*)</div>");
                 Matcher dateMatcher = datePattern.matcher(html);
 
                 if (dateMatcher.find()) {
                     logger.info("Match");
-                    String scrapedDate = dateMatcher.group(2);
+                    String scrapedDate = dateMatcher.group(3);
                     logger.info("Date: {}", scrapedDate);
                     scraperOutput.setScrapedDate(scrapedDate);
 
@@ -64,25 +64,17 @@ public class ReedExhibitionsScraper extends WebCrawler {
                     logger.info("No date match");
                 }
 
-                Pattern timePattern = Pattern.compile(".*(([01]?[0-9]|2[0-3]):[0-5][0-9])");
-                Matcher timeMatcher = timePattern.matcher(text);
+                String scrapedTime ="";
+                logger.info("Start Time: {}", scrapedTime);
+                scraperOutput.setScrapedTime(scrapedTime);
 
-                if (timeMatcher.find()) {
-                    logger.info("Match");
-                    String scrapedTime = timeMatcher.group(1);
-                    logger.info("Start Time: {}", scrapedTime);
-                    scraperOutput.setScrapedTime(scrapedTime);
 
-                } else {
-                    logger.info("No time match");
-                }
-
-                Pattern cityPattern = Pattern.compile("<div([^>]*)event-details(.*)>(.*)</div>");
+                Pattern cityPattern = Pattern.compile("<span([^>]*)taxonomy-term([^>]*)count-1([^>]*)>(.*)</span>");
                 Matcher cityMatcher = cityPattern.matcher(html);
 
                 if (cityMatcher.find()) {
                     logger.info("Match");
-                    String scrapedCity = cityMatcher.group(3);
+                    String scrapedCity = cityMatcher.group(4);
                     logger.info("City: {}", scrapedCity);
                     scraperOutput.setScrapedCity(scrapedCity);
 
@@ -90,12 +82,12 @@ public class ReedExhibitionsScraper extends WebCrawler {
                     logger.info("No city match");
                 }
 
-                Pattern descriptionPattern = Pattern.compile("<div([^>]*)content(.*)>(.*)</div>");
+                Pattern descriptionPattern = Pattern.compile("<div([^>]*)field--name-field-short-descriptio([^>]*)>([^>]*)<p><span><span><strong><span><span>(.*)</span></span></strong></span></span></p>");
                 Matcher descriptionMatcher = descriptionPattern.matcher(html);
 
                 if (descriptionMatcher.find()) {
                     logger.info("Match");
-                    String scrapedDescription = descriptionMatcher.group(3);
+                    String scrapedDescription = descriptionMatcher.group(4);
                     logger.info("Description: {}", scrapedDescription);
                     scraperOutput.setScrapedDescription(scrapedDescription);
 
@@ -105,6 +97,9 @@ public class ReedExhibitionsScraper extends WebCrawler {
             }
         }
         //TODO: Ensure that the scraper output is not created if values are null or there's an exception
+    }
+    public ScraperOutput getScraperOutput() {
+        return scraperOutput;
     }
 
 }

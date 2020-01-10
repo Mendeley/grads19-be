@@ -83,4 +83,7 @@ public class GenericScraper extends WebCrawler {
             }
         }
     }
+    public ScraperOutput getScraperOutput() {
+        return scraperOutput;
+    }
 }

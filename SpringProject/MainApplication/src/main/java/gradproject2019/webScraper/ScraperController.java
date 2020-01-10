@@ -20,8 +20,7 @@ public class ScraperController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<ConferenceResponseDto> getConferenceURL(@RequestHeader("Authorization") UUID token, @RequestBody String conferenceURL) throws Exception {
-        scraperService.startScraper(conferenceURL);
-        ConferenceResponseDto responseDto = ConferenceResponseDto.ConferenceResponseDtoBuilder.aConferenceResponseDto().build();
+        ConferenceResponseDto responseDto = scraperService.startScraper(conferenceURL);
 
         return ResponseEntity.ok(responseDto);
     }
