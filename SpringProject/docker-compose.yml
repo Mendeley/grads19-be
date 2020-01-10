@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  mysql:
+    build: ./MainApplication/src/main/resources
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+  java:
+    build: .
+    command: java -cp app:app/lib/* gradproject2019.Application
+    ports:
+      - 8080:8080
+    restart: on-failure
+    depends_on:
+      - mysql
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
+    container_name: elasticsearch
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=docker-cluster
+      - cluster.initial_master_nodes=elasticsearch
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    expose:
+      - "9200"
+    depends_on:
+      - mysql
+  react:
+    build: ../../grads19-weblet
+    command: npm start
+    ports:
+      - 3000:3000
+    depends_on:
+      - java
+      - mysql

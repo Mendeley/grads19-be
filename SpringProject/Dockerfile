@@ -4,12 +4,13 @@ ENV MAVEN_CONFIG=''
 WORKDIR /app
 # installing mvnw wrapper
 RUN mvn -N io.takari:maven:wrapper -Dmaven=${MAVEN_VERSION} && ./mvnw --version
-COPY pom.xml .
+COPY ./MainApplication/pom.xml .
+COPY ./pom.xml ../
 # resolves all project dependencies locally
 RUN ./mvnw dependency:go-offline -B
-COPY . .
+COPY ./MainApplication .
 # compile  the code and package
-RUN ./mvnw package -Dmaven.test.skip=true\
+RUN ./mvnw package\
     && unzip target/*.jar  -d target/dependency
 FROM openjdk:11-jdk
 VOLUME /tmp
