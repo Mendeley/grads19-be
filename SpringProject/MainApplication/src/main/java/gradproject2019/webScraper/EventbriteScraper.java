@@ -52,12 +52,12 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("No title match");
                 }
 
-                Pattern datePattern = Pattern.compile("<div([^>]*)listing-hero-header(.*)>(.*)</div>");
+                Pattern datePattern = Pattern.compile("<time([^>]*)>([^>]*)<p>(.*)</p>");
                 Matcher dateMatcher = datePattern.matcher(html);
 
                 if (dateMatcher.find()) {
                     logger.info("Match");
-                    String scrapedDate = dateMatcher.group(2);
+                    String scrapedDate = dateMatcher.group(3);
                     logger.info("Date: {}", scrapedDate);
                     scraperOutput.setScrapedDate(scrapedDate);
 
@@ -65,7 +65,7 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("No date match");
                 }
 
-                Pattern timePattern = Pattern.compile(".*(([01]?[0-9]|2[0-3]):[0-5][0-9])");
+                Pattern timePattern = Pattern.compile("(([01]?[0-9]|2[0-3]):[0-5][0-9]).*");
                 Matcher timeMatcher = timePattern.matcher(text);
 
                 if (timeMatcher.find()) {
@@ -78,12 +78,12 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("No time match");
                 }
 
-                Pattern cityPattern = Pattern.compile("<div([^>]*)event-details(.*)>(.*)</div>");
+                Pattern cityPattern = Pattern.compile("<div([^>]*)class=\"event-details__data\">([^>]*)<p>(.*)</p>([^>]*)<p>(.*)</p>([^>]*)<p>(.*)</p>([^>]*)<p>(.*)</p>");
                 Matcher cityMatcher = cityPattern.matcher(html);
 
                 if (cityMatcher.find()) {
                     logger.info("Match");
-                    String scrapedCity = cityMatcher.group(3);
+                    String scrapedCity = cityMatcher.group(7);
                     logger.info("City: {}", scrapedCity);
                     scraperOutput.setScrapedCity(scrapedCity);
 
@@ -91,12 +91,12 @@ public class EventbriteScraper extends WebCrawler {
                     logger.info("No city match");
                 }
 
-                Pattern descriptionPattern = Pattern.compile("<div([^>]*)content(.*)>(.*)</div>");
+                Pattern descriptionPattern = Pattern.compile("<strong([^>]*)>(.*)</strong>");
                 Matcher descriptionMatcher = descriptionPattern.matcher(html);
 
                 if (descriptionMatcher.find()) {
                     logger.info("Match");
-                    String scrapedDescription = descriptionMatcher.group(3);
+                    String scrapedDescription = descriptionMatcher.group(2);
                     logger.info("Description: {}", scrapedDescription);
                     scraperOutput.setScrapedDescription(scrapedDescription);
 
