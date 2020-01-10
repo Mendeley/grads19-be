@@ -22,7 +22,7 @@ Add the start statements to the bottom of each Dockerfile:
 - Java: `ENTRYPOINT ["java","-cp","app:app/lib/*","gradproject2019.Application"]`
 - React: `CMD ["npm", "start"]`
 - Mysql: N/A
-- ElasticSearch: 
+- ElasticSearch: N/A
 
 Then you can do the following (replaces step 1 of the docker-compose method):
 
@@ -32,6 +32,4 @@ Then you can do the following (replaces step 1 of the docker-compose method):
 
 - For the MySQL open the command line and navigate to `grads19-be/SpringProject/MainApplication/src/main/resources` and run `docker build . -t mysql` followed by `docker run -p 3306:3306 mysql`
 
-- For the Elastic Search open the command line and navigate to `grads19-be/SpringProject/ElasticSearch` and run `docker build . -t elasticsearch` followed by `docker run -p 9200:9200 elasticsearch`
-
-(p.s. open this in intelij for clearer formatting)
+- For the Elastic Search open the command line and navigate to `grads19-be/SpringProject/ElasticSearch` and run `docker build . -t elasticsearch` followed by `docker run -p 9200:9200 -ti -v /usr/share/elasticsearch/data elasticsearch`
