@@ -1,7 +1,7 @@
 package com.gradproject2019.auth;
 
-import com.gradproject2019.auth.data.LoginDto;
-import com.gradproject2019.auth.persistence.Token;
+import gradproject2019.auth.data.LoginDto;
+import gradproject2019.auth.persistence.Token;
 import com.gradproject2019.utils.ErrorEntity;
 import com.gradproject2019.utils.TestUtils;
 import org.junit.After;

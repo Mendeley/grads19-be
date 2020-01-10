@@ -1,8 +1,9 @@
-package com.gradproject2019.conferences;
+package com.gradproject2019;
 
-import com.gradproject2019.conferences.data.ConferenceResponseDto;
-import com.gradproject2019.conferences.persistance.EsConference;
-import com.gradproject2019.conferences.repository.ConferenceSearchRepository;
+import gradproject2019.conferences.data.ConferenceResponseDto;
+import gradproject2019.conferences.service.ConferenceService;
+import gradproject2019.elasticsearch.persistence.EsConference;
+import gradproject2019.elasticsearch.repository.ConferenceSearchRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -134,11 +132,6 @@ public class ElasticsearchIT {
         //Assert.assertEquals(1, response.size());
         //Assert.assertEquals(esConference.getName(), response.getBody().get(0).getName());
     }
-//
-//    private ResponseEntity<List<ConferenceResponseDto>> getEsConferenceList(URI uri) {
-//        return restTemplate.exchange(uri, GET, null, new ParameterizedTypeReference<List<ConferenceResponseDto>>() {});
-//
-//    }
 
     private ResponseEntity<ConferenceResponseDto> getEsConferenceList(URI uri) {
         return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ConferenceResponseDto>() {});

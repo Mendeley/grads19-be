@@ -1,15 +1,16 @@
 package com.gradproject2019.utils;
 
-import com.gradproject2019.auth.persistence.Token;
-import com.gradproject2019.auth.repository.AuthRepository;
-import com.gradproject2019.auth.service.AuthService;
-import com.gradproject2019.conferences.persistence.Conference;
-import com.gradproject2019.conferences.repository.ConferenceRepository;
-import com.gradproject2019.userConference.persistence.UserConference;
-import com.gradproject2019.userConference.repository.UserConferenceRepository;
-import com.gradproject2019.userConference.service.UserConferenceService;
-import com.gradproject2019.users.persistence.User;
-import com.gradproject2019.users.repository.UserRepository;
+import gradproject2019.auth.persistence.Token;
+import gradproject2019.auth.repository.AuthRepository;
+import gradproject2019.auth.service.AuthService;
+import gradproject2019.conferences.persistence.Conference;
+import gradproject2019.conferences.repository.ConferenceRepository;
+import gradproject2019.userConference.persistence.UserConference;
+import gradproject2019.userConference.repository.UserConferenceRepository;
+import gradproject2019.userConference.service.UserConferenceService;
+import gradproject2019.users.persistence.User;
+import gradproject2019.users.repository.UserRepository;
+import gradproject2019.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
