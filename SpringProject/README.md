@@ -19,10 +19,10 @@ TO USE DOCKERFILES (local & deployment):
 
 Add the start statements to the bottom of each Dockerfile:
 
-- Java: `ENTRYPOINT ["java","-cp","app:app/lib/*","gradproject2019.Application","-Dspring.datasource.url=jdbc:mysql://mysql:3306/conference_finder?autoReconnect=true -Dspring.datasource.password=password -Dspring.datasource.username=root"]` (if you are doing this for deployment purposes, ignore this last set of "")
+- Java: `ENTRYPOINT ["java","-cp","app:app/lib/*","gradproject2019.Application"]` (if you are doing this for deployment purposes, make sure you define values for the following environment variables `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_PASSWORD` and `SPRING_DATASOURCE_USERNAME`)
 - React: `CMD ["npm", "start"]`
 - Mysql: N/A
-- ElasticSearch: N/A (for deployment purposes make sure the configuration files include the following environment variable, `ES_JAVA_OPTS='-Xms512m -Xmx512m'`, and a container configuration including the following code)
+- ElasticSearch: N/A (for deployment purposes make sure the container configuration includes the following code)
 
         ulimits:
             memlock:
@@ -31,10 +31,10 @@ Add the start statements to the bottom of each Dockerfile:
 
 Then you can do the following (replaces step 1 of the docker-compose method) (for deployment purposes ignore the `docker run` statements):
 
-- For the Java open the command line and navigate to `grads19-be/SpringProject` and run `docker build . -t java` followed by `docker run -p 8080:8080 java`
+1. For the MySQL open the command line and navigate to `grads19-be/SpringProject/MainApplication/src/main/resources` and run `docker build . -t mysql` followed by `docker run -p 3306:3306 mysql`
 
-- For the React open the command line and navigate to `grads19-weblet` and run `docker build . -t react` followed by `docker run -p 3000:3000 react`
+2. For the Java open the command line and navigate to `grads19-be/SpringProject` and run `docker build . -t java` followed by `docker run -p 8080:8080 -e SPRING_DATASOURCE_URL='jdbc:mysql://localhost:3306/conference_finder?autoReconnect=true' -e SPRING_DATASOURCE_PASSWORD='password' -e SPRING_DATASOURCE_USERNAME='root' java`
 
-- For the MySQL open the command line and navigate to `grads19-be/SpringProject/MainApplication/src/main/resources` and run `docker build . -t mysql` followed by `docker run -p 3306:3306 mysql`
+3. For the Elastic Search open the command line and navigate to `grads19-be/SpringProject/ElasticSearch` and run `docker build . -t elasticsearch` followed by `docker run -p 9200:9200 -ti -v /usr/share/elasticsearch/data --ulimit memlock=-1:-1 elasticsearch`
 
-- For the Elastic Search open the command line and navigate to `grads19-be/SpringProject/ElasticSearch` and run `docker build . -t elasticsearch` followed by `docker run -p 9200:9200 -ti -v /usr/share/elasticsearch/data --ulimit memlock=-1:-1 -e ES_JAVA_OPTS='-Xms512m -Xmx512m' elasticsearch`
+4. For the React open the command line and navigate to `grads19-weblet` and run `docker build . -t react` followed by `docker run -p 3000:3000 react`

@@ -11,7 +11,11 @@ services:
       - 3306
   java:
     build: .
-    command: java -cp app:app/lib/* gradproject2019.Application -Dspring.datasource.url=jdbc:mysql://mysql:3306/conference_finder?autoReconnect=true -Dspring.datasource.password=password -Dspring.datasource.username=root
+    command: java -cp app:app/lib/* gradproject2019.Application
+    environment:
+      - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/conference_finder?autoReconnect=true"
+      - "SPRING_DATASOURCE_PASSWORD=password"
+      - "SPRING_DATASOURCE_USERNAME=root"
     ports:
       - 8080:8080
     restart: on-failure
