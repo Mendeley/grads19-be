@@ -6,7 +6,6 @@ import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
-import gradproject2019.conferences.data.ConferenceResponseDto;
 import org.springframework.stereotype.Service;
 
 @Service

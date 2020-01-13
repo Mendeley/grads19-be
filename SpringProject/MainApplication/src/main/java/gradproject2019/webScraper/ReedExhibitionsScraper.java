@@ -6,8 +6,13 @@ import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.jpa.internal.util.PersistenceUtilHelper;
 import org.springframework.web.util.HtmlUtils;
 
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,59 +48,87 @@ public class ReedExhibitionsScraper extends WebCrawler {
                 Matcher titleMatcher = titlePattern.matcher(html);
 
                 if (titleMatcher.find()) {
-                    logger.info("Match");
                     String scrapedConferenceTitle = titleMatcher.group(3);
                     logger.info("Title: {}", scrapedConferenceTitle);
                     scraperOutput.setScrapedConferenceTitle(scrapedConferenceTitle);
 
-                } else {
-                    logger.info("No title match");
                 }
 
                 Pattern datePattern = Pattern.compile("<div([^>]*)field--name-event-formatted-date(.*)>(.*)</div>");
                 Matcher dateMatcher = datePattern.matcher(html);
 
                 if (dateMatcher.find()) {
-                    logger.info("Match");
                     String scrapedDate = dateMatcher.group(3);
                     String replaceDateHtmlEntities = HtmlUtils.htmlUnescape(scrapedDate);
-                    logger.info("Date: {}", replaceDateHtmlEntities);
-                    scraperOutput.setScrapedDate(replaceDateHtmlEntities);
+                    logger.info("Full date: {}", replaceDateHtmlEntities);
 
-                } else {
-                    logger.info("No date match");
-                }
+                    String testString = replaceDateHtmlEntities;
 
-                String scrapedTime ="";
-                logger.info("Start Time: {}", scrapedTime);
+                    String indexSingleBeg = testString.substring(1, 3);
+                    String indexDoubleBeg = testString.substring(2, 4);
+                    String indexSingleSingle= testString.substring(7, 8);
+                    String indexSingleDouble =testString.substring(8, 9);
+                    String indexDoubleSingle = testString.substring(8, 9);
+                    String indexDoubleDouble = testString.substring(9, 10);
+
+                    if ((indexSingleBeg.equals("th") || indexSingleBeg.equals("st") || indexSingleBeg.equals("rd") || indexSingleBeg.equals("nd") )&& indexSingleSingle.equals(" ")) {
+                        String finalString1 = testString.substring(0,3);
+                        String finalString2 = testString.substring(8);
+                        String finalString = (finalString1 + " " + finalString2);
+                        logger.info("Date: {}", finalString);
+                        scraperOutput.setScrapedDate(finalString);
+
+                    }
+
+                    else if ( (indexSingleBeg.equals("th") || indexSingleBeg.equals("st") || indexSingleBeg.equals("rd") || indexSingleBeg.equals("nd") )&& indexSingleDouble.equals(" ")) {
+                        String finalString1 = testString.substring(0,3);
+                        String finalString2 = testString.substring(9);
+                        String finalString = (finalString1 + " " + finalString2);
+                        logger.info("Date: {}", finalString);
+                        scraperOutput.setScrapedDate(finalString);
+                    }
+
+                    else if (( indexDoubleBeg.equals("th") || indexDoubleBeg.equals("st") || indexDoubleBeg.equals("rd") || indexDoubleBeg.equals("nd") ) && indexDoubleSingle.equals(" ")) {
+                        String finalString1 = testString.substring(0,4);
+                        String finalString2 = testString.substring(9);
+                        String finalString = (finalString1 + " " + finalString2);
+                        logger.info("Date: {}", finalString);
+                        scraperOutput.setScrapedDate(finalString);
+                    }
+
+                    else if ( ( indexDoubleBeg.equals("th") || indexDoubleBeg.equals("st") || indexDoubleBeg.equals("rd") || indexDoubleBeg.equals("nd") )  && indexDoubleDouble.equals(" ")) {
+                        String finalString1 = testString.substring(0,4);
+                        String finalString2 = testString.substring(10);
+                        String finalString = (finalString1 + " " + finalString2);
+                        logger.info("Date: {}", finalString);
+                        scraperOutput.setScrapedDate(finalString);
+                    }
+
+                    else if ( in) }
+
+                String scrapedTime = "00:00:00";
+                logger.info("Time: {}", scrapedTime);
                 scraperOutput.setScrapedTime(scrapedTime);
-
 
                 Pattern cityPattern = Pattern.compile("<span([^>]*)taxonomy-term([^>]*)count-1([^>]*)>(.*)</span>");
                 Matcher cityMatcher = cityPattern.matcher(html);
 
                 if (cityMatcher.find()) {
-                    logger.info("Match");
                     String scrapedCity = cityMatcher.group(4);
                     logger.info("City: {}", scrapedCity);
                     scraperOutput.setScrapedCity(scrapedCity);
 
-                } else {
-                    logger.info("No city match");
                 }
 
                 Pattern descriptionPattern = Pattern.compile("<div([^>]*)field--name-field-short-descriptio([^>]*)>([^>]*)<p><span><span><strong><span><span>(.*)</span></span></strong></span></span></p>");
                 Matcher descriptionMatcher = descriptionPattern.matcher(html);
 
                 if (descriptionMatcher.find()) {
-                    logger.info("Match");
                     String scrapedDescription = descriptionMatcher.group(4);
                     String replaceDescriptionHtmlEntities = HtmlUtils.htmlUnescape(scrapedDescription);
                     logger.info("Description: {}", replaceDescriptionHtmlEntities);
                     scraperOutput.setScrapedDescription(replaceDescriptionHtmlEntities);
 
-                } else {
-                    logger.info("No description match");
                 }
 
                 String scrapedTopic ="";
