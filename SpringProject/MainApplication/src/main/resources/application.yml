@@ -4,9 +4,9 @@ spring:
   datasource:
     platform: mysql
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/conference_finder?autoReconnect=true
-    password: password
-    username: root
+    url: ${SPRING_DATASOURCE_URL}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    username: ${SPRING_DATASOURCE_USERNAME}
     hikari:
         connection-timeout: 60000
         maximum-pool-size: 5

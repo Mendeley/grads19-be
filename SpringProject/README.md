@@ -19,10 +19,10 @@ TO USE DOCKERFILES (deployment):
 
 Add the start statements to the bottom of each Dockerfile:
 
-- Java: `ENTRYPOINT ["java","-cp","app:app/lib/*","gradproject2019.Application"]`
+- Java: `ENTRYPOINT ["java","-cp","app:app/lib/*","gradproject2019.Application","-Dspring.datasource.url=jdbc:mysql://mysql:3306/conference_finder?autoReconnect=true -Dspring.datasource.password=password -Dspring.datasource.username=root"]` (if you are doing this for deployment purposes, ignore this last set of "")
 - React: `CMD ["npm", "start"]`
 - Mysql: N/A
-- ElasticSearch: N/A
+- ElasticSearch: `???`
 
 Then you can do the following (replaces step 1 of the docker-compose method):
 

@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @Import({ElasticSearchServiceImpl.class, AppConfig.class, ObjectMapper.class})
 @TestPropertySource(properties = {"elastic-search.endpoint=localhost", "elastic-search.protocol=http", "elastic-search.port=9200"})
-class ElasticSearchServiceIT {
+class ElasticSearchServiceTestBroken {
 
     @Autowired
     private ElasticSearchService elasticSearchService;
