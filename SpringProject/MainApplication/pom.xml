@@ -106,6 +106,10 @@
             <artifactId>crawler4j</artifactId>
             <version>4.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
     </dependencies>
 

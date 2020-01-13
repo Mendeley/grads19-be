@@ -4,6 +4,9 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,9 +35,7 @@ public class ReedExhibitionsScraper extends WebCrawler {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
 
             String html = htmlParseData.getHtml();
-            String text = htmlParseData.getText();
 
-            //String htmlNoPTag = html.replace("<p>","").replace("</p>", "");
 
             if (html != null ) {
 
@@ -57,8 +58,9 @@ public class ReedExhibitionsScraper extends WebCrawler {
                 if (dateMatcher.find()) {
                     logger.info("Match");
                     String scrapedDate = dateMatcher.group(3);
-                    logger.info("Date: {}", scrapedDate);
-                    scraperOutput.setScrapedDate(scrapedDate);
+                    String replaceDateHtmlEntities = HtmlUtils.htmlUnescape(scrapedDate);
+                    logger.info("Date: {}", replaceDateHtmlEntities);
+                    scraperOutput.setScrapedDate(replaceDateHtmlEntities);
 
                 } else {
                     logger.info("No date match");
@@ -88,12 +90,17 @@ public class ReedExhibitionsScraper extends WebCrawler {
                 if (descriptionMatcher.find()) {
                     logger.info("Match");
                     String scrapedDescription = descriptionMatcher.group(4);
-                    logger.info("Description: {}", scrapedDescription);
-                    scraperOutput.setScrapedDescription(scrapedDescription);
+                    String replaceDescriptionHtmlEntities = HtmlUtils.htmlUnescape(scrapedDescription);
+                    logger.info("Description: {}", replaceDescriptionHtmlEntities);
+                    scraperOutput.setScrapedDescription(replaceDescriptionHtmlEntities);
 
                 } else {
                     logger.info("No description match");
                 }
+
+                String scrapedTopic ="";
+                logger.info("Topic: {}", scrapedTopic);
+                scraperOutput.setScrapedTopic(scrapedTopic);
             }
         }
         //TODO: Ensure that the scraper output is not created if values are null or there's an exception

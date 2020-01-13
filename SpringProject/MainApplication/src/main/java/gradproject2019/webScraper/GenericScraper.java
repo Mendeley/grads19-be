@@ -80,6 +80,10 @@ public class GenericScraper extends WebCrawler {
                     scraperOutput.setScrapedDescription(scrapedDescription);
 
                 }
+
+                String scrapedTopic ="";
+                logger.info("Topic: {}", scrapedTopic);
+                scraperOutput.setScrapedTopic(scrapedTopic);
             }
         }
     }

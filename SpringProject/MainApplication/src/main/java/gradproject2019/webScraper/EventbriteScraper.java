@@ -35,8 +35,6 @@ public class EventbriteScraper extends WebCrawler {
             String html = htmlParseData.getHtml();
             String text = htmlParseData.getText();
 
-            //String htmlNoPTag = html.replace("<p>","").replace("</p>", "");
-
             if (html != null ) {
 
                 Pattern titlePattern = Pattern.compile("<h1([^>]*)title(.*)>(.*)</h1>");
@@ -103,6 +101,10 @@ public class EventbriteScraper extends WebCrawler {
                 } else {
                     logger.info("No description match");
                 }
+
+                String scrapedTopic ="";
+                logger.info("Topic: {}", scrapedTopic);
+                scraperOutput.setScrapedTopic(scrapedTopic);
             }
         }
         //TODO: Ensure that the scraper output is not created if values are null or there's an exception

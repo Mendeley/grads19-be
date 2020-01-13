@@ -6,13 +6,15 @@ public class ScraperOutput {
     private String scrapedTime;
     private String scrapedCity;
     private String scrapedDescription;
+    private String scrapedTopic;
 
-    public ScraperOutput(String scrapedConferenceTitle, String scrapedDate, String scrapedTime, String scrapedCity, String scrapedDescription) {
+    public ScraperOutput(String scrapedConferenceTitle, String scrapedDate, String scrapedTime, String scrapedCity, String scrapedDescription, String scrapedTopic) {
         this.scrapedConferenceTitle = scrapedConferenceTitle;
         this.scrapedDate = scrapedDate;
         this.scrapedTime = scrapedTime;
         this.scrapedCity = scrapedCity;
         this.scrapedDescription = scrapedDescription;
+        this.scrapedTopic = scrapedTopic;
     }
 
     public ScraperOutput() {
@@ -36,6 +38,8 @@ public class ScraperOutput {
         return scrapedDescription;
     }
 
+    public String getScrapedTopic() {return  scrapedTopic; }
+
     public void setScrapedConferenceTitle(String scrapedConferenceTitle) {
         this.scrapedConferenceTitle = scrapedConferenceTitle;
     }
@@ -56,4 +60,5 @@ public class ScraperOutput {
         this.scrapedDescription = scrapedDescription;
     }
 
+    public void setScrapedTopic(String scrapedTopic) { this.scrapedTopic = scrapedTopic; }
 }

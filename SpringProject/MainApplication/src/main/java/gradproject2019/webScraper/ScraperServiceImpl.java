@@ -60,7 +60,7 @@ public class ScraperServiceImpl implements ScraperService {
     }
 
     private ScraperResponseDto scraperOutputToResponseDto(ScraperOutput scraperOutput) {
-        return new ScraperResponseDto(name, time, );
+        return new ScraperResponseDto();
     }
 
 

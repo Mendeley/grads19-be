@@ -1,6 +1,5 @@
 package gradproject2019.webScraper;
 
-import gradproject2019.conferences.data.ConferenceResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,10 +18,11 @@ public class ScraperController {
     private ScraperService scraperService;
 
     @PostMapping(path = "/add")
-    public ResponseEntity<ConferenceResponseDto> getConferenceURL(@RequestHeader("Authorization") UUID token, @RequestBody String conferenceURL) throws Exception {
-        ConferenceResponseDto responseDto = scraperService.startScraper(conferenceURL);
+    public ResponseEntity<ScraperResponseDto> getConferenceURL(@RequestHeader("Authorization") UUID token, @RequestBody String conferenceURL) throws Exception {
+        //ConferenceResponseDto responseDto = scraperService.startScraper(conferenceURL);
+        ScraperResponseDto scraperResponseDto = scraperService.startScraper(conferenceURL);
 
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(scraperResponseDto);
     }
 
     //TODO: ensure user is verified before the crawler starts
