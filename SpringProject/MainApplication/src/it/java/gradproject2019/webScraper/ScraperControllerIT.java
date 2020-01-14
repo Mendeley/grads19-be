@@ -45,13 +45,15 @@ public class ScraperControllerIT extends TestUtils {
         URI uri = new URI(baseUri);
         String conferenceURL = "https://www.eventbrite.co.uk/e/ucl-ai-in-medicine-conference-2020-tickets-85348905875?aff=ebdssbdestsearch";
 
-        ResponseEntity<ConferenceResponseDto> response = getConferenceURL(uri, conferenceURL);
+        ResponseEntity<ScraperResponseDto> response = getConferenceURL(uri, conferenceURL);
 
         Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals("UCL AI in Medicine Conference 2020", response.getBody().getScrapedConferenceTitle());
+        Assert.assertEquals("London ", response.getBody().getScrapedCity());
     }
 
-    private ResponseEntity<ConferenceResponseDto> getConferenceURL(URI uri, String conferenceURL) {
-        return restTemplate.exchange(uri, POST, new HttpEntity<>(conferenceURL, passingHeaders), new ParameterizedTypeReference<ConferenceResponseDto>() {
+    private ResponseEntity<ScraperResponseDto> getConferenceURL(URI uri, String conferenceURL) {
+        return restTemplate.exchange(uri, POST, new HttpEntity<>(conferenceURL, passingHeaders), new ParameterizedTypeReference<ScraperResponseDto>() {
 
         });
     }

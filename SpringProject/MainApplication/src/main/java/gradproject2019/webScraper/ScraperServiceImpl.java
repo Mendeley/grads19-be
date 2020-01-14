@@ -42,7 +42,7 @@ public class ScraperServiceImpl implements ScraperService {
             CrawlController.WebCrawlerFactory<EventbriteScraper> factory = EventbriteScraper::new;
             controller.start(factory, numberOfCrawlers);
 
-            scraperOutput = factory.newInstance().getScraperOutput();
+            scraperOutput = EventbriteScraper.getScraperOutput();
         } else if (url.contains("reedexhibitions")) {
             CrawlController.WebCrawlerFactory<ReedExhibitionsScraper> factory = ReedExhibitionsScraper::new;
             controller.start(factory, numberOfCrawlers);
@@ -59,8 +59,6 @@ public class ScraperServiceImpl implements ScraperService {
     }
 
     private ScraperResponseDto scraperOutputToResponseDto(ScraperOutput scraperOutput) {
-        return new ScraperResponseDto();
+        return new ScraperResponseDto().from(scraperOutput);
     }
-
-
 }

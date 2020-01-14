@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class EventbriteScraper extends WebCrawler {
 
     private final static Pattern Exclusions = Pattern.compile(".*(\\.(css|js|xml|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
-    private ScraperOutput scraperOutput = new ScraperOutput();
+    private static ScraperOutput scraperOutput = new ScraperOutput();
 
     EventbriteScraper() {
 
@@ -104,7 +104,7 @@ public class EventbriteScraper extends WebCrawler {
         //TODO: Ensure that the scraper output is not created if values are null or there's an exception
     }
 
-    public ScraperOutput getScraperOutput() {
+    public static ScraperOutput getScraperOutput() {
         return scraperOutput;
     }
 
