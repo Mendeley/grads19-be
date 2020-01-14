@@ -18,4 +18,6 @@ ARG DEPENDENCY=/app/target/dependency
 COPY --from=Build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=Build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=Build ${DEPENDENCY}/BOOT-INF/classes /app
+COPY wait-for-it.sh /usr/wait-for-it.sh
+RUN chmod +x /usr/wait-for-it.sh
 EXPOSE 8090

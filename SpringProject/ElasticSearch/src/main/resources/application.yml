@@ -33,6 +33,6 @@ mysql:
     password: ${MYSQL_DATASOURCE_PASSWORD}
 
 elastic-search:
-  endpoint: localhost
+  endpoint: ${ELASTICSEARCH_ENDPOINT}
   protocol: http
   port: 9200

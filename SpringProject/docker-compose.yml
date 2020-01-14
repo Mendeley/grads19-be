@@ -11,7 +11,7 @@ services:
       - 3306
   java:
     build: .
-    command: java -cp app:app/lib/* gradproject2019.Application
+    command: ./usr/wait-for-it.sh -t 0 mysql:3306 -- java -cp app:app/lib/* gradproject2019.Application
     environment:
       - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/conference_finder?autoReconnect=true"
       - "SPRING_DATASOURCE_PASSWORD=password"
@@ -34,11 +34,28 @@ services:
         soft: -1
         hard: -1
     ports:
-      - "9200:9200"
+      - 9200:9200
     expose:
-      - "9200"
+      - 9200
     depends_on:
       - mysql
+  batchrun:
+    build:
+      context: .
+      dockerfile: ./ElasticSearch/BatchDockerfile/Dockerfile
+    command: ./usr/wait-for-it.sh -t 0 java:8080 -- java -cp app:app/lib/* grads19.ElasticSearchIngester
+    environment:
+      - "MYSQL_DATASOURCE_JDBCURL=jdbc:mysql://mysql:3306/conference_finder?autoReconnect=true&useSSL=false"
+      - "MYSQL_DATASOURCE_PASSWORD=password"
+      - "MYSQL_DATASOURCE_USERNAME=root"
+      - "ELASTICSEARCH_ENDPOINT=elasticsearch"
+    ports:
+      - 8090:8090
+    restart: on-failure
+    depends_on:
+      - java
+      - mysql
+      - elasticsearch
   react:
     build: ../../grads19-weblet
     command: npm start
