@@ -62,18 +62,21 @@ public class ReedExhibitionsScraper extends WebCrawler {
                     String replaceDateHtmlEntities = HtmlUtils.htmlUnescape(scrapedDate);
                     logger.info("Full date: {}", replaceDateHtmlEntities);
 
-                    String testString = replaceDateHtmlEntities;
 
-                    String indexSingleBeg = testString.substring(1, 3);
-                    String indexDoubleBeg = testString.substring(2, 4);
-                    String indexSingleSingle= testString.substring(7, 8);
-                    String indexSingleDouble =testString.substring(8, 9);
-                    String indexDoubleSingle = testString.substring(8, 9);
-                    String indexDoubleDouble = testString.substring(9, 10);
+                    String indexSingleBeg = replaceDateHtmlEntities.substring(1, 3);
+                    String indexDoubleBeg = replaceDateHtmlEntities.substring(2, 4);
+                    String indexSingleSingle= replaceDateHtmlEntities.substring(7, 8);
+                    String indexSingleDouble = replaceDateHtmlEntities.substring(8, 9);
+                    String indexDoubleSingle = replaceDateHtmlEntities.substring(8, 9);
+                    String indexDoubleDouble = replaceDateHtmlEntities.substring(9, 10);
 
-                    if ((indexSingleBeg.equals("th") || indexSingleBeg.equals("st") || indexSingleBeg.equals("rd") || indexSingleBeg.equals("nd") )&& indexSingleSingle.equals(" ")) {
-                        String finalString1 = testString.substring(0,3);
-                        String finalString2 = testString.substring(8);
+                    if (!replaceDateHtmlEntities.contains("-")) {
+                        scraperOutput.setScrapedDate(replaceDateHtmlEntities);
+                    }
+
+                    else if ((indexSingleBeg.equals("th") || indexSingleBeg.equals("st") || indexSingleBeg.equals("rd") || indexSingleBeg.equals("nd") )&& indexSingleSingle.equals(" ")) {
+                        String finalString1 = replaceDateHtmlEntities.substring(0,3);
+                        String finalString2 = replaceDateHtmlEntities.substring(8);
                         String finalString = (finalString1 + " " + finalString2);
                         logger.info("Date: {}", finalString);
                         scraperOutput.setScrapedDate(finalString);
@@ -81,30 +84,32 @@ public class ReedExhibitionsScraper extends WebCrawler {
                     }
 
                     else if ( (indexSingleBeg.equals("th") || indexSingleBeg.equals("st") || indexSingleBeg.equals("rd") || indexSingleBeg.equals("nd") )&& indexSingleDouble.equals(" ")) {
-                        String finalString1 = testString.substring(0,3);
-                        String finalString2 = testString.substring(9);
+                        String finalString1 = replaceDateHtmlEntities.substring(0,3);
+                        String finalString2 = replaceDateHtmlEntities.substring(9);
                         String finalString = (finalString1 + " " + finalString2);
                         logger.info("Date: {}", finalString);
                         scraperOutput.setScrapedDate(finalString);
                     }
 
                     else if (( indexDoubleBeg.equals("th") || indexDoubleBeg.equals("st") || indexDoubleBeg.equals("rd") || indexDoubleBeg.equals("nd") ) && indexDoubleSingle.equals(" ")) {
-                        String finalString1 = testString.substring(0,4);
-                        String finalString2 = testString.substring(9);
+                        String finalString1 = replaceDateHtmlEntities.substring(0,4);
+                        String finalString2 = replaceDateHtmlEntities.substring(9);
                         String finalString = (finalString1 + " " + finalString2);
                         logger.info("Date: {}", finalString);
                         scraperOutput.setScrapedDate(finalString);
                     }
 
                     else if ( ( indexDoubleBeg.equals("th") || indexDoubleBeg.equals("st") || indexDoubleBeg.equals("rd") || indexDoubleBeg.equals("nd") )  && indexDoubleDouble.equals(" ")) {
-                        String finalString1 = testString.substring(0,4);
-                        String finalString2 = testString.substring(10);
+                        String finalString1 = replaceDateHtmlEntities.substring(0,4);
+                        String finalString2 = replaceDateHtmlEntities.substring(10);
                         String finalString = (finalString1 + " " + finalString2);
                         logger.info("Date: {}", finalString);
                         scraperOutput.setScrapedDate(finalString);
                     }
 
-                    else if ( in) }
+                    else {
+                        scraperOutput.setScrapedDate(replaceDateHtmlEntities);
+                    } }
 
                 String scrapedTime = "00:00:00";
                 logger.info("Time: {}", scrapedTime);
