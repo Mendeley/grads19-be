@@ -10,5 +10,4 @@ public class ElasticSearchIngester {
     public static void main(String[] args) {
         SpringApplication.run(ElasticSearchIngester.class, args);
     }
-
 }

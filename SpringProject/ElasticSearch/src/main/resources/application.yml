@@ -28,9 +28,9 @@ mysql:
   datasource:
     platform: mysql
     driverClassName: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://localhost:3306/conference_finder?autoReconnect=true&useSSL=false
-    username: root
-    password: password
+    jdbcUrl: ${MYSQL_DATASOURCE_JDBCURL}
+    username: ${MYSQL_DATASOURCE_USERNAME}
+    password: ${MYSQL_DATASOURCE_PASSWORD}
 
 elastic-search:
   endpoint: localhost

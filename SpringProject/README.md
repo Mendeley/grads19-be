@@ -21,6 +21,7 @@ Add the start statements to the bottom of each Dockerfile:
 
 - Java: `ENTRYPOINT ["java","-cp","app:app/lib/*","gradproject2019.Application"]` (if you are doing this for deployment purposes, make sure you define values for the following environment variables `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_PASSWORD` and `SPRING_DATASOURCE_USERNAME`)
 - React: `CMD ["npm", "start"]`
+- Batch: `ENTRYPOINT ["java","-cp","app:app/lib/*","grads19.ElasticSearchIngester"]` (for deployment purposes, make sure you define values for the following environment variables `MYSQL_DATASOURCE_JDBCURL=${SPRING_DATASOURCE_URL}&useSSL=false`, `MYSQL_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}` and `MYSQL_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}`)
 - Mysql: N/A
 - ElasticSearch: N/A (for deployment purposes make sure the container configuration includes the following code)
 
@@ -37,4 +38,6 @@ Then you can do the following (replaces step 1 of the docker-compose method) (fo
 
 3. For the Elastic Search open the command line and navigate to `grads19-be/SpringProject/ElasticSearch` and run `docker build . -t elasticsearch` followed by `docker run -p 9200:9200 -ti -v /usr/share/elasticsearch/data --ulimit memlock=-1:-1 elasticsearch`
 
-4. For the React open the command line and navigate to `grads19-weblet` and run `docker build . -t react` followed by `docker run -p 3000:3000 react`
+4. For the Batch Run open the command line and navigate to `grads19-be/SpringProject` and run `docker build -f ./ElasticSearch/BatchDockerfile/Dockerfile . -t batchrun` followed by `docker run -p 8090:8090 -e MYSQL_DATASOURCE_JDBCURL='jdbc:mysql://localhost:3306/conference_finder?autoReconnect=true&useSSL=false' -e MYSQL_DATASOURCE_PASSWORD='password' -e MYSQL_DATASOURCE_USERNAME='root' batchrun`
+
+5. For the React open the command line and navigate to `grads19-weblet` and run `docker build . -t react` followed by `docker run -p 3000:3000 react`
