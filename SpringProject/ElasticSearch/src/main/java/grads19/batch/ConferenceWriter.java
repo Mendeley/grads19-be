@@ -1,6 +1,5 @@
 package grads19.batch;
 
-
 import grads19.services.ElasticSearchService;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;

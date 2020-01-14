@@ -5,7 +5,7 @@ import gradproject2019.auth.exception.TokenNotFoundException;
 import gradproject2019.auth.exception.UserUnauthorisedException;
 import gradproject2019.auth.persistence.Token;
 import gradproject2019.auth.repository.AuthRepository;
-import gradproject2019.auth.exception.InvalidCredentialsException;
+import gradproject2019.auth.exception.InvalidCredentialsAuthException;
 import gradproject2019.users.persistence.User;
 import gradproject2019.users.service.UserService;
 import gradproject2019.utils.AuthUtils;
@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void checkPasswordHashMatch(String password, String hash) {
         if (!AuthUtils.verifyHash(password, hash)) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsAuthException();
         }
     }
 
