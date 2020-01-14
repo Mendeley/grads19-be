@@ -1,17 +1,17 @@
 package gradproject2019.webScraper;
 
+import java.time.Instant;
+
 public class ScraperOutput {
     private String scrapedConferenceTitle;
-    private String scrapedDate;
-    private String scrapedTime;
+    private Instant scrapedDateTime;
     private String scrapedCity;
     private String scrapedDescription;
     private String scrapedTopic;
 
-    public ScraperOutput(String scrapedConferenceTitle, String scrapedDate, String scrapedTime, String scrapedCity, String scrapedDescription, String scrapedTopic) {
+    public ScraperOutput(String scrapedConferenceTitle, Instant scrapedDateTime, String scrapedCity, String scrapedDescription, String scrapedTopic) {
         this.scrapedConferenceTitle = scrapedConferenceTitle;
-        this.scrapedDate = scrapedDate;
-        this.scrapedTime = scrapedTime;
+        this.scrapedDateTime = scrapedDateTime;
         this.scrapedCity = scrapedCity;
         this.scrapedDescription = scrapedDescription;
         this.scrapedTopic = scrapedTopic;
@@ -22,12 +22,8 @@ public class ScraperOutput {
 
     public String getScrapedConferenceTitle() { return scrapedConferenceTitle; }
 
-    public String getScrapedDate() {
-        return scrapedDate;
-    }
-
-    public String getScrapedTime() {
-        return scrapedTime;
+    public Instant getScrapedDateTime() {
+        return scrapedDateTime;
     }
 
     public String getScrapedCity() {
@@ -44,12 +40,8 @@ public class ScraperOutput {
         this.scrapedConferenceTitle = scrapedConferenceTitle;
     }
 
-    public void setScrapedDate(String scrapedDate) {
-        this.scrapedDate = scrapedDate;
-    }
-
-    public void setScrapedTime(String scrapedTime) {
-        this.scrapedTime = scrapedTime;
+    public void setScrapedDateTime(Instant scrapedDateTime) {
+        this.scrapedDateTime = scrapedDateTime;
     }
 
     public void setScrapedCity(String scrapedCity) {

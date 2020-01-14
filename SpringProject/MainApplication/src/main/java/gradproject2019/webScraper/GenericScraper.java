@@ -5,6 +5,11 @@ import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,21 +52,25 @@ public class GenericScraper extends WebCrawler {
 
                 Pattern datePattern = Pattern.compile("<div([^>]*)date(.*)>(.*)</div>");
                 Matcher dateMatcher = datePattern.matcher(html);
-
-                if (dateMatcher.find()) {
-                    String scrapedDate = dateMatcher.group(3);
-                    scraperOutput.setScrapedDate(scrapedDate);
-
-                }
-
                 Pattern timePattern = Pattern.compile(".*(([01]?[0-9]|2[0-3]):[0-5][0-9])");
                 Matcher timeMatcher = timePattern.matcher(text);
 
-                if (timeMatcher.find()) {
-                    String scrapedTime = timeMatcher.group(1);
-                    scraperOutput.setScrapedTime(scrapedTime);
+                if (dateMatcher.find() || timeMatcher.find()) {
+                    String scrapedDateTime = (dateMatcher.group(3) + timeMatcher.group(1));
+
+                    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyy HH:mm:ss");
+                    formatter1.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    try {
+                        Date dateTime1=formatter1.parse(scrapedDateTime);
+                        Instant datetimeInstant =dateTime1.toInstant();
+                        scraperOutput.setScrapedDateTime(datetimeInstant);
+                        logger.info("dateTimeInstant: {}", datetimeInstant);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
                 }
+
 
                 Pattern cityPattern = Pattern.compile("<div([^>]*)location(.*)>(.*)</div>");
                 Matcher cityMatcher = cityPattern.matcher(html);

@@ -26,7 +26,6 @@ public class EventbriteScraper extends WebCrawler {
     @Override
     public void visit(Page page) {
         String url = page.getWebURL().getURL();
-        logger.info("URL: {}", url);
 
         if (page.getParseData() instanceof HtmlParseData) {
 
@@ -41,65 +40,49 @@ public class EventbriteScraper extends WebCrawler {
                 Matcher titleMatcher = titlePattern.matcher(html);
 
                 if (titleMatcher.find()) {
-                    logger.info("Match");
                     String scrapedConferenceTitle = titleMatcher.group(3);
                     logger.info("Title: {}", scrapedConferenceTitle);
                     scraperOutput.setScrapedConferenceTitle(scrapedConferenceTitle);
-
-                } else {
-                    logger.info("No title match");
                 }
 
                 Pattern datePattern = Pattern.compile("<time([^>]*)>([^>]*)<p>(.*)</p>");
                 Matcher dateMatcher = datePattern.matcher(html);
 
                 if (dateMatcher.find()) {
-                    logger.info("Match");
                     String scrapedDate = dateMatcher.group(3);
                     logger.info("Date: {}", scrapedDate);
-                    scraperOutput.setScrapedDate(scrapedDate);
+                    //scraperOutput.setScrapedDate(scrapedDate);
 
-                } else {
-                    logger.info("No date match");
                 }
 
                 Pattern timePattern = Pattern.compile("(([01]?[0-9]|2[0-3]):[0-5][0-9]).*");
                 Matcher timeMatcher = timePattern.matcher(text);
 
                 if (timeMatcher.find()) {
-                    logger.info("Match");
                     String scrapedTime = timeMatcher.group(1);
                     logger.info("Start Time: {}", scrapedTime);
-                    scraperOutput.setScrapedTime(scrapedTime);
+                    //scraperOutput.setScrapedTime(scrapedTime);
 
-                } else {
-                    logger.info("No time match");
                 }
 
                 Pattern cityPattern = Pattern.compile("<div([^>]*)class=\"event-details__data\">([^>]*)<p>(.*)</p>([^>]*)<p>(.*)</p>([^>]*)<p>(.*)</p>([^>]*)<p>(.*)</p>");
                 Matcher cityMatcher = cityPattern.matcher(html);
 
                 if (cityMatcher.find()) {
-                    logger.info("Match");
                     String scrapedCity = cityMatcher.group(7);
                     logger.info("City: {}", scrapedCity);
                     scraperOutput.setScrapedCity(scrapedCity);
 
-                } else {
-                    logger.info("No city match");
                 }
 
                 Pattern descriptionPattern = Pattern.compile("<strong([^>]*)>(.*)</strong>");
                 Matcher descriptionMatcher = descriptionPattern.matcher(html);
 
                 if (descriptionMatcher.find()) {
-                    logger.info("Match");
                     String scrapedDescription = descriptionMatcher.group(2);
                     logger.info("Description: {}", scrapedDescription);
                     scraperOutput.setScrapedDescription(scrapedDescription);
 
-                } else {
-                    logger.info("No description match");
                 }
 
                 String scrapedTopic ="";

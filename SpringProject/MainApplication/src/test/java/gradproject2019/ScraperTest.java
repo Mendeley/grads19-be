@@ -48,8 +48,7 @@ public class ScraperTest {
         ScraperOutput actualOutput = scraperOutput;
 
         assertThat(actualOutput.getScrapedConferenceTitle()).isEqualTo("example title");
-        assertThat(actualOutput.getScrapedDate()).isEqualTo("example date");
-        assertThat(actualOutput.getScrapedTime()).isEqualTo("8:30");
+        assertThat(actualOutput.getScrapedDateTime()).isEqualTo("example date");
         assertThat(actualOutput.getScrapedCity()).isEqualTo("example city");
         assertThat(actualOutput.getScrapedDescription()).isEqualTo("example description");
     }

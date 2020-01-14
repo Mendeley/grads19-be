@@ -1,9 +1,10 @@
 package gradproject2019.webScraper;
 
+import java.time.Instant;
+
 public class ScraperResponseDto {
     private String scrapedConferenceTitle;
-    private String scrapedDate;
-    private String scrapedTime;
+    private Instant scrapedDateTime;
     private String scrapedCity;
     private String scrapedDescription;
     private String scrapedTopic;
@@ -16,12 +17,8 @@ public class ScraperResponseDto {
         return scrapedConferenceTitle;
     }
 
-    public String getScrapedDate() {
-        return scrapedDate;
-    }
-
-    public String getScrapedTime() {
-        return scrapedTime;
+    public Instant getScrapedDateTime() {
+        return scrapedDateTime;
     }
 
     public String getScrapedCity() {
@@ -39,8 +36,7 @@ public class ScraperResponseDto {
     public ScraperResponseDto from(ScraperOutput scraperOutput) {
         return new ScraperResponseDtoBuilder()
                 .withScrapedConferenceTitle(scraperOutput.getScrapedConferenceTitle())
-                .withScrapedDate(scraperOutput.getScrapedConferenceTitle())
-                .withScrapedTime(scraperOutput.getScrapedTime())
+                .withScrapedDateTime(scraperOutput.getScrapedDateTime())
                 .withScrapedCity(scraperOutput.getScrapedCity())
                 .withScrapedDescription(scraperOutput.getScrapedDescription())
                 .withScrapedTopic(scraperOutput.getScrapedTopic())
@@ -49,8 +45,7 @@ public class ScraperResponseDto {
 
     public static final class ScraperResponseDtoBuilder {
         private String scrapedConferenceTitle;
-        private String scrapedDate;
-        private String scrapedTime;
+        private Instant scrapedDateTime;
         private String scrapedCity;
         private String scrapedDescription;
         private String scrapedTopic;
@@ -67,13 +62,8 @@ public class ScraperResponseDto {
             return this;
         }
 
-        public ScraperResponseDtoBuilder withScrapedDate(String scrapedDate) {
-            this.scrapedDate = scrapedDate;
-            return this;
-        }
-
-        public ScraperResponseDtoBuilder withScrapedTime(String scrapedTime) {
-            this.scrapedTime = scrapedTime;
+        public ScraperResponseDtoBuilder withScrapedDateTime(Instant scrapedDateTime) {
+            this.scrapedDateTime = scrapedDateTime;
             return this;
         }
 
@@ -94,10 +84,9 @@ public class ScraperResponseDto {
         public ScraperResponseDto build() {
             ScraperResponseDto scraperResponseDto = new ScraperResponseDto();
             scraperResponseDto.scrapedDescription = this.scrapedDescription;
-            scraperResponseDto.scrapedDate = this.scrapedDate;
+            scraperResponseDto.scrapedDateTime = this.scrapedDateTime;
             scraperResponseDto.scrapedCity = this.scrapedCity;
             scraperResponseDto.scrapedConferenceTitle = this.scrapedConferenceTitle;
-            scraperResponseDto.scrapedTime = this.scrapedTime;
             scraperResponseDto.scrapedTopic = this.scrapedTopic;
             return scraperResponseDto;
         }
