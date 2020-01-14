@@ -71,7 +71,6 @@ public class GenericScraper extends WebCrawler {
 
                 }
 
-
                 Pattern cityPattern = Pattern.compile("<div([^>]*)location(.*)>(.*)</div>");
                 Matcher cityMatcher = cityPattern.matcher(html);
 

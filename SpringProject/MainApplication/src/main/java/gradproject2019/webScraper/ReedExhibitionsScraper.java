@@ -69,9 +69,9 @@ public class ReedExhibitionsScraper extends WebCrawler {
                         String finalString = (finalString1 + " " + finalString2);
                         logger.info("Date: {}", finalString);
 
-                        String shortDate = (finalString.substring(0,2) + " " + finalString.substring(5,8) + " " + finalString.substring(finalString.length()-4));
+                        String shortDate = (finalString.substring(0,1) + " " + finalString.substring(4,7) + " " + finalString.substring(finalString.length()-4));
                         String hyphenDate = shortDate.replace(" ", "-");
-                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyy");
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
                         formatter1.setTimeZone(TimeZone.getTimeZone("UTC"));
                         try {
                             Date dateTime1=formatter1.parse(hyphenDate);
@@ -89,9 +89,9 @@ public class ReedExhibitionsScraper extends WebCrawler {
                         String finalString = (finalString1 + " " + finalString2);
                         logger.info("Date: {}", finalString);
 
-                        String shortDate = (finalString.substring(0,2) + " " + finalString.substring(5,8) + " " + finalString.substring(finalString.length()-4));
+                        String shortDate = (finalString.substring(0,1) + " " + finalString.substring(4,7) + " " + finalString.substring(finalString.length()-4));
                         String hyphenDate = shortDate.replace(" ", "-");
-                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyy");
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
                         formatter1.setTimeZone(TimeZone.getTimeZone("UTC"));
                         try {
                             Date dateTime1=formatter1.parse(hyphenDate);
@@ -111,7 +111,7 @@ public class ReedExhibitionsScraper extends WebCrawler {
 
                         String shortDate = (finalString.substring(0,2) + " " + finalString.substring(5,8) + " " + finalString.substring(finalString.length()-4));
                         String hyphenDate = shortDate.replace(" ", "-");
-                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyy");
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
                         formatter1.setTimeZone(TimeZone.getTimeZone("UTC"));
                         try {
                             Date dateTime1=formatter1.parse(hyphenDate);
@@ -131,7 +131,7 @@ public class ReedExhibitionsScraper extends WebCrawler {
 
                         String shortDate = (finalString.substring(0,2) + " " + finalString.substring(5,8) + " " + finalString.substring(finalString.length()-4));
                         String hyphenDate = shortDate.replace(" ", "-");
-                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyy");
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
                         formatter1.setTimeZone(TimeZone.getTimeZone("UTC"));
                         try {
                             Date dateTime1=formatter1.parse(hyphenDate);
@@ -146,7 +146,7 @@ public class ReedExhibitionsScraper extends WebCrawler {
                     else {
                         String shortDate = (replaceDateHtmlEntities.substring(0,2) + " " + replaceDateHtmlEntities.substring(5,8) + " " + replaceDateHtmlEntities.substring(replaceDateHtmlEntities.length()-4));
                         String hyphenDate = shortDate.replace(" ", "-");
-                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyy");
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
                         formatter1.setTimeZone(TimeZone.getTimeZone("UTC"));
                         try {
                             Date dateTime1=formatter1.parse(hyphenDate);

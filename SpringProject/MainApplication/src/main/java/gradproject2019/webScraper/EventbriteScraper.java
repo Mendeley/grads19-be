@@ -5,6 +5,11 @@ import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,21 +53,29 @@ public class EventbriteScraper extends WebCrawler {
                 Pattern datePattern = Pattern.compile("<time([^>]*)>([^>]*)<p>(.*)</p>");
                 Matcher dateMatcher = datePattern.matcher(html);
 
-                if (dateMatcher.find()) {
-                    String scrapedDate = dateMatcher.group(3);
-                    logger.info("Date: {}", scrapedDate);
-                    //scraperOutput.setScrapedDate(scrapedDate);
-
-                }
-
                 Pattern timePattern = Pattern.compile("(([01]?[0-9]|2[0-3]):[0-5][0-9]).*");
                 Matcher timeMatcher = timePattern.matcher(text);
 
-                if (timeMatcher.find()) {
-                    String scrapedTime = timeMatcher.group(1);
-                    logger.info("Start Time: {}", scrapedTime);
-                    //scraperOutput.setScrapedTime(scrapedTime);
+                if (dateMatcher.find() && timeMatcher.find()) {
+                   String scrapedDate = dateMatcher.group(3);
+                   String removeDay = scrapedDate.substring(5);
+                   String hyphenDate = removeDay.replace(" ", "-");
 
+                   String scrapedTime = timeMatcher.group(1);
+                   String addSeconds = (scrapedTime + ":00");
+
+                   String scrapedDateTime = (hyphenDate + " " + addSeconds);
+
+                   SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+                   formatter1.setTimeZone(TimeZone.getTimeZone("UTC"));
+                   try {
+                       Date dateTime1=formatter1.parse(scrapedDateTime);
+                       Instant datetimeInstant =dateTime1.toInstant();
+                       scraperOutput.setScrapedDateTime(datetimeInstant);
+                       logger.info("dateTimeInstant: {}", datetimeInstant);
+                   } catch (ParseException e) {
+                       e.printStackTrace();
+                   }
                 }
 
                 Pattern cityPattern = Pattern.compile("<div([^>]*)class=\"event-details__data\">([^>]*)<p>(.*)</p>([^>]*)<p>(.*)</p>([^>]*)<p>(.*)</p>([^>]*)<p>(.*)</p>");
@@ -72,7 +85,6 @@ public class EventbriteScraper extends WebCrawler {
                     String scrapedCity = cityMatcher.group(7);
                     logger.info("City: {}", scrapedCity);
                     scraperOutput.setScrapedCity(scrapedCity);
-
                 }
 
                 Pattern descriptionPattern = Pattern.compile("<strong([^>]*)>(.*)</strong>");
@@ -82,7 +94,6 @@ public class EventbriteScraper extends WebCrawler {
                     String scrapedDescription = descriptionMatcher.group(2);
                     logger.info("Description: {}", scrapedDescription);
                     scraperOutput.setScrapedDescription(scrapedDescription);
-
                 }
 
                 String scrapedTopic ="";
