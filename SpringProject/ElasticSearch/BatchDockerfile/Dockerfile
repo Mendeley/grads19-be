@@ -4,11 +4,11 @@ ENV MAVEN_CONFIG=''
 WORKDIR /app
 # installing mvnw wrapper
 RUN mvn -N io.takari:maven:wrapper -Dmaven=${MAVEN_VERSION} && ./mvnw --version
-COPY ./MainApplication/pom.xml .
+COPY ./ElasticSearch/pom.xml .
 COPY ./pom.xml ../
 # resolves all project dependencies locally
 RUN ./mvnw dependency:go-offline -B
-COPY ./MainApplication .
+COPY ./ElasticSearch .
 # compile  the code and package
 RUN ./mvnw package\
     && unzip target/*.jar  -d target/dependency
@@ -18,5 +18,6 @@ ARG DEPENDENCY=/app/target/dependency
 COPY --from=Build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=Build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=Build ${DEPENDENCY}/BOOT-INF/classes /app
-EXPOSE 8080
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.gradproject2019.Application"]
+COPY wait-for-it.sh /usr/wait-for-it.sh
+RUN chmod +x /usr/wait-for-it.sh
+EXPOSE 8090

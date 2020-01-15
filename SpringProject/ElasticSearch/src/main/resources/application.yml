@@ -1,0 +1,38 @@
+#Common properties
+spring:
+  profiles:
+    active: dev
+  datasource:
+    jdbcUrl: jdbc:h2:mem:memodb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  batch:
+    initialize-schema: ALWAYS
+    chunk-size: 1000
+
+logging:
+  level:
+    root: INFO
+    org:
+      hibernate: INFO
+      springframework:
+        web: INFO
+
+---
+
+spring:
+  profiles: dev
+
+mysql:
+  datasource:
+    platform: mysql
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: ${MYSQL_DATASOURCE_JDBCURL}
+    username: ${MYSQL_DATASOURCE_USERNAME}
+    password: ${MYSQL_DATASOURCE_PASSWORD}
+
+elastic-search:
+  endpoint: ${ELASTICSEARCH_ENDPOINT}
+  protocol: http
+  port: 9200
