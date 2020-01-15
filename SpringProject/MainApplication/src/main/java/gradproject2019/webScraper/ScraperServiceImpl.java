@@ -52,12 +52,12 @@ public class ScraperServiceImpl implements ScraperService {
             CrawlController.WebCrawlerFactory<ReedExhibitionsScraper> factory = ReedExhibitionsScraper::new;
             controller.start(factory, numberOfCrawlers);
 
-            scraperOutput = factory.newInstance().getScraperOutput();
+            scraperOutput = ReedExhibitionsScraper.getScraperOutput();
         } else {
             CrawlController.WebCrawlerFactory<GenericScraper> factory = GenericScraper::new;
             controller.start(factory, numberOfCrawlers);
 
-            scraperOutput = factory.newInstance().getScraperOutput();
+            scraperOutput = GenericScraper.getScraperOutput();
         }
 
         return scraperOutputToResponseDto(scraperOutput);
