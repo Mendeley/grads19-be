@@ -85,22 +85,30 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
 
-//
+    @Override
 
-//    @Override
-//    public Page<Conference> findByConferenceName(String name, Pageable pageable) {
-//        return SearchRepository.findByConferenceName(name, pageable);
-//    }
-//
-//    @Override
-//    public Page<Conference> findByConferenceCity(String city, Pageable pageable) {
-//        return SearchRepository.findByConferenceCity(city, pageable);
-//    }
-//
-//    @Override
-//    public Page<Conference> findByConferenceDescription(String description, Pageable pageable) {
-//        return SearchRepository.findByConferenceDescription(description, pageable);
-//    }
+    public List<ConferenceResponseDto> findByConferenceName(String name, Integer page, Integer size) {
+        return conferenceSearchRepository.findByName(name,PageRequest.of(page, size))
+                .get()
+                .map(c -> new ConferenceResponseDto().from(c))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ConferenceResponseDto> findByConferenceCity(String city, Integer page, Integer size) {
+        return conferenceSearchRepository.findByCity(city, PageRequest.of(page, size))
+                .get()
+                .map(c -> new ConferenceResponseDto().from(c))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ConferenceResponseDto> findByConferenceDescription(String description, Integer page, Integer size) {
+        return conferenceSearchRepository.findByDescription(description, PageRequest.of(page, size))
+                .get()
+                .map(c -> new ConferenceResponseDto().from(c))
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<ConferenceResponseDto> findByConferenceTopic(String topic, Integer page, Integer size) {
