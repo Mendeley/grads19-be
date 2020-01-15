@@ -1,6 +1,7 @@
 package gradproject2019.conferences.data;
 
 import gradproject2019.conferences.persistence.Conference;
+import gradproject2019.elasticsearch.persistence.EsConference;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
@@ -54,6 +55,17 @@ public class ConferenceResponseDto {
     }
 
     public ConferenceResponseDto from(Conference conference) {
+        return new ConferenceResponseDtoBuilder()
+                .withId(conference.getId())
+                .withName(conference.getName())
+                .withDateTime(conference.getDateTime())
+                .withCity(conference.getCity())
+                .withDescription(conference.getDescription())
+                .withTopic(conference.getTopic())
+                .build();
+    }
+
+    public ConferenceResponseDto esFrom(EsConference conference) {
         return new ConferenceResponseDtoBuilder()
                 .withId(conference.getId())
                 .withName(conference.getName())
