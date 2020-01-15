@@ -21,6 +21,11 @@ public class ScraperServiceImpl implements ScraperService {
 
         config.setMaxDepthOfCrawling(0);
 
+        config.setCleanupDelaySeconds(1);
+        config.setThreadMonitoringDelaySeconds(1);
+        config.setThreadShutdownDelaySeconds(1);
+        config.setShutdownOnEmptyQueue(true);
+
         config.setMaxPagesToFetch(1);
 
         config.setIncludeBinaryContentInCrawling(false);
