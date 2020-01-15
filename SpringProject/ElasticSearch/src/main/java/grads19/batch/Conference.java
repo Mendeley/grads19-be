@@ -3,6 +3,7 @@ package grads19.batch;
 import java.io.Serializable;
 
 public class Conference implements Serializable {
+    private Long id;
     private String name;
     private String city;
     private String description;
@@ -11,12 +12,22 @@ public class Conference implements Serializable {
     public Conference() {
     }
 
-    public Conference(String name, String city, String description, String topic) {
+    public Conference(Long id, String name, String city, String description, String topic) {
+        this.id = id;
         this.name = name;
         this.city = city;
         this.description = description;
         this.topic = topic;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     public String getName() {
         return name;
@@ -64,6 +75,11 @@ public class Conference implements Serializable {
 
         public ConferenceBuilder withName(String name) {
             conference.setName(name);
+            return this;
+        }
+
+        public ConferenceBuilder withId(Long id) {
+            conference.setId(id);
             return this;
         }
 

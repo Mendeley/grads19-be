@@ -12,6 +12,7 @@ public class ConferenceProcessor implements ItemProcessor<ConferenceDTO, Confere
     public Conference process(final ConferenceDTO conferenceDto) {
 
         return aConference()
+                .withId(conferenceDto.getId())
                 .withName(conferenceDto.getName())
                 .withCity(conferenceDto.getCity())
                 .withDescription(conferenceDto.getDescription())

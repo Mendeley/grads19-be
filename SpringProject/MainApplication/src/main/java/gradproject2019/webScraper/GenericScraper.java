@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class GenericScraper extends WebCrawler {
     private final static Pattern Exclusions = Pattern.compile(".*(\\.(css|js|xml|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
-    private ScraperOutput scraperOutput = new ScraperOutput();
+    private static ScraperOutput scraperOutput = new ScraperOutput();
 
     GenericScraper() {
 
@@ -95,7 +95,7 @@ public class GenericScraper extends WebCrawler {
             }
         }
     }
-    public ScraperOutput getScraperOutput() {
+    public static ScraperOutput getScraperOutput() {
         return scraperOutput;
     }
 }
