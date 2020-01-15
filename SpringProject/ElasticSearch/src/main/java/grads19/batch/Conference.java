@@ -1,6 +1,8 @@
 package grads19.batch;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 public class Conference implements Serializable {
     private Long id;
@@ -8,12 +10,14 @@ public class Conference implements Serializable {
     private String city;
     private String description;
     private String topic;
+    private Instant dateTime;
 
     public Conference() {
     }
 
-    public Conference(Long id, String name, String city, String description, String topic) {
+    public Conference(Long id, String name, String city, String description, String topic, Instant dateTime ) {
         this.id = id;
+        this.dateTime = dateTime;
         this.name = name;
         this.city = city;
         this.description = description;
@@ -28,6 +32,13 @@ public class Conference implements Serializable {
         this.id = id;
     }
 
+    public Instant getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Instant dateTime) {
+        this.dateTime = dateTime;
+    }
 
     public String getName() {
         return name;
@@ -75,6 +86,11 @@ public class Conference implements Serializable {
 
         public ConferenceBuilder withName(String name) {
             conference.setName(name);
+            return this;
+        }
+
+        public ConferenceBuilder withDateTime(Instant dateTime) {
+            conference.setDateTime(dateTime);
             return this;
         }
 

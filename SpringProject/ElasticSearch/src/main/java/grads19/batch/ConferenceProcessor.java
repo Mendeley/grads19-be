@@ -13,6 +13,7 @@ public class ConferenceProcessor implements ItemProcessor<ConferenceDTO, Confere
 
         return aConference()
                 .withId(conferenceDto.getId())
+                .withDateTime(conferenceDto.getDateTime())
                 .withName(conferenceDto.getName())
                 .withCity(conferenceDto.getCity())
                 .withDescription(conferenceDto.getDescription())

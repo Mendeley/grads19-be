@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 public class ConferenceReader extends JdbcPagingItemReader<ConferenceDTO> {
 
-    private static final String SELECT_CLAUSE = "SELECT id, name, city, description, topic";
+    private static final String SELECT_CLAUSE = "SELECT id, name, date_time, city, description, topic";
     private static final String FROM_CLAUSE = "FROM conferences";
 
     public ConferenceReader(ConferenceMapper conferenceMapper,

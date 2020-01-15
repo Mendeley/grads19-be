@@ -1,8 +1,12 @@
 package grads19.batch;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 public class ConferenceDTO {
 
     private Long id;
+    private Instant dateTime;
     private String name;
     private String city;
     private String description;
@@ -17,6 +21,14 @@ public class ConferenceDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Instant getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Instant dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getName() {
@@ -65,6 +77,11 @@ public class ConferenceDTO {
 
         public ConferenceDTOBuilder withId(Long id) {
             conferenceDTO.setId(id);
+            return this;
+        }
+
+        public ConferenceDTOBuilder withDateTime(Instant dateTime) {
+            conferenceDTO.setDateTime(dateTime);
             return this;
         }
 
