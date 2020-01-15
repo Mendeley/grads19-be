@@ -24,14 +24,14 @@ public class ConferenceController {
     @Autowired
     private ConferenceService conferenceService;
 
-    @GetMapping(path = "/conferences")
+    @GetMapping
     public ResponseEntity<List<ConferenceResponseDto>> getAllConferences(
             //@RequestParam String name,
             //@RequestParam String city,
             //@RequestParam String description,
             @RequestParam(required = false) String topic,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size) {
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "500") Integer size) {
 
         List<ConferenceResponseDto> conferences;
 

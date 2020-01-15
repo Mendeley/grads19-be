@@ -3,6 +3,15 @@
         "index": {
             "number_of_shards": 3,
             "number_of_replicas": 2
+        },
+        "analysis": {
+            "analyzer": {
+                "standard_lowercase": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": ["lowercase"]
+                }
+            }
         }
     },
     "mappings": {
@@ -17,7 +26,8 @@
                 "type": "text"
             },
             "topic": {
-                "type": "keyword"
+                "type": "keyword",
+                "analyzer": "standard_lowercase"
             },
             "dateTime": {
                 "type": "date"
