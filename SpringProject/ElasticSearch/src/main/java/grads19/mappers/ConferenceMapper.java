@@ -14,12 +14,14 @@ public class ConferenceMapper implements RowMapper<ConferenceDTO> {
 
     @Override
     public ConferenceDTO mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+        Long id = resultSet.getLong("id");
         String name = resultSet.getString("name");
         String city = resultSet.getString("city");
         String description = resultSet.getString("description");
         String topic = resultSet.getString("topic");
 
         return aConferenceDTO()
+                .withId(id)
                 .withName(name)
                 .withCity(city)
                 .withDescription(description)
