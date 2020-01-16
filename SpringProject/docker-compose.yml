@@ -59,7 +59,7 @@ services:
       - elasticsearch
   react:
     build: ../../grads19-weblet
-    command: npm start
+    command: nginx -g "daemon off;"
     ports:
       - 3000:3000
     depends_on:
