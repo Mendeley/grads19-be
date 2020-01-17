@@ -2,12 +2,21 @@ package grads19.batch;
 
 public class ConferenceDTO {
 
+    private Long id;
     private String name;
     private String city;
     private String description;
     private String topic;
 
     public ConferenceDTO() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -52,6 +61,11 @@ public class ConferenceDTO {
 
         public static ConferenceDTOBuilder aConferenceDTO() {
             return new ConferenceDTOBuilder();
+        }
+
+        public ConferenceDTOBuilder withId(Long id) {
+            conferenceDTO.setId(id);
+            return this;
         }
 
         public ConferenceDTOBuilder withName(String name) {

@@ -3,6 +3,7 @@ package gradproject2019.conferences.controller;
 import gradproject2019.conferences.data.ConferencePatchRequestDto;
 import gradproject2019.conferences.data.ConferenceRequestDto;
 import gradproject2019.conferences.data.ConferenceResponseDto;
+
 import gradproject2019.conferences.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+import static org.hibernate.annotations.common.util.StringHelper.isNotEmpty;
+
 @CrossOrigin(origins = "http://confound.test.corp.mendeley.com")
 @Controller
 @RequestMapping("/conferences")
@@ -22,8 +25,32 @@ public class ConferenceController {
     private ConferenceService conferenceService;
 
     @GetMapping
-    public ResponseEntity<List<ConferenceResponseDto>> getAllConferences() {
-        List<ConferenceResponseDto> conferences = conferenceService.getAllConferences();
+    public ResponseEntity<List<ConferenceResponseDto>> getAllConferences(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String topic,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "500") Integer size) {
+
+        List<ConferenceResponseDto> conferences;
+
+        if (isNotEmpty(topic)) {
+            conferences = conferenceService.findByConferenceTopic(topic, page, size);
+        }
+        else if (isNotEmpty(name)) {
+            conferences = conferenceService.findByConferenceName(name, page, size);
+        }
+        else if (isNotEmpty(city)) {
+            conferences = conferenceService.findByConferenceCity(city, page, size);
+        }
+        else if (isNotEmpty(description)) {
+            conferences = conferenceService.findByConferenceDescription(description, page, size);
+        }
+        else {
+            conferences = conferenceService.getAllConferences();
+        }
+
         return ResponseEntity.ok(conferences);
     }
 

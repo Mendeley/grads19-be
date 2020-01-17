@@ -16,6 +16,7 @@ services:
       - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/conference_finder?autoReconnect=true"
       - "SPRING_DATASOURCE_PASSWORD=password"
       - "SPRING_DATASOURCE_USERNAME=root"
+      - "SPRING_DATA_ELASTICSEARCH_CLUSTER-NODES=elasticsearch:9200"
     ports:
       - 8080:8080
     restart: on-failure
@@ -58,7 +59,7 @@ services:
       - elasticsearch
   react:
     build: ../../grads19-weblet
-    command: npm start
+    command: nginx -g "daemon off;"
     ports:
       - 3000:3000
     depends_on:

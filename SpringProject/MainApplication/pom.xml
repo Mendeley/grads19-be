@@ -17,6 +17,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <elasticsearch.version>6.8.1</elasticsearch.version>
     </properties>
 
     <dependencies>
@@ -82,6 +83,20 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.3m</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.uci.ics</groupId>
+            <artifactId>crawler4j</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-elasticsearch</artifactId>
+            <version>3.2.3.RELEASE</version>
         </dependency>
     </dependencies>
 
@@ -161,7 +176,7 @@
                 </executions>
                 <configuration>
                     <argLine>
-                        -Dspring.datasource.url=jdbc:mysql://localhost:3306/conference_finder?autoReconnect=true -Dspring.datasource.password=password -Dspring.datasource.username=root
+                        -Dspring.datasource.url=jdbc:mysql://localhost:3306/conference_finder?autoReconnect=true -Dspring.datasource.password=password -Dspring.datasource.username=root -Dspring.data.elasticsearch.cluster-nodes=localhost:9200
                     </argLine>
                     <includes>
                         <include>**/*IT.java</include>
@@ -191,7 +206,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/it/java/gradproject2019</source>
+                                <source>src/it/java</source>
                             </sources>
                         </configuration>
                     </execution>
