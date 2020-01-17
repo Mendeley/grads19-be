@@ -34,5 +34,5 @@ mysql:
 
 elastic-search:
   endpoint: ${ELASTICSEARCH_ENDPOINT}
-  protocol: http
-  port: 9200
+  protocol: ${ELASTICSEARCH_PROTOCOL}
+  port: ${ELASTICSEARCH_PORT}
