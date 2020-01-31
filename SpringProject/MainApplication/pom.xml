@@ -226,6 +226,36 @@
                     </execution>
                 </executions>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.owasp</groupId>-->
+<!--                <artifactId>dependency-check-maven</artifactId>-->
+<!--                <version>5.3.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>check-dependencies</id>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal> &lt;!&ndash; runs dependency check against project and generates a report &ndash;&gt;-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--                <plugin>-->
+<!--                    <groupId>org.sonatype.ossindex.maven</groupId>-->
+<!--                    <artifactId>ossindex-maven-plugin</artifactId>-->
+<!--                    <version>3.1.0</version>-->
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <id>audit-dependencies</id>-->
+<!--                            <phase>validate</phase>-->
+<!--                            <goals>-->
+<!--                                <goal>audit</goal>-->
+<!--                            </goals>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
+<!--                    <configuration>-->
+<!--                        <fail>false</fail>-->
+<!--                    </configuration>-->
+<!--                </plugin>-->
         </plugins>
     </build>
 </project>
