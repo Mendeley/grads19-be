@@ -256,6 +256,19 @@
 <!--                        <fail>false</fail>-->
 <!--                    </configuration>-->
 <!--                </plugin>-->
+            <plugin>
+                <groupId>com.mendeley.core</groupId>
+                <artifactId>hooked-lints</artifactId>
+                <version>1.0.5</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
