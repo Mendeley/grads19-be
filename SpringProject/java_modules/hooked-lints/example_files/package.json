@@ -1,0 +1,8 @@
+{
+	"scripts": {
+		"lint": "node_modules/hooked-lints/scripts/hooks/hooks.sh pre-commit all",
+		"lintfix": "npm run lintfix-prettier; npm run lintfix-eslint; echo -n",
+		"lintfix-eslint": "eslint . --ext js --ext ts --ext tsx --ext jsx -fix",
+		"lintfix-prettier": "prettier --write --list-different '**/*.{ts,js,tsx,jsx,json,md,java}' '!**/build/**'"
+	}
+}

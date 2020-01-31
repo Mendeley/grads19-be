@@ -1,0 +1,36 @@
+pipeline {
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+    timestamps()
+  }
+  agent {
+    label "debian"
+  }
+  stages {
+    stage("Install") {
+      steps {
+        sh "make node_modules"
+      }
+    }
+    stage("Lint") {
+      steps {
+        sh "make lint"
+      }
+    }
+    stage("Unit Test") {
+      steps {
+        sh "make test"
+      }
+    }
+    stage("Publish") {
+      when {
+        branch 'master'
+      }
+      steps {
+        sshagent(['jenkins-gitlab']) {
+          sh "make release"
+        }
+      }
+    }
+  }
+}

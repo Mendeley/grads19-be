@@ -1,0 +1,40 @@
+{
+	"name": "@mendeley-internal/lib-js-hooked-lints",
+	"version": "0.1.9",
+	"description": "Package with Git hooks and linter for JS and Java!",
+	"main": "index.js",
+	"scripts": {
+		"hooks": "./scripts/hooks/install-hooks.sh --quick",
+		"postinstall": "npm run hooks",
+		"test": "./scripts/bats-core/bin/bats $(find scripts/test/ -iname '*.bats')"
+	},
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@git.mendeley.com:7999/www/lib-js-hooked-lints.git"
+	},
+	"keywords": ["hooks", "git", "linters", "java", "js"],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@typescript-eslint/eslint-plugin": "^1.5.0",
+		"@typescript-eslint/parser": "^1.5.0",
+		"eslint": "^5.15.1",
+		"eslint-config-prettier": "^4.1.0",
+		"eslint-config-standard": "^12.0.0",
+		"eslint-plugin-filenames": "^1.3.2",
+		"eslint-plugin-import": "^2.16.0",
+		"eslint-plugin-jest": "^22.3.0",
+		"eslint-plugin-jsdoc": "^4.1.1",
+		"eslint-plugin-node": "^8.0.1",
+		"eslint-plugin-prettier": "^3.0.1",
+		"eslint-plugin-promise": "^4.0.1",
+		"eslint-plugin-react": "^7.12.4",
+		"eslint-plugin-spellcheck": "^0.0.11",
+		"eslint-plugin-standard": "^4.0.0",
+		"eslint-plugin-unicorn": "^7.1.0",
+		"prettier": "^1.16.1",
+		"stylelint": "^9.10.1",
+		"stylelint-no-px": "^0.12.1",
+		"typescript": "^3.6.2"
+	}
+}

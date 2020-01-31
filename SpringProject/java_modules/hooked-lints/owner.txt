@@ -1,0 +1,3 @@
+Mendeley-Types: Library
+Mendeley-Team: Core Services
+Mendeley-Slack: #core-services
