@@ -34,6 +34,7 @@
                 <groupId>com.mendeley.core</groupId>
                 <artifactId>hooked-lints</artifactId>
                 <version>1.0.5</version>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
                         <goals>
