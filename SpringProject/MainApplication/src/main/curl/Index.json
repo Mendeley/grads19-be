@@ -5,10 +5,9 @@
             "number_of_replicas": 2
         },
         "analysis": {
-            "analyzer": {
+            "normalizer": {
                 "standard_lowercase": {
                     "type": "custom",
-                    "tokenizer": "standard",
                     "filter": ["lowercase"]
                 }
             }
@@ -26,8 +25,14 @@
                 "type": "text"
             },
             "topic": {
-                "type": "keyword",
-                "analyzer": "standard_lowercase"
+                "type": "text",
+                "analyser": "simple",
+                "fields": {
+                    "keyword":{
+                        "type": "keyword",
+                        "normalizer": "standard_lowercase"
+                    }
+                }
             },
             "dateTime": {
                 "type": "date"
