@@ -19,13 +19,11 @@ public interface ConferenceService {
 
     ConferenceResponseDto editConference(UUID token, Long conferenceId, ConferencePatchRequestDto conferencePatchRequestDto);
 
-    //List<ConferenceResponseDto> searchConferences(String name, String city, String description, String topic, Pageable pageable);
+    List<ConferenceResponseDto> findByConferenceName(String name, Integer page, Integer size);
 
-    //Page<Conference> findByName(String name, Pageable pageable);
+    List<ConferenceResponseDto> findByConferenceCity(String city, Integer page, Integer size);
 
-    //Page<Conference> findByCity(String city, Pageable pageable);
-
-    //Page<Conference> findByDescription(String description, Pageable pageable);
+    List<ConferenceResponseDto> findByConferenceDescription(String description, Integer page, Integer size);
 
     List<ConferenceResponseDto> findByConferenceTopic(String topic, Integer page, Integer size);
 }

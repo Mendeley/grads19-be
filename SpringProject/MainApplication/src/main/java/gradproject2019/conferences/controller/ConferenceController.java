@@ -26,9 +26,9 @@ public class ConferenceController {
 
     @GetMapping
     public ResponseEntity<List<ConferenceResponseDto>> getAllConferences(
-            //@RequestParam String name,
-            //@RequestParam String city,
-            //@RequestParam String description,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String description,
             @RequestParam(required = false) String topic,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "500") Integer size) {
@@ -37,7 +37,17 @@ public class ConferenceController {
 
         if (isNotEmpty(topic)) {
             conferences = conferenceService.findByConferenceTopic(topic, page, size);
-        } else {
+        }
+        else if (isNotEmpty(name)) {
+            conferences = conferenceService.findByConferenceName(name, page, size);
+        }
+        else if (isNotEmpty(city)) {
+            conferences = conferenceService.findByConferenceCity(city, page, size);
+        }
+        else if (isNotEmpty(description)) {
+            conferences = conferenceService.findByConferenceDescription(description, page, size);
+        }
+        else {
             conferences = conferenceService.getAllConferences();
         }
 
